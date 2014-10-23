@@ -86,11 +86,9 @@ Func LevelUp($hero, $levels=1)
       Return
    EndIf
 
-   $page = $HERO_BUTTON[$hero][0]
-   $row = $HERO_BUTTON[$hero][1]
+   ScrollToHero($hero)
 
-   ScrollToPage($page)
-
+   Local $row = $HERO_BUTTON[$hero][1]
    ClickHeroRow($row, $levels)
 EndFunc
 
@@ -126,6 +124,11 @@ EndFunc
 ; @param {Int} $page
 Func ScrollToPage($p)
    Click($SCROLL_TOP[0], $PAGE_SCROLL[$p])
+EndFunc
+
+Func ScrollToHero($hero)
+   Local $page = $HERO_BUTTON[$hero][0]
+   ScrollToPage($page)
 EndFunc
 
 ; Click on the game board a given number of times.
