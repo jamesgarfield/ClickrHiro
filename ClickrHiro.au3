@@ -69,13 +69,13 @@ Main()
 
 Func Main()
    ScrollToPage(2)
-   ;LevelUp($IVAN, 25)
+   LevelUp($CID, 162)
 EndFunc
 
 ; LevelUp a Hero a given number of levels
 ; @param {HeroEnum} $hero
 ; @param {Int} [$levels]
-Func LevelUp($hero, $levels=1, $onCorrectPage=False)
+Func LevelUp($hero, $levels=1)
    If $levels <= 0 Then
       Return
    EndIf
@@ -83,35 +83,37 @@ Func LevelUp($hero, $levels=1, $onCorrectPage=False)
    $page = $HERO_BUTTON[$hero][0]
    $row = $HERO_BUTTON[$hero][1]
 
-   If Not $onCorrectPage Then
-	  ScrollToPage($page)
-   EndIf
+   ScrollToPage($page)
 
-   If $levels >= 100 Then
-      Send("{CTRLDOWN}")
-      ClickHeroRow($row, 1)
-      Send("{CTRLUP}")
-      Return LevelUp($hero, $levels-100, true)
-   ElseIf $levels >= 25 Then
-      Send("{z down}")
-      ClickHeroRow($row, 1)
-      Send("{z up}")
-      Return LevelUp($hero, $levels-25, true)
-   ElseIf $levels >= 10 Then
-      Send("{SHIFTDOWN}")
-      ClickHeroRow($row, 1)
-      Send("{SHIFTUP}")
-      Return LevelUp($hero, $levels-10, true)
-   Else
-      ClickHeroRow($row, $levels)
-   EndIf
+   ClickHeroRow($row, $levels)
 EndFunc
 
 ; Send a given number of clicks to a hero row
 ; @param {Int} $row
 ; @param {Int} [$count]
 Func ClickHeroRow($row, $count=1)
-   Click($HERO_ROW_X, $HERO_ROW_Y[$row], $count)
+   If $count <= 0 Then
+      Return
+   EndIf
+
+   If $count >= 100 Then
+      Send("{CTRLDOWN}")
+      Click($HERO_ROW_X, $HERO_ROW_Y[$row], 1)
+      Send("{CTRLUP}")
+      Return ClickHeroRow($row, $count-100)
+   ElseIf $count >= 25 Then
+      Send("{z down}")
+      Click($HERO_ROW_X, $HERO_ROW_Y[$row], 1)
+      Send("{z up}")
+      Return ClickHeroRow($row, $count-25)
+   ElseIf $count >= 10 Then
+      Send("{SHIFTDOWN}")
+      Click($HERO_ROW_X, $HERO_ROW_Y[$row], 1)
+      Send("{SHIFTUP}")
+      Return ClickHeroRow($row, $count-10)
+   Else
+      Click($HERO_ROW_X, $HERO_ROW_Y[$row], $count)
+   EndIf
 EndFunc
 
 ; Scroll to a given hero page
@@ -135,9 +137,9 @@ EndFunc
 ; @return {Array<Int,Int>}
 Func FindBoard()
    WinActivate($WINDOW)
-   
+
    Local $poz = WinGetPos($WINDOW)
-   
+
    Local $boardLeftX = $poz[0]
    Local $boardTopY = $poz[1]
    Local $width = $poz[2]
@@ -151,8 +153,7 @@ Func FindBoard()
 
    Local $left = ColorSearch($boardLeftX, $leftYSearchPos, $leftCutoff, $leftYSearchPos, $LEFT_EDGE_COLOR, 20)
    Local $top = ColorSearch($topXSearchPos, $boardTopY, $topXSearchPos, $topCutoff, $TOP_EDGE_COLOR, 20)
-   Dbg($left)
-   Dbg($top)
+
    Local $coord[] = [$left[0], $top[1] + $TOP_OFFSET]
    Return $coord
 EndFunc
