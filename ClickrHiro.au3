@@ -8,16 +8,29 @@ Global Const $DEBUG = False
 Global Const $WINDOW = "Clicker Heroes"
 Global Const $CLICK_DELAY = 5
 
-Global Const $BOARD_WIDTH = 1020
-Global Const $BOARD_HEIGHT = 572
+;Pixels Go Here
+   ;Game area
+   Global Const $BOARD_WIDTH = 1133
+   Global Const $BOARD_HEIGHT = 639
+
+   ;Top of scroll bar, under up arrow
+   Global Const $SCROLL_TOP[] = [547, 201]
+
+   ;Page scrolling postions (4 heroes per page)
+   Global Const $PAGE_SCROLL[] = [201, 304, 359, 419, 474, 529, 559]
+
+   ;Level Button Positioning
+   Global Const $HERO_ROW_X = 91
+   Global Const $HERO_ROW_Y[] = [224, 330, 436, 542]
+;End of Pixels
 
 ;Used to find the game board within the browser window
 Global Const $LEFT_EDGE_COLOR = 0x875508
 Global Const $TOP_EDGE_COLOR = 0xBB7A19
 Global Const $TOP_OFFSET = -3
 
-;Top of the hero page scroll bar
-Global Const $SCROLL_TOP[] = [491, 183]
+Global Const $CANNOT_BUY_COLOR = 0xFE8743
+
 
 ;HeroEnum
 Global Enum $CID, _
@@ -46,13 +59,6 @@ Global Enum $CID, _
             $SHINATOBE, _
             $GRANT, _
             $FROSTLEAF
-
-;Y click positions for different hero pages
-Global Const $PAGE_SCROLL[] = [182, 273, 323, 374, 425, 476, 502]
-
-;Level Button Positioning
-Global Const $HERO_ROW_X = 100
-Global Const $HERO_ROW_Y[] = [210, 305, 400, 495]
 
 ;Hero Page/Row combos
 Global Const $HERO_BUTTON[26][2] = _
