@@ -75,11 +75,36 @@ EndFunc
 ; LevelUp a Hero a given number of levels
 ; @param {HeroEnum} $hero
 ; @param {Int} [$levels]
-Func LevelUp($hero, $levels=1)
+Func LevelUp($hero, $levels=1, $onCorrectPage=False)
+   If $levels <= 0 Then
+      Return
+   EndIf
+
    $page = $HERO_BUTTON[$hero][0]
    $row = $HERO_BUTTON[$hero][1]
-   ScrollToPage($page)
-   ClickHeroRow($row, $levels)
+
+   If Not $onCorrectPage Then
+	  ScrollToPage($page)
+   EndIf
+
+   If $levels >= 100 Then
+      Send("{CTRLDOWN}")
+      ClickHeroRow($row, 1)
+      Send("{CTRLUP}")
+      Return LevelUp($hero, $levels-100, true)
+   ElseIf $levels >= 25 Then
+      Send("{z down}")
+      ClickHeroRow($row, 1)
+      Send("{z up}")
+      Return LevelUp($hero, $levels-25, true)
+   ElseIf $levels >= 10 Then
+      Send("{SHIFTDOWN}")
+      ClickHeroRow($row, 1)
+      Send("{SHIFTUP}")
+      Return LevelUp($hero, $levels-10, true)
+   Else
+      ClickHeroRow($row, $levels)
+   EndIf
 EndFunc
 
 ; Send a given number of clicks to a hero row
