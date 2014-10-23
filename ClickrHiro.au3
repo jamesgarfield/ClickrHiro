@@ -185,6 +185,12 @@ Func ColorSearch($left, $top, $right, $bottom, $color, $variance=0)
    Return PixelSearch($left, $top, $right, $bottom, $color, $variance)
 EndFunc
 
+Func TranslateCoords($x, $y)
+   Local $board = FindBoard()
+   Local $coords[] = [$x+$board[0], $y+$board[1]]
+   Return $coords
+EndFunc
+
 ; Map a function over an array
 ; @param {function} $f
 ; @param {Array} $a
