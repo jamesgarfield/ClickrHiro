@@ -74,8 +74,34 @@ Global Const $HERO_BUTTON[26][2] = _
 Main()
 
 Func Main()
-   ScrollToPage(2)
-   LevelUp($CID, 162)
+   Dbg(FindBoard())
+   Dbg(CanLevelBy100($BRITTANY))
+
+EndFunc
+
+Func CanLevelBy100($hero)
+   ScrollToHero($hero)
+
+   Local $row = $HERO_BUTTON[$hero][1]
+
+   Local $topLeft 		= TranslateCoords($HERO_ROW_X - 20, $HERO_ROW_Y[$row] - 20)
+   Local $bottomRight	= TranslateCoords($HERO_ROW_X + 20, $HERO_ROW_Y[$row] + 20)
+
+   Local $left    = $topLeft[0]
+   Local $top     = $topLeft[1]
+   Local $right   = $bottomRight[0]
+   Local $bottom  = $bottomRight[1]
+   Send("{CTRLDOWN}")
+   Sleep(200)	;Wait for colors to change, there is a small amount of lag in this
+   Local $coord = ColorSearch($left, $top, $right, $bottom, $CANNOT_BUY_COLOR, 30)
+   Send("{CTRLUP}")
+   Dbg($coord)
+
+   ;Found the CANNOT_BUY_COLOR, cannot buy this amount
+   If IsArray($coord) Then
+	  Return False
+   EndIf
+   Return True
 EndFunc
 
 ; LevelUp a Hero a given number of levels
