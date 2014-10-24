@@ -98,10 +98,10 @@ Func Main()
    Local $levelingHeros[] = [$BRITTANY, $IVAN, $SEER]
 
    While $g_run
-     If Mod($cnt, 100) == 0 Then
+     If Mod($cnt, 30) == 0 Then
        Map(TryToLevelBy10, $levelingHeros)
        Send("a")
-     ElseIf Mod($cnt, 25) == 0 Then
+     ElseIf Mod($cnt, 10) == 0 Then
        Send("a")
      EndIf
 
