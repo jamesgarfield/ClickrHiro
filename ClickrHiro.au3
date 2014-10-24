@@ -92,24 +92,44 @@ Func Main()
    Local $cnt = 0
 
 
-   Local $x = Int(Floor($BOARD_WIDTH/3)*2)
-   Local $y = Int(Floor($BOARD_HEIGHT/2))
-   Local $brit = 0
+   Local Const $x = Int(Floor($BOARD_WIDTH/3)*2)
+   Local Const $y = Int(Floor($BOARD_HEIGHT/2))
+
+   Local $levelingHeros[] = [$BRITTANY, $IVAN, $SEER]
+
    While $g_run
-	  If Mod($cnt, 100) == 0 And CanLevelBy10($BRITTANY) Then
-		 $brit += 10
-		 Dbg("brit up: " & $brit)
-		 LevelUp($BRITTANY, 10)
-		 Send("a")
-	  ElseIf Mod($cnt, 25) == 0 Then
-		 Send("a")
-	  EndIf
+     If Mod($cnt, 100) == 0 Then
+       Map(TryToLevelBy10, $levelingHeros)
+       Send("a")
+     ElseIf Mod($cnt, 25) == 0 Then
+       Send("a")
+     EndIf
 
-	  Click($x, $y, 40)
+     Click($x, $y, 40)
 
 
-	  $cnt += 1
+     $cnt += 1
    WEnd
+EndFunc
+
+Func TryToLevel($hero)
+   If CanLevel($hero) Then
+      LevelUp($hero, 1)
+      Return True
+   EndIf
+   Return False
+EndFunc
+
+Func TryToLevelBy10($hero)
+   WithKeyPress($KEY_SHIFT, TryToLevel, $hero)
+EndFunc
+
+Func TryToLevelBy25($hero)
+   WithKeyPress($KEY_Z, TryToLevel, $hero)
+EndFunc
+
+Func TryToLevelBy100($hero)
+   WithKeyPress($KEY_CTRL, TryToLevel, $hero)
 EndFunc
 
 Func CanLevel($hero)
