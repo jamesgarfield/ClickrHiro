@@ -110,6 +110,20 @@ Func CanLevel($hero)
    Return True
 EndFunc
 
+Func CanLevelBy10($hero)
+   Return WithKeyPress($KEY_SHIFT, CanLevel, $hero)
+EndFunc
+
+Func CanLevelBy25($hero)
+   Return WithKeyPress($KEY_Z , CanLevel, $hero)
+EndFunc
+
+Func CanLevelBy100($hero)
+   Return WithKeyPress($KEY_CTRL, CanLevel, $hero)
+EndFunc
+
+
+
 ; LevelUp a Hero a given number of levels
 ; @param {HeroEnum} $hero
 ; @param {Int} [$levels]
