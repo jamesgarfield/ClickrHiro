@@ -80,6 +80,11 @@ Global Const $KEY_ACTION[3][2] = _
             [  ["{CTRLDOWN}", "{CTRLUP}"], _
                ["{SHIFTDOWN}", "{SHIFTUP}"], _
                ["{z down}", "{z up}"]]
+
+Global $g_run = True
+Global $g_paused = False
+HotKeySet("^{PAUSE}", "Toggle_Pause")
+
 Main()
 
 Func Main()
@@ -338,6 +343,15 @@ Func Range($start, $end=Null, $step = 1)
    Next
 
    Return $r
+EndFunc
+
+Func Toggle_Pause()
+	  $g_paused = Not $g_paused
+	  While $g_paused And $g_run
+		 Sleep(100)
+		 ToolTip("Paused", 0, 0)
+	  WEnd
+	  ToolTip("")
 EndFunc
 
 Func HexStr($h)
