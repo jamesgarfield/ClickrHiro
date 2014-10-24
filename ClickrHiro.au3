@@ -290,7 +290,7 @@ Func WithKeyPress($key, $f, $arg = Null)
    Local $result
 
    Send($KEY_ACTION[$key][0])
-   ;Sleep(200)
+   Sleep(100)  ;Sometimes you need the delay to be sure the color has changed
    If $arg == Null Then
     $result = $f()
    Else
