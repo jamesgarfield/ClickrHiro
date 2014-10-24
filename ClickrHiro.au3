@@ -88,9 +88,28 @@ HotKeySet("^{PAUSE}", "Toggle_Pause")
 Main()
 
 Func Main()
-   Dbg(FindBoard())
-   Dbg(CanLevelBy100($BRITTANY))
+   WinActivate($WINDOW)
+   Local $cnt = 0
 
+
+   Local $x = Int(Floor($BOARD_WIDTH/3)*2)
+   Local $y = Int(Floor($BOARD_HEIGHT/2))
+   Local $brit = 0
+   While $g_run
+	  If Mod($cnt, 100) == 0 And CanLevelBy10($BRITTANY) Then
+		 $brit += 10
+		 Dbg("brit up: " & $brit)
+		 LevelUp($BRITTANY, 10)
+		 Send("a")
+	  ElseIf Mod($cnt, 25) == 0 Then
+		 Send("a")
+	  EndIf
+
+	  Click($x, $y, 40)
+
+
+	  $cnt += 1
+   WEnd
 EndFunc
 
 Func CanLevel($hero)
