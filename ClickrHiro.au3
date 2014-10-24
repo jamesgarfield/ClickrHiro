@@ -118,8 +118,10 @@ EndFunc
 Func TryToLevel($hero)
    If CanLevel($hero) Then
       LevelUp($hero, 1)
+      ClickInKillZone()
       Return True
    EndIf
+   ClickInKillZone()
    Return False
 EndFunc
 
