@@ -71,6 +71,15 @@ Global Const $HERO_BUTTON[26][2] = _
                              [6,2], [6,3]]      ;Grant, FrostLeaf
 
 
+;Key Press
+Global Enum $KEY_CTRL, _
+            $KEY_SHIFT, _
+            $KEY_Z
+
+Global Const $KEY_ACTION[3][2] = _
+            [  ["{CTRLDOWN}", "{CTRLUP}"], _
+               ["{SHIFTDOWN}", "{SHIFTUP}"], _
+               ["{z down}", "{z up}"]]
 Main()
 
 Func Main()
@@ -79,27 +88,24 @@ Func Main()
 
 EndFunc
 
-Func CanLevelBy100($hero)
+Func CanLevel($hero)
    ScrollToHero($hero)
 
    Local $row = $HERO_BUTTON[$hero][1]
 
-   Local $topLeft 		= TranslateCoords($HERO_ROW_X - 20, $HERO_ROW_Y[$row] - 20)
-   Local $bottomRight	= TranslateCoords($HERO_ROW_X + 20, $HERO_ROW_Y[$row] + 20)
+   Local $topLeft       = TranslateCoords($HERO_ROW_X - 20, $HERO_ROW_Y[$row] - 20)
+   Local $bottomRight   = TranslateCoords($HERO_ROW_X + 20, $HERO_ROW_Y[$row] + 20)
 
    Local $left    = $topLeft[0]
    Local $top     = $topLeft[1]
    Local $right   = $bottomRight[0]
    Local $bottom  = $bottomRight[1]
-   Send("{CTRLDOWN}")
-   Sleep(200)	;Wait for colors to change, there is a small amount of lag in this
-   Local $coord = ColorSearch($left, $top, $right, $bottom, $CANNOT_BUY_COLOR, 30)
-   Send("{CTRLUP}")
-   Dbg($coord)
+
+   Local $coord = ColorSearch($left, $top, $right, $bottom, $CANNOT_BUY_COLOR, 40)
 
    ;Found the CANNOT_BUY_COLOR, cannot buy this amount
    If IsArray($coord) Then
-	  Return False
+     Return False
    EndIf
    Return True
 EndFunc
@@ -215,6 +221,22 @@ Func TranslateCoords($x, $y)
    Local $board = FindBoard()
    Local $coords[] = [$x+$board[0], $y+$board[1]]
    Return $coords
+EndFunc
+
+Func WithKeyPress($key, $f, $arg = Null)
+   Local $result
+
+   Send($KEY_ACTION[$key][0])
+   ;Sleep(200)
+   If $arg == Null Then
+    $result = $f()
+   Else
+      $result = Call(FuncName($f), $arg)
+   EndIf
+
+   Send($KEY_ACTION[$key][1])
+
+   Return $result
 EndFunc
 
 ; Map a function over an array
