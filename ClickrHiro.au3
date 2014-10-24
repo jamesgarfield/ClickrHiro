@@ -96,7 +96,7 @@ Func Main()
 
    While $g_run
      If Mod($cnt, 30) == 0 Then
-       Map(TryToLevelBy10, $levelingHeros)
+       Map(TryToLevelBy25, $levelingHeros)
        Send("a")
      ElseIf Mod($cnt, 10) == 0 Then
        Send("a")
