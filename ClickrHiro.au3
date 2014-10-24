@@ -285,7 +285,7 @@ Func Map($f, ByRef $a)
    Local $result[$len]
 
    For $i = 0 To $len-1 Step 1
-	  $result[$i] = $funcName($a[$i])
+     $result[$i] = $f($a[$i])
    Next
 
    Return $result
