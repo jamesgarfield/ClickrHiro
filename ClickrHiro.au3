@@ -207,8 +207,8 @@ EndFunc
 Func Click($x, $y, $count=1)
    Local $board = FindBoard()
    For $i = 0 To $count-1
-	  MouseClick("left", $x + $board[0], $y + $board[1], 1)
-	  Sleep($CLICK_DELAY)
+     MouseClick("left", $x + $board[0], $y + $board[1], 1)
+     Sleep($CLICK_DELAY)
    Next
 EndFunc
 
@@ -248,8 +248,8 @@ EndFunc
 ; @return {Array<Int,Int>}
 Func ColorSearch($left, $top, $right, $bottom, $color, $variance=0)
    If $DEBUG Then
-	  Local $d[] = ["ColorSearch", $left, $top, $right, $bottom, $color, $variance]
-	  Dbg($d)
+     Local $d[] = ["ColorSearch", $left, $top, $right, $bottom, $color, $variance]
+     Dbg($d)
    EndIf
 
    Return PixelSearch($left, $top, $right, $bottom, $color, $variance)
@@ -310,8 +310,8 @@ Func BindMap($f, ByRef $arg, ByRef $a)
    ReDim $bindArg[UBound($bindArg) + 1]
 
    For $i = 0 To $len-1 Step 1
-	  $bindArg[$mapArg] = $a[$i]
-	  $result[$i] = Call($funcName, $bindArg)
+     $bindArg[$mapArg] = $a[$i]
+     $result[$i] = Call($funcName, $bindArg)
    Next
 
    Return $result
@@ -336,8 +336,8 @@ Func BindRMap($f, ByRef $arg, ByRef $a)
 
 
    For $i = 0 To $len-1 Step 1
-	  $bindArg[$mapArg] = $a[$i]
-	  $result[$i] = Call($funcName, $bindArg)
+     $bindArg[$mapArg] = $a[$i]
+     $result[$i] = Call($funcName, $bindArg)
    Next
 
    Return $result
@@ -349,28 +349,28 @@ EndFunc
 ; @param {Int} [$step]
 Func Range($start, $end=Null, $step = 1)
    If $end = Null Then
-	  $end = $start
-	  $start = 0
+     $end = $start
+     $start = 0
    EndIf
 
    Local $size = Int(Ceiling(($end - $start)/$step))
    Local $r[$size]
    Local $index = 0
    For $i = $start To $end-1 Step $step
-	  $r[$index] = $i
-	  $index += 1
+     $r[$index] = $i
+     $index += 1
    Next
 
    Return $r
 EndFunc
 
 Func Toggle_Pause()
-	  $g_paused = Not $g_paused
-	  While $g_paused And $g_run
-		 Sleep(100)
-		 ToolTip("Paused", 0, 0)
-	  WEnd
-	  ToolTip("")
+     $g_paused = Not $g_paused
+     While $g_paused And $g_run
+       Sleep(100)
+       ToolTip("Paused", 0, 0)
+     WEnd
+     ToolTip("")
 EndFunc
 
 Func HexStr($h)
@@ -383,8 +383,8 @@ EndFunc
 
 Func Dbg($msg)
    If IsArray($msg) Then
-	  ConsoleWrite(_ArrayToString($msg, ", ") & @CR)
+     ConsoleWrite(_ArrayToString($msg, ", ") & @CR)
    Else
-	  ConsoleWrite($msg & @CR)
+     ConsoleWrite($msg & @CR)
    EndIf
 EndFunc
