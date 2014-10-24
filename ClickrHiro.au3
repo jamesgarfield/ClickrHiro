@@ -91,10 +91,6 @@ Func Main()
    WinActivate($WINDOW)
    Local $cnt = 0
 
-
-   Local Const $x = Int(Floor($BOARD_WIDTH/3)*2)
-   Local Const $y = Int(Floor($BOARD_HEIGHT/2))
-
    Local $levelingHeros[] = [$BRITTANY, $IVAN, $SEER]
 
    While $g_run
@@ -105,11 +101,17 @@ Func Main()
        Send("a")
      EndIf
 
-     Click($x, $y, 40)
-
+     ClickInKillZone(40)
 
      $cnt += 1
    WEnd
+EndFunc
+
+Func ClickInKillZone($count=1)
+   Local Const $x = Int(Floor($BOARD_WIDTH/4)*3)
+   Local Const $y = Int(Floor($BOARD_HEIGHT/3)*2)
+
+   Click($x, $y, $count)
 EndFunc
 
 Func TryToLevel($hero)
