@@ -7,6 +7,7 @@ Global Const $DEBUG = False
 
 Global Const $WINDOW = "Clicker Heroes"
 Global Const $CLICK_DELAY = 5
+Global Const $MOUSE_SPEED = 3
 
 ;Pixels Go Here
    ;Game area
@@ -229,7 +230,7 @@ EndFunc
 Func Click($x, $y, $count=1)
    Local $board = FindBoard()
    For $i = 0 To $count-1
-     MouseClick("left", $x + $board[0], $y + $board[1], 1)
+     MouseClick("left", $x + $board[0], $y + $board[1], 1, $MOUSE_SPEED)
      Sleep($CLICK_DELAY)
    Next
 EndFunc
