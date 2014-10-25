@@ -1,12 +1,12 @@
 #include <MsgBoxConstants.au3>
 #include <Array.au3>
 
-Global Const $VERSION = "0.1.0"
+Global Const $VERSION = "0.2.0"
 
 Global Const $DEBUG = False
 
 Global Const $WINDOW = "Clicker Heroes"
-Global Const $CLICK_DELAY = 5
+Global Const $CLICK_DELAY = 2
 Global Const $MOUSE_SPEED = 3
 
 ;Pixels Go Here
@@ -23,6 +23,10 @@ Global Const $MOUSE_SPEED = 3
    ;Level Button Positioning
    Global Const $HERO_ROW_X = 91
    Global Const $HERO_ROW_Y[] = [224, 330, 436, 542]
+
+   ;Farm Mode Positioning
+   Global Const $PROGRESSION_TOP_LEFT[] = [1104, 200]
+   Global Const $PROGRESSION_BOTTOM_RIGHT[] = [1115, 208]
 ;End of Pixels
 
 ;Used to find the game board within the browser window
@@ -30,7 +34,8 @@ Global Const $LEFT_EDGE_COLOR = 0x875508
 Global Const $TOP_EDGE_COLOR = 0xBB7A19
 Global Const $TOP_OFFSET = -3
 
-Global Const $CANNOT_BUY_COLOR = 0xFE8743
+Global Const $CANNOT_BUY_COLORS[] = [0xFE8743, 0x7E4321]
+Global Const $PROGRESSION_COLOR = 0xF5FCFF
 
 
 ;HeroEnum
@@ -84,7 +89,8 @@ Global Const $KEY_ACTION[3][2] = _
 
 Global $g_run = True
 Global $g_paused = False
-HotKeySet("^{PAUSE}", "Toggle_Pause")
+Global $g_page = -1
+HotKeySet("^{Pause}", "Toggle_Pause")
 
 Main()
 
@@ -92,20 +98,36 @@ Func Main()
    WinActivate($WINDOW)
    Local $cnt = 0
 
-   Local $levelingHeros[] = [$BRITTANY, $IVAN, $SEER]
+   Local $levelingHeros[] = [$BRITTANY, $IVAN, $TREEBEAST, $SAMURAI, $SEER]
 
    While $g_run
-     If Mod($cnt, 30) == 0 Then
+     If Mod($cnt, 60) == 0 Then
        Map(TryToLevelBy25, $levelingHeros)
-       Send("a")
-     ElseIf Mod($cnt, 10) == 0 Then
-       Send("a")
+	   EnableProgression()
      EndIf
 
      ClickInKillZone(40)
 
      $cnt += 1
    WEnd
+EndFunc
+
+Func EnableProgression()
+
+   Local $topLeft       = TranslateCoords($PROGRESSION_TOP_LEFT[0], $PROGRESSION_TOP_LEFT[1])
+   Local $bottomRight   = TranslateCoords($PROGRESSION_BOTTOM_RIGHT[0], $PROGRESSION_BOTTOM_RIGHT[1])
+
+   Local $left    = $topLeft[0]
+   Local $top     = $topLeft[1]
+   Local $right   = $bottomRight[0]
+   Local $bottom  = $bottomRight[1]
+
+   Local $coord = ColorSearch($left, $top, $right, $bottom, $PROGRESSION_COLOR, 10)
+
+   ;Didn't find progression mode, turn it on!
+	If Not IsArray($coord) Then
+	  Send("a")
+   EndIf
 EndFunc
 
 Func ClickInKillZone($count=1)
@@ -116,13 +138,15 @@ Func ClickInKillZone($count=1)
 EndFunc
 
 Func TryToLevel($hero)
-   If CanLevel($hero) Then
+   Local $levelled = False
+   While CanLevel($hero)
       LevelUp($hero, 1)
       ClickInKillZone()
-      Return True
-   EndIf
+	  $levelled = True
+   Wend
+
    ClickInKillZone()
-   Return False
+   Return $levelled
 EndFunc
 
 Func TryToLevelBy10($hero)
@@ -149,13 +173,16 @@ Func CanLevel($hero)
    Local $top     = $topLeft[1]
    Local $right   = $bottomRight[0]
    Local $bottom  = $bottomRight[1]
+   For $cannotBuyColor in $CANNOT_BUY_COLORS
+	  Local $coord = ColorSearch($left, $top, $right, $bottom, $cannotBuyColor, 40)
 
-   Local $coord = ColorSearch($left, $top, $right, $bottom, $CANNOT_BUY_COLOR, 40)
+	  ;Found the CANNOT_BUY_COLOR, cannot buy this amount
+	  If IsArray($coord) Then
+		 Return False
+	  EndIf
+   Next
 
-   ;Found the CANNOT_BUY_COLOR, cannot buy this amount
-   If IsArray($coord) Then
-     Return False
-   EndIf
+
    Return True
 EndFunc
 
@@ -218,7 +245,10 @@ EndFunc
 ; Scroll to a given hero page
 ; @param {Int} $page
 Func ScrollToPage($p)
-   Click($SCROLL_TOP[0], $PAGE_SCROLL[$p])
+   If $g_page <> $p Then
+	  Click($SCROLL_TOP[0], $PAGE_SCROLL[$p])
+	  $g_page = $p
+   EndIf
 EndFunc
 
 Func ScrollToHero($hero)
@@ -394,7 +424,8 @@ Func Toggle_Pause()
      While $g_paused And $g_run
        Sleep(100)
        ToolTip("Paused", 0, 0)
-     WEnd
+	WEnd
+	$g_page = -1
      ToolTip("")
 EndFunc
 
