@@ -262,12 +262,12 @@ EndFunc
 ; @param {Int} $top
 ; @param {Int} $right
 ; @param {Int} $bottom
-; @return 
+; @return {Array<Int x1, Int y1, Int x2, Int y2>}
 Func NewPixelRange($left, $top, $right, $bottom)
    Local $range[] = [$left, $top, $right, $bottom]
 EndFunc
 
-; Test is a color exists in a given board pixel range
+; Tests if a color exists in a given board pixel range
 ; @param {Array<Int x1, Int y1, Int x2, Int y2>} $range
 ; @param {Hex|Int} $color
 ; @param {Int} [$variance]
