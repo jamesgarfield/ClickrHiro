@@ -248,8 +248,6 @@ Func FindBoard()
    Static Local $lastHeight = 0
    Static Local $lastCoord[] = [0, 0]
 
-   WinActivate($WINDOW)
-
    Local $poz = WinGetPos($WINDOW)
 
    Local $boardLeftX = $poz[0]
