@@ -25,8 +25,7 @@ Global Const $MOUSE_SPEED = 3
    Global Const $HERO_ROW_Y[] = [224, 330, 436, 542]
 
    ;Farm Mode Positioning
-   Global Const $PROGRESSION_TOP_LEFT[] = [1104, 200]
-   Global Const $PROGRESSION_BOTTOM_RIGHT[] = [1115, 208]
+   Global Const $PROGRESSION_PIXEL_RANGE[] = NewPixelRange[1104, 200, 1115, 208]
 ;End of Pixels
 
 ;Used to find the game board within the browser window
@@ -114,19 +113,11 @@ Func Main()
 EndFunc
 
 Func EnableProgression()
-
-   Local $topLeft       = TranslateCoords($PROGRESSION_TOP_LEFT[0], $PROGRESSION_TOP_LEFT[1])
-   Local $bottomRight   = TranslateCoords($PROGRESSION_BOTTOM_RIGHT[0], $PROGRESSION_BOTTOM_RIGHT[1])
-
-   Local $left    = $topLeft[0]
-   Local $top     = $topLeft[1]
-   Local $right   = $bottomRight[0]
-   Local $bottom  = $bottomRight[1]
-
-   Local $coord = ColorSearch($left, $top, $right, $bottom, $PROGRESSION_COLOR, 10)
+   
+   Local $range = $PROGRESSION_PIXEL_RANGE
 
    ;Didn't find progression mode, turn it on!
-    If Not IsArray($coord) Then
+   If Not BoardRangeContainsColor($range, $PROGRESSION_COLOR, 10) Then
       Send("a")
    EndIf
 EndFunc
