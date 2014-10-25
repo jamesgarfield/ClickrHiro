@@ -35,7 +35,7 @@ Global Const $TOP_EDGE_COLOR = 0xBB7A19
 Global Const $TOP_OFFSET = -3
 
 Global Const $CANNOT_BUY_COLORS[] = [0xFE8743, 0x7E4321]
-Global Const $PROGRESSION_COLOR = 0xF5FCFF
+Global Const $PROGRESSION_COLOR = 0xFF0000
 
 
 ;HeroEnum
@@ -126,7 +126,7 @@ Func EnableProgression()
    Local $coord = ColorSearch($left, $top, $right, $bottom, $PROGRESSION_COLOR, 10)
 
    ;Didn't find progression mode, turn it on!
-    If Not IsArray($coord) Then
+    If IsArray($coord) Then
       Send("a")
    EndIf
 EndFunc
