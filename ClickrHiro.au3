@@ -90,7 +90,7 @@ Global Const $KEY_ACTION[3][2] = _
 Global $g_run = True
 Global $g_paused = False
 Global $g_page = -1
-HotKeySet("^{Pause}", "Toggle_Pause")
+HotKeySet("^{PAUSE}", "Toggle_Pause")
 
 Main()
 
