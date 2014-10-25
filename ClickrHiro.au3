@@ -6,7 +6,7 @@ Global Const $VERSION = "0.1.0"
 Global Const $DEBUG = False
 
 Global Const $WINDOW = "Clicker Heroes"
-Global Const $CLICK_DELAY = 5
+Global Const $CLICK_DELAY = 2
 Global Const $MOUSE_SPEED = 3
 
 ;Pixels Go Here
