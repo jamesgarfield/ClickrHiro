@@ -158,18 +158,16 @@ Func CanLevel($hero)
 
    Local $row = $HERO_BUTTON[$hero][1]
 
-   Local $topLeft       = TranslateCoords($HERO_ROW_X - 20, $HERO_ROW_Y[$row] - 20)
-   Local $bottomRight   = TranslateCoords($HERO_ROW_X + 20, $HERO_ROW_Y[$row] + 20)
+   Local Const $SEARCH_RADIUS = 20
 
-   Local $left    = $topLeft[0]
-   Local $top     = $topLeft[1]
-   Local $right   = $bottomRight[0]
-   Local $bottom  = $bottomRight[1]
+   Local $range = NewPixelRange( $HERO_ROW_X - $SEARCH_RADIUS, _
+                              $HERO_ROW_Y[$row] - $SEARCH_RADIUS, _
+                              $HERO_ROW_X + $SEARCH_RADIUS, _ 
+                              $HERO_ROW_Y[$row] + $SEARCH_RADIUS)
+
    For $cannotBuyColor in $CANNOT_BUY_COLORS
-      Local $coord = ColorSearch($left, $top, $right, $bottom, $cannotBuyColor, 40)
-
       ;Found the CANNOT_BUY_COLOR, cannot buy this amount
-      If IsArray($coord) Then
+      If BoardRangeContainsColor($range, $cannotBuyColor, 40) Then
          Return False
       EndIf
    Next
