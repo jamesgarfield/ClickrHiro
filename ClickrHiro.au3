@@ -84,7 +84,7 @@ Global Const $KEY_ACTION[3][2] = _
 
 Global $g_run = True
 Global $g_paused = False
-HotKeySet("^{PAUSE}", "Toggle_Pause")
+HotKeySet("^{PAUSE}", "Toggle_Pause")     ;Ctrl+Pause
 HotKeySet("+!{END}", "Shut_Down")         ;Alt+Shift+End
 
 Main()
