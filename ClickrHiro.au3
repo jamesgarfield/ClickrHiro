@@ -268,6 +268,15 @@ Func Click($x, $y, $count=1)
    Next
 EndFunc
 
+; Create a Pixel Range array
+; @param {Int} $left
+; @param {Int} $top
+; @param {Int} $right
+; @param {Int} $bottom
+; @return 
+Func NewPixelRange($left, $top, $right, $bottom)
+   Local $range[] = [$left, $top, $right, $bottom]
+EndFunc
 
 ; Test is a color exists in a given board pixel range
 ; @param {Array<Int x1, Int y1, Int x2, Int y2>} $range
