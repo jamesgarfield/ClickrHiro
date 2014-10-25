@@ -414,6 +414,7 @@ Func Toggle_Pause()
        Sleep(100)
        ToolTip("Paused", 0, 0)
      WEnd
+     WinActivate($WINDOW)
      ToolTip("")
 EndFunc
 
