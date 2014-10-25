@@ -268,6 +268,38 @@ Func Click($x, $y, $count=1)
    Next
 EndFunc
 
+
+; Test is a color exists in a given board pixel range
+; @param {Array<Int x1, Int y1, Int x2, Int y2>} $range
+; @param {Hex|Int} $color
+; @param {Int} [$variance]
+; @return {Boolean}
+Func BoardRangeContainsColor($range, $color, $variance=0)
+   Local $coord = BoardSearch($topLeft[0], $topLeft[1], $bottomRight[0], $bottomRight[1], $color, $variance)
+   Return IsArray($coord)
+EndFunc
+
+; Search the game board for a color in a given pixel range
+; @param {Int} $left
+; @param {Int} $top
+; @param {Int} $right
+; @param {Int} $bottom
+; @param {Int|Hex} $color
+; @param {Int} [$variance]
+;
+; @return {Array<Int,Int>}
+Func BoardSearch($left, $top, $right, $bottom, $color, $variance=0)
+   Local $topLeft       = TranslateCoords($left, $top)
+   Local $bottomRight   = TranslateCoords($right, $bottom)
+
+   $left    = $topLeft[0]
+   $top     = $topLeft[1]
+   $right   = $bottomRight[0]
+   $bottom  = $bottomRight[1]
+   
+   Return ColorSearch($left, $top, $right, $bottom, $color, $variance)
+EndFunc
+
 ; Find the game board within the browser window
 ; @return {Array<Int,Int>}
 Func FindBoard()
