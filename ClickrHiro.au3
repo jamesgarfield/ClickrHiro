@@ -103,7 +103,7 @@ Func Main()
    While $g_run
      If Mod($cnt, 60) == 0 Then
        Map(TryToLevelBy25, $levelingHeros)
-	   EnableProgression()
+       EnableProgression()
      EndIf
 
      ClickInKillZone(40)
@@ -125,8 +125,8 @@ Func EnableProgression()
    Local $coord = ColorSearch($left, $top, $right, $bottom, $PROGRESSION_COLOR, 10)
 
    ;Didn't find progression mode, turn it on!
-	If Not IsArray($coord) Then
-	  Send("a")
+    If Not IsArray($coord) Then
+      Send("a")
    EndIf
 EndFunc
 
@@ -142,7 +142,7 @@ Func TryToLevel($hero)
    While CanLevel($hero)
       LevelUp($hero, 1)
       ClickInKillZone()
-	  $levelled = True
+      $levelled = True
    Wend
 
    ClickInKillZone()
@@ -174,12 +174,12 @@ Func CanLevel($hero)
    Local $right   = $bottomRight[0]
    Local $bottom  = $bottomRight[1]
    For $cannotBuyColor in $CANNOT_BUY_COLORS
-	  Local $coord = ColorSearch($left, $top, $right, $bottom, $cannotBuyColor, 40)
+      Local $coord = ColorSearch($left, $top, $right, $bottom, $cannotBuyColor, 40)
 
-	  ;Found the CANNOT_BUY_COLOR, cannot buy this amount
-	  If IsArray($coord) Then
-		 Return False
-	  EndIf
+      ;Found the CANNOT_BUY_COLOR, cannot buy this amount
+      If IsArray($coord) Then
+         Return False
+      EndIf
    Next
 
 
@@ -246,8 +246,8 @@ EndFunc
 ; @param {Int} $page
 Func ScrollToPage($p)
    If $g_page <> $p Then
-	  Click($SCROLL_TOP[0], $PAGE_SCROLL[$p])
-	  $g_page = $p
+      Click($SCROLL_TOP[0], $PAGE_SCROLL[$p])
+      $g_page = $p
    EndIf
 EndFunc
 
@@ -424,9 +424,9 @@ Func Toggle_Pause()
      While $g_paused And $g_run
        Sleep(100)
        ToolTip("Paused", 0, 0)
-	WEnd
-	$g_page = -1
-     ToolTip("")
+    WEnd
+    $g_page = -1
+    ToolTip("")
 EndFunc
 
 Func HexStr($h)
