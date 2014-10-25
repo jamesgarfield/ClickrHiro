@@ -241,6 +241,13 @@ EndFunc
 ; Find the game board within the browser window
 ; @return {Array<Int,Int>}
 Func FindBoard()
+   
+   Static Local $lastLeftX = 0
+   Static Local $lastTopY = 0
+   Static Local $lastWidth = 0
+   Static Local $lastHeight = 0
+   Static Local $lastCoord[] = [0, 0]
+
    WinActivate($WINDOW)
 
    Local $poz = WinGetPos($WINDOW)
@@ -249,6 +256,18 @@ Func FindBoard()
    Local $boardTopY = $poz[1]
    Local $width = $poz[2]
    Local $height = $poz[3]
+
+   If $boardLeftX = $lastLeftX And _
+      $boardTopY  = $lastTopY And _
+      $width      = $lastWidth And _
+      $height     = $lastHeight Then
+      Return $lastCoord
+   EndIf
+
+   $lastLeftX = $boardLeftX
+   $lastTopY = $boardTopY
+   $lastWidth = $width
+   $lastHeight = $height
 
    Local $leftCutoff =  $boardLeftX + Int($width/2)
    Local $topCutoff =  $boardTopY + Int($height/2)
@@ -259,8 +278,9 @@ Func FindBoard()
    Local $left = ColorSearch($boardLeftX, $leftYSearchPos, $leftCutoff, $leftYSearchPos, $LEFT_EDGE_COLOR, 20)
    Local $top = ColorSearch($topXSearchPos, $boardTopY, $topXSearchPos, $topCutoff, $TOP_EDGE_COLOR, 20)
 
-   Local $coord[] = [$left[0], $top[1] + $TOP_OFFSET]
-   Return $coord
+   $lastCoord[0] = $left[0]
+   $lastCoord[1] = $top[1] + $TOP_OFFSET
+   Return $lastCoord
 EndFunc
 
 ; Search for a color in a given pixel range
