@@ -1,7 +1,7 @@
 #include <MsgBoxConstants.au3>
 #include <Array.au3>
 
-Global Const $VERSION = "0.2.1"
+Global Const $VERSION = "0.2.2"
 
 Global Const $DEBUG = False
 
