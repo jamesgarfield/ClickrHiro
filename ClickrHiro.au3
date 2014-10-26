@@ -295,6 +295,7 @@ EndFunc
 ; @return {Array<Int x1, Int y1, Int x2, Int y2>}
 Func NewPixelRange($left, $top, $right, $bottom)
    Local $range[] = [$left, $top, $right, $bottom]
+   Return $range
 EndFunc
 
 ; Tests if a color exists in a given board pixel range
