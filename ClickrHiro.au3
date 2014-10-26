@@ -290,10 +290,16 @@ EndFunc
 ; Create a Pixel Range array
 ; @param {Int} $left
 ; @param {Int} $top
-; @param {Int} $right
-; @param {Int} $bottom
+; @param {Int} [$right]
+; @param {Int} [$bottom]
 ; @return {Array<Int x1, Int y1, Int x2, Int y2>}
-Func NewPixelRange($left, $top, $right, $bottom)
+Func NewPixelRange($left, $top, $right=Null, $bottom=Null)
+   If $right == Null Then
+      $right = $left
+   EndIf
+   If $bottom == Null Then
+      $bottom = $top
+   EndIf
    Local $range[] = [$left, $top, $right, $bottom]
    Return $range
 EndFunc
