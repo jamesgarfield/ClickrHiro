@@ -5,7 +5,7 @@ Global Const $VERSION = "0.2.1"
 
 Global Const $DEBUG = False
 
-Global Const $WINDOW = "Clicker Heroes"
+Global Const $WINDOW = "Lvl"
 Global Const $CLICK_DELAY = 3
 Global Const $MOUSE_SPEED = 3
 
