@@ -136,11 +136,8 @@ Func PerformCooldowns()
 EndFunc
 
 Func EnableProgression()
-   
-   Local $range = $PROGRESSION_PIXEL_RANGE
-
    ;Didn't find progression mode, turn it on!
-   If BoardRangeContainsColor($range, $PROGRESSION_COLOR, 10) Then
+   If Not ProgressionEnabled() Then
       Send("a")
    EndIf
 EndFunc
