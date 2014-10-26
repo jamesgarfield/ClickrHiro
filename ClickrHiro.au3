@@ -92,7 +92,6 @@ Global Const $KEY_ACTION[3][2] = _
 
 Global $g_run = True
 
-Global $g_page = -1
 HotKeySet("^{PAUSE}", "Toggle_Pause")     ;Ctrl+Pause
 HotKeySet("+!{END}", "Shut_Down")         ;Alt+Shift+End
 
@@ -260,9 +259,10 @@ EndFunc
 ; Scroll to a given hero page
 ; @param {Int} $page
 Func ScrollToPage($p)
-   If $g_page <> $p Then
+   Static Local $current_page = -1
+   If $current_page <> $p Then
       Click($SCROLL_TOP[0], $PAGE_SCROLL[$p])
-      $g_page = $p
+      $current_page = $p
    EndIf
 EndFunc
 
