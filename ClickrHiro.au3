@@ -6,6 +6,7 @@ Global Const $VERSION = "0.2.0"
 Global Const $DEBUG = False
 
 Global Const $WINDOW = "Clicker Heroes"
+Global Const $CLICK_DELAY = 3
 Global Const $MOUSE_SPEED = 3
 
 ;Pixels Go Here
@@ -118,27 +119,27 @@ Func Main()
 EndFunc
 
 Func PerformCooldowns()
-	Local $cd_index = 1
-	Local $cooldowns_ready[10] = []
+   Local $cd_index = 1
+   Local $cooldowns_ready[10] = []
    For $y = 0 To $COOLDOWN_Y_OFFSET * 8 Step +$COOLDOWN_Y_OFFSET
-	  Local $coords = TranslateCoords($TOP_COOLDOWN[0], $y + $TOP_COOLDOWN[1])
-	  Local $color = PixelGetColor($coords[0], $coords[1])
+      Local $coords = TranslateCoords($TOP_COOLDOWN[0], $y + $TOP_COOLDOWN[1])
+      Local $color = PixelGetColor($coords[0], $coords[1])
 
-	  if $color == $COOLDOWN_COLOR Then
-		 $cooldowns_ready[$cd_index] = False
-	  Else
-		 $cooldowns_ready[$cd_index] = True
-	  EndIf
-	  $cd_index += 1
+      if $color == $COOLDOWN_COLOR Then
+         $cooldowns_ready[$cd_index] = False
+      Else
+         $cooldowns_ready[$cd_index] = True
+      EndIf
+      $cd_index += 1
    Next
 
    If $cooldowns_ready[6] Then
-	  Send("123457")
-	  If $cooldowns_ready[8] And $cooldowns_ready[9] Then
-		 Send("869")
-	  EndIf
+      Send("123457")
+      If $cooldowns_ready[8] And $cooldowns_ready[9] Then
+         Send("869")
+      EndIf
    ElseIf $cooldowns_ready[8] And $cooldowns_ready[9] Then
-	  Send("89")
+      Send("89")
    EndIf
 EndFunc
 
@@ -368,7 +369,7 @@ Func WithKeyPress($key, $f, $arg = Null)
    Local $result
 
    Send($KEY_ACTION[$key][0])
-   Sleep(100)  ;Sometimes you need the delay to be sure the color has changed
+   Sleep(400)  ;Sometimes you need the delay to be sure the color has changed
    If $arg == Null Then
     $result = $f()
    Else
