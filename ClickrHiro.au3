@@ -90,7 +90,6 @@ Global Const $KEY_ACTION[3][2] = _
                ["{SHIFTDOWN}", "{SHIFTUP}"], _
                ["{z down}", "{z up}"]]
 
-Global $g_run = True
 
 HotKeySet("^{PAUSE}", "Toggle_Pause")     ;Ctrl+Pause
 HotKeySet("+!{END}", "Shut_Down")         ;Alt+Shift+End
@@ -103,7 +102,7 @@ Func Main()
 
    Local $levelingHeros[] = [$BRITTANY, $IVAN, $TREEBEAST, $SAMURAI, $SEER]
 
-   While $g_run
+   While RunBot()
       If Mod($cnt, 30) == 0 Then
          Map(TryToLevelBy25, $levelingHeros)
          EnableProgression()
@@ -513,7 +512,7 @@ EndFunc
 
 Func Toggle_Pause()
    Paused(Not Paused())
-   While Paused()
+   While Paused() And RunBot()
       Sleep(100)
       ToolTip("Paused", 0, 0)
    WEnd
@@ -522,10 +521,20 @@ Func Toggle_Pause()
    $g_page = -1
 EndFunc
 
+Func RunBot($run=Null)
+   Static Local $is_running = True
+
+   If $run == Null Then
+      Return $is_running
+   EndIf
+
+   $is_running = $run
+   Return $is_running
+EndFunc
+
 Func Shut_Down()
-    $g_run = False
-    $g_page = -1
-    ToolTip("")
+    RunBot(false)
+    ToolTip("Shutting Down")
 EndFunc
 
 Func HexStr($h)
