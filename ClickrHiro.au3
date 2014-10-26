@@ -129,20 +129,14 @@ EndFunc
 
 Func PerformCooldowns()
    Local $cd_index = 1
-   Local $cooldowns_ready[10] = []
-   For $y = 0 To $COOLDOWN_Y_OFFSET * 8 Step +$COOLDOWN_Y_OFFSET
-      Local $range = NewPixelRange($TOP_COOLDOWN[0], $y + $TOP_COOLDOWN[1])
-      
-      $cooldowns_ready[$cd_index] = BoardRangeContainsColor($range, $COOLDOWN_COLOR)
-      $cd_index += 1
-   Next
-
-   If $cooldowns_ready[6] Then
+   Local $cooldowns_ready = Map(SkillEnabled, Range(9))
+   
+   If $cooldowns_ready[$DARK_RITUAL] Then
       Send("123457")
-      If $cooldowns_ready[8] And $cooldowns_ready[9] Then
+      If $cooldowns_ready[$ENERGIZE] And $cooldowns_ready[$RELOAD] Then
          Send("869")
       EndIf
-   ElseIf $cooldowns_ready[8] And $cooldowns_ready[9] Then
+   ElseIf $cooldowns_ready[$ENERGIZE] And $cooldowns_ready[$RELOAD] Then
       Send("89")
    EndIf
 EndFunc
