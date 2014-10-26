@@ -29,7 +29,7 @@ Global Const $MOUSE_SPEED = 3
    Global Const $HERO_ROW_Y[] = [224, 330, 436, 542]
 
    ;Farm Mode Positioning
-   Global Const $PROGRESSION_PIXEL_RANGE[] = NewPixelRange[1104, 200, 1115, 208]
+   Global Const $PROGRESSION_PIXEL_RANGE = NewPixelRange(1104, 200, 1115, 208)
 ;End of Pixels
 
 ;Used to find the game board within the browser window
