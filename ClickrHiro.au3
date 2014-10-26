@@ -79,6 +79,18 @@ Global Const $HERO_BUTTON[26][2] = _
                [5,0], [5,1], [5,2], [5,3], _    ;Beast, Ahtena, Aphro, Shina
                              [6,2], [6,3]]      ;Grant, FrostLeaf
 
+;Skills Enum
+Global Enum $CLICKSTORM, _
+            $POWERSURGE, _
+            $LUCKY_STRIKES, _
+            $METAL_DETECTOR, _
+            $GOLDEN_CLICKS, _
+            $DARK_RITUAL, _
+            $SUPER_CLICKS, _
+            $ENERGIZE, _
+            $RELOAD
+
+
 
 ;Key Press
 Global Enum $KEY_CTRL, _
@@ -133,6 +145,11 @@ Func PerformCooldowns()
    ElseIf $cooldowns_ready[8] And $cooldowns_ready[9] Then
       Send("89")
    EndIf
+EndFunc
+
+Func SkillEnabled($skill)
+   Local $range = NewPixelRange($TOP_COOLDOWN[0], $TOP_COOLDOWN[1] + ($skill * $COOLDOWN_Y_OFFSET))
+   Return Not BoardRangeContainsColor($range, $COOLDOWN_COLOR)
 EndFunc
 
 Func EnableProgression()
