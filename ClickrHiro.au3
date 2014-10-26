@@ -91,7 +91,7 @@ Global Const $KEY_ACTION[3][2] = _
                ["{z down}", "{z up}"]]
 
 Global $g_run = True
-Global $g_paused = False
+
 Global $g_page = -1
 HotKeySet("^{PAUSE}", "Toggle_Pause")     ;Ctrl+Pause
 HotKeySet("+!{END}", "Shut_Down")         ;Alt+Shift+End
@@ -500,15 +500,26 @@ Func Range($start, $end=Null, $step = 1)
    Return $r
 EndFunc
 
+Func Paused($pause=Null)
+   Static Local $is_paused = False
+
+   If $pause == Null Then
+      Return $is_paused
+   EndIf
+
+   $is_paused = $pause
+   Return $is_paused
+EndFunc
+
 Func Toggle_Pause()
-     $g_paused = Not $g_paused
-     While $g_paused And $g_run
-       Sleep(100)
-       ToolTip("Paused", 0, 0)
-    WEnd
-    WinActivate($WINDOW)
-    $g_page = -1
-    ToolTip("")
+   Paused(Not Paused())
+   While Paused()
+      Sleep(100)
+      ToolTip("Paused", 0, 0)
+   WEnd
+   ToolTip("")
+   WinActivate($WINDOW)
+   $g_page = -1
 EndFunc
 
 Func Shut_Down()
