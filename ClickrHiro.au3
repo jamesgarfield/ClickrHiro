@@ -121,14 +121,9 @@ Func PerformCooldowns()
    Local $cd_index = 1
    Local $cooldowns_ready[10] = []
    For $y = 0 To $COOLDOWN_Y_OFFSET * 8 Step +$COOLDOWN_Y_OFFSET
-      Local $coords = TranslateCoords($TOP_COOLDOWN[0], $y + $TOP_COOLDOWN[1])
-      Local $color = PixelGetColor($coords[0], $coords[1])
-
-      if $color == $COOLDOWN_COLOR Then
-         $cooldowns_ready[$cd_index] = False
-      Else
-         $cooldowns_ready[$cd_index] = True
-      EndIf
+      Local $range = NewPixelRange($TOP_COOLDOWN[0], $y + $TOP_COOLDOWN[1])
+      
+      $cooldowns_ready[$cd_index] = BoardRangeContainsColor($range, $COOLDOWN_COLOR)
       $cd_index += 1
    Next
 
