@@ -29,8 +29,7 @@ Global Const $MOUSE_SPEED = 3
    Global Const $HERO_ROW_Y[] = [224, 330, 436, 542]
 
    ;Farm Mode Positioning
-   Global Const $PROGRESSION_TOP_LEFT[] = [1104, 200]
-   Global Const $PROGRESSION_BOTTOM_RIGHT[] = [1115, 208]
+   Global Const $PROGRESSION_PIXEL_RANGE[] = NewPixelRange[1104, 200, 1115, 208]
 ;End of Pixels
 
 ;Used to find the game board within the browser window
@@ -144,19 +143,11 @@ Func PerformCooldowns()
 EndFunc
 
 Func EnableProgression()
-
-   Local $topLeft       = TranslateCoords($PROGRESSION_TOP_LEFT[0], $PROGRESSION_TOP_LEFT[1])
-   Local $bottomRight   = TranslateCoords($PROGRESSION_BOTTOM_RIGHT[0], $PROGRESSION_BOTTOM_RIGHT[1])
-
-   Local $left    = $topLeft[0]
-   Local $top     = $topLeft[1]
-   Local $right   = $bottomRight[0]
-   Local $bottom  = $bottomRight[1]
-
-   Local $coord = ColorSearch($left, $top, $right, $bottom, $PROGRESSION_COLOR, 10)
+   
+   Local $range = $PROGRESSION_PIXEL_RANGE
 
    ;Didn't find progression mode, turn it on!
-    If IsArray($coord) Then
+   If BoardRangeContainsColor($range, $PROGRESSION_COLOR, 10) Then
       Send("a")
    EndIf
 EndFunc
@@ -197,18 +188,16 @@ Func CanLevel($hero)
 
    Local $row = $HERO_BUTTON[$hero][1]
 
-   Local $topLeft       = TranslateCoords($HERO_ROW_X - 20, $HERO_ROW_Y[$row] - 20)
-   Local $bottomRight   = TranslateCoords($HERO_ROW_X + 20, $HERO_ROW_Y[$row] + 20)
+   Local Const $SEARCH_RADIUS = 20
 
-   Local $left    = $topLeft[0]
-   Local $top     = $topLeft[1]
-   Local $right   = $bottomRight[0]
-   Local $bottom  = $bottomRight[1]
+   Local $range = NewPixelRange( $HERO_ROW_X - $SEARCH_RADIUS, _
+                              $HERO_ROW_Y[$row] - $SEARCH_RADIUS, _
+                              $HERO_ROW_X + $SEARCH_RADIUS, _ 
+                              $HERO_ROW_Y[$row] + $SEARCH_RADIUS)
+
    For $cannotBuyColor in $CANNOT_BUY_COLORS
-      Local $coord = ColorSearch($left, $top, $right, $bottom, $cannotBuyColor, 40)
-
       ;Found the CANNOT_BUY_COLOR, cannot buy this amount
-      If IsArray($coord) Then
+      If BoardRangeContainsColor($range, $cannotBuyColor, 40) Then
          Return False
       EndIf
    Next
@@ -296,6 +285,47 @@ Func Click($x, $y, $count=1)
      MouseClick("left", $x + $board[0], $y + $board[1], 1, $MOUSE_SPEED)
      Sleep($CLICK_DELAY)
    Next
+EndFunc
+
+; Create a Pixel Range array
+; @param {Int} $left
+; @param {Int} $top
+; @param {Int} $right
+; @param {Int} $bottom
+; @return {Array<Int x1, Int y1, Int x2, Int y2>}
+Func NewPixelRange($left, $top, $right, $bottom)
+   Local $range[] = [$left, $top, $right, $bottom]
+EndFunc
+
+; Tests if a color exists in a given board pixel range
+; @param {Array<Int x1, Int y1, Int x2, Int y2>} $range
+; @param {Hex|Int} $color
+; @param {Int} [$variance]
+; @return {Boolean}
+Func BoardRangeContainsColor($range, $color, $variance=0)
+   Local $coord = BoardSearch($topLeft[0], $topLeft[1], $bottomRight[0], $bottomRight[1], $color, $variance)
+   Return IsArray($coord)
+EndFunc
+
+; Search the game board for a color in a given pixel range
+; @param {Int} $left
+; @param {Int} $top
+; @param {Int} $right
+; @param {Int} $bottom
+; @param {Int|Hex} $color
+; @param {Int} [$variance]
+;
+; @return {Array<Int,Int>}
+Func BoardSearch($left, $top, $right, $bottom, $color, $variance=0)
+   Local $topLeft       = TranslateCoords($left, $top)
+   Local $bottomRight   = TranslateCoords($right, $bottom)
+
+   $left    = $topLeft[0]
+   $top     = $topLeft[1]
+   $right   = $bottomRight[0]
+   $bottom  = $bottomRight[1]
+   
+   Return ColorSearch($left, $top, $right, $bottom, $color, $variance)
 EndFunc
 
 ; Find the game board within the browser window
