@@ -6,7 +6,6 @@ Global Const $VERSION = "0.2.0"
 Global Const $DEBUG = False
 
 Global Const $WINDOW = "Clicker Heroes"
-Global Const $CLICK_DELAY = 2
 Global Const $MOUSE_SPEED = 3
 
 ;Pixels Go Here
@@ -19,6 +18,10 @@ Global Const $MOUSE_SPEED = 3
 
    ;Page scrolling postions (4 heroes per page)
    Global Const $PAGE_SCROLL[] = [201, 304, 359, 419, 474, 529, 559]
+
+   ; Cooldowns Position
+   Global Const $TOP_COOLDOWN[] = [607, 169]
+   Global Const $COOLDOWN_Y_OFFSET = 51.75
 
    ;Level Button Positioning
    Global Const $HERO_ROW_X = 91
@@ -36,7 +39,7 @@ Global Const $TOP_OFFSET = -3
 
 Global Const $CANNOT_BUY_COLORS[] = [0xFE8743, 0x7E4321]
 Global Const $PROGRESSION_COLOR = 0xFF0000
-
+Global Const $COOLDOWN_COLOR = 0xFFFFFF
 
 ;HeroEnum
 Global Enum $CID, _
@@ -102,15 +105,41 @@ Func Main()
    Local $levelingHeros[] = [$BRITTANY, $IVAN, $TREEBEAST, $SAMURAI, $SEER]
 
    While $g_run
-     If Mod($cnt, 60) == 0 Then
-       Map(TryToLevelBy25, $levelingHeros)
-       EnableProgression()
-     EndIf
+      If Mod($cnt, 30) == 0 Then
+         Map(TryToLevelBy25, $levelingHeros)
+         EnableProgression()
+      EndIf
+      PerformCooldowns()
 
-     ClickInKillZone(40)
+      ClickInKillZone(40)
 
-     $cnt += 1
+      $cnt += 1
    WEnd
+EndFunc
+
+Func PerformCooldowns()
+	Local $cd_index = 1
+	Local $cooldowns_ready[10] = []
+   For $y = 0 To $COOLDOWN_Y_OFFSET * 8 Step +$COOLDOWN_Y_OFFSET
+	  Local $coords = TranslateCoords($TOP_COOLDOWN[0], $y + $TOP_COOLDOWN[1])
+	  Local $color = PixelGetColor($coords[0], $coords[1])
+
+	  if $color == $COOLDOWN_COLOR Then
+		 $cooldowns_ready[$cd_index] = False
+	  Else
+		 $cooldowns_ready[$cd_index] = True
+	  EndIf
+	  $cd_index += 1
+   Next
+
+   If $cooldowns_ready[6] Then
+	  Send("123457")
+	  If $cooldowns_ready[8] And $cooldowns_ready[9] Then
+		 Send("869")
+	  EndIf
+   ElseIf $cooldowns_ready[8] And $cooldowns_ready[9] Then
+	  Send("89")
+   EndIf
 EndFunc
 
 Func EnableProgression()
@@ -271,7 +300,7 @@ EndFunc
 ; Find the game board within the browser window
 ; @return {Array<Int,Int>}
 Func FindBoard()
-   
+
    Static Local $lastLeftX = 0
    Static Local $lastTopY = 0
    Static Local $lastWidth = 0
