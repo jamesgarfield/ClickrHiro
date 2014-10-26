@@ -304,7 +304,7 @@ EndFunc
 ; @param {Int} [$variance]
 ; @return {Boolean}
 Func BoardRangeContainsColor($range, $color, $variance=0)
-   Local $coord = BoardSearch($topLeft[0], $topLeft[1], $bottomRight[0], $bottomRight[1], $color, $variance)
+   Local $coord = BoardSearch($range[0], $range[1], $range[2], $range[3], $color, $variance)
    Return IsArray($coord)
 EndFunc
 
