@@ -142,6 +142,12 @@ Func EnableProgression()
    EndIf
 EndFunc
 
+Func EnableFarming()
+   If ProgressionEnabled() Then
+      Send("a")
+   EndIf
+EndFunc
+
 Func ProgressionEnabled()
    Local $range = $PROGRESSION_PIXEL_RANGE
    Local $color = $PROGRESSION_COLOR
