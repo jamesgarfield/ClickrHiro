@@ -145,6 +145,12 @@ Func EnableProgression()
    EndIf
 EndFunc
 
+Func ProgressionEnabled()
+   Local $range = $PROGRESSION_PIXEL_RANGE
+   Local $color = $PROGRESSION_COLOR
+   Return Not BoardRangeContainsColor($range, $color, 10)
+EndFunc
+
 Func ClickInKillZone($count=1)
    Local Const $x = Int(Floor($BOARD_WIDTH/4)*3)
    Local Const $y = Int(Floor($BOARD_HEIGHT/3)*2)
