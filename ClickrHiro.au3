@@ -4,7 +4,7 @@
 ; Set Options
 Opt("WinTitleMatchMode", 2) ; Set window title match for any substring instead of start with
 
-Global Const $VERSION = "0.3.0"
+Global Const $VERSION = "0.3.1"
 
 Global Const $DEBUG = False
 
