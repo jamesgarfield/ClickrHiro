@@ -130,6 +130,18 @@ Func Main()
    WEnd
 EndFunc
 
+; Levels a hero either by 100 or 25 until they cannot be leveled anymore
+; @param {HeroEnum} $hero
+; @return {Boolean} If the hero was leveled 
+Func MaxLevelHero($hero)
+   If TryToLevelBy100($hero) Or _
+      TryToLevelBy25($hero) Then
+      MaxLevelHero($hero)
+      Return True
+   EndIf
+   Return False
+EndFunc
+
 Func EnhancedDarkRitual()
    Local Enum  $PHASE_UNDETERMINED, _ ;Script just started
                $PHASE_NONE, _         ;Spam skills while waiting for EDR combo
