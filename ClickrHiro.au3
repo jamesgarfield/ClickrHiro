@@ -1,11 +1,14 @@
 #include <MsgBoxConstants.au3>
 #include <Array.au3>
 
+; Set Options
+Opt("WinTitleMatchMode", 2) ; Set window title match for any substring instead of start with
+
 Global Const $VERSION = "0.2.5"
 
 Global Const $DEBUG = False
 
-Global Const $WINDOW = "Lvl"
+Global Const $WINDOW = "Clicker Heroes"
 Global Const $CLICK_DELAY = 3
 Global Const $MOUSE_SPEED = 3
 
