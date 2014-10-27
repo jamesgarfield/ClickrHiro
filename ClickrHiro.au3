@@ -555,6 +555,11 @@ Func Every($f, ByRef $a)
    Next
    Return True
 EndFunc
+
+Func IsTrue($b)
+   Return $b == True
+EndFunc
+
 ; Create a range of numbers
 ; @param {Int} $start
 ; @param {Int} [$end]
