@@ -170,7 +170,7 @@ Func EnhancedDarkRitual()
             $skill[$GOLDEN_CLICKS] Then
                $phase = $PHASE_NONE
          EndIf
-   EndSelect
+   EndSwitch
 EndFunc
 
 Func PerformCooldowns()
