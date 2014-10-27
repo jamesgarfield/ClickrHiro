@@ -113,21 +113,50 @@ Main()
 
 Func Main()
    WinActivate($WINDOW)
-   Local $cnt = 0
-
+   
    Local $levelingHeros[] = [$BRITTANY, $IVAN, $TREEBEAST, $SAMURAI, $SEER]
+   PrimaryHeroes($levelingHeros)
 
+
+   Local $pipeline[] = [AlwaysWithTheClicking, LateGameLeveling, EnhancedDarkRitual]
+   Local $tick = 0
    While RunBot()
-      ClickInKillZone(40)
-
-      If Mod($cnt, 30) == 0 Then
-         Map(TryToLevelBy25, $levelingHeros)
-         EnableProgression()
-      EndIf
-      EnhancedDarkRitual()
-
-      $cnt += 1
+      For $step in $pipeline
+         $step($tick)
+      Next
+      $tick += 1
    WEnd
+EndFunc
+
+; Always clicks mobs for every tick count
+Func AlwaysWithTheClicking($tick)
+   ClickInKillZone(40)
+EndFunc
+
+; Get/Set the primary heroes to level during late game leveling
+; @param {Array<HeroEnum>} [$heroes]
+; @return {Array<HeroEnum>}
+Func PrimaryHeroes($heroes = Null)
+   Static $primary_heroes[] = []
+
+   If $heroes <> Null Then
+      $primary_heroes = $heroes
+   EndIf
+
+   Return $primary_heroes
+EndFunc
+
+; Levels all Primary Heroes and ensures that progression is enabled if any were leveled
+; @param {Int} $tick
+Func LateGameLeveling($tick)
+   If Mod($tick, 30) <> 0 Then
+      Return
+   EndIf
+
+   Local $leveledAHero = Any(IsTrue, Map(MaxLevelHero, PrimaryHeroes()))
+   If $leveledAHero Then
+      EnableProgression()
+   EndIf
 EndFunc
 
 ; Levels a hero either by 100 or 25 until they cannot be leveled anymore
@@ -142,7 +171,7 @@ Func MaxLevelHero($hero)
    Return False
 EndFunc
 
-Func EnhancedDarkRitual()
+Func EnhancedDarkRitual($tick)
    Local Enum  $PHASE_UNDETERMINED, _ ;Script just started
                $PHASE_NONE, _         ;Spam skills while waiting for EDR combo
                $PHASE_RELOAD, _       ;Wait for 2nd DR Reload
