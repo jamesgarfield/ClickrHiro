@@ -545,6 +545,16 @@ Func BindRMap($f, ByRef $arg, ByRef $a)
    Return $result
 EndFunc
 
+Func Every($f, ByRef $a)
+   Local $len = UBound($a)
+   
+   For $i = 0 To $len-1 Step 1
+      If Not $f($a[$i]) Then
+         Return False
+      EndIf
+   Next
+   Return True
+EndFunc
 ; Create a range of numbers
 ; @param {Int} $start
 ; @param {Int} [$end]
