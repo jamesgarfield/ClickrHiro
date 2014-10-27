@@ -1,13 +1,11 @@
 #include <MsgBoxConstants.au3>
 #include <Array.au3>
 
-Opt("WinTitleMatchMode", 2)
-
-Global Const $VERSION = "0.2.0"
+Global Const $VERSION = "0.2.5"
 
 Global Const $DEBUG = False
 
-Global Const $WINDOW = "Clicker Heroes"
+Global Const $WINDOW = "Lvl"
 Global Const $CLICK_DELAY = 3
 Global Const $MOUSE_SPEED = 3
 
@@ -31,8 +29,7 @@ Global Const $MOUSE_SPEED = 3
    Global Const $HERO_ROW_Y[] = [224, 330, 436, 542]
 
    ;Farm Mode Positioning
-   Global Const $PROGRESSION_TOP_LEFT[] = [1104, 200]
-   Global Const $PROGRESSION_BOTTOM_RIGHT[] = [1115, 208]
+   Global Const $PROGRESSION_PIXEL_RANGE = NewPixelRange(1104, 200, 1115, 208)
 ;End of Pixels
 
 ;Used to find the game board within the browser window
@@ -82,6 +79,18 @@ Global Const $HERO_BUTTON[26][2] = _
                [5,0], [5,1], [5,2], [5,3], _    ;Beast, Ahtena, Aphro, Shina
                              [6,2], [6,3]]      ;Grant, FrostLeaf
 
+;Skills Enum
+Global Enum $CLICKSTORM, _
+            $POWERSURGE, _
+            $LUCKY_STRIKES, _
+            $METAL_DETECTOR, _
+            $GOLDEN_CLICKS, _
+            $DARK_RITUAL, _
+            $SUPER_CLICKS, _
+            $ENERGIZE, _
+            $RELOAD
+
+
 
 ;Key Press
 Global Enum $KEY_CTRL, _
@@ -93,9 +102,7 @@ Global Const $KEY_ACTION[3][2] = _
                ["{SHIFTDOWN}", "{SHIFTUP}"], _
                ["{z down}", "{z up}"]]
 
-Global $g_run = True
-Global $g_paused = False
-Global $g_page = -1
+
 HotKeySet("^{PAUSE}", "Toggle_Pause")     ;Ctrl+Pause
 HotKeySet("+!{END}", "Shut_Down")         ;Alt+Shift+End
 
@@ -107,7 +114,7 @@ Func Main()
 
    Local $levelingHeros[] = [$BRITTANY, $IVAN, $TREEBEAST, $SAMURAI, $SEER]
 
-   While $g_run
+   While RunBot()
       ClickInKillZone(40)
 
       If Mod($cnt, 30) == 0 Then
@@ -122,45 +129,40 @@ EndFunc
 
 Func PerformCooldowns()
    Local $cd_index = 1
-   Local $cooldowns_ready[10] = []
-   For $y = 0 To $COOLDOWN_Y_OFFSET * 8 Step +$COOLDOWN_Y_OFFSET
-      Local $coords = TranslateCoords($TOP_COOLDOWN[0], $y + $TOP_COOLDOWN[1])
-      Local $color = PixelGetColor($coords[0], $coords[1])
-
-      if $color == $COOLDOWN_COLOR Then
-         $cooldowns_ready[$cd_index] = False
-      Else
-         $cooldowns_ready[$cd_index] = True
-      EndIf
-      $cd_index += 1
-   Next
-
-   If $cooldowns_ready[6] Then
+   Local $cooldowns_ready = Map(SkillEnabled, Range(9))
+   
+   If $cooldowns_ready[$DARK_RITUAL] Then
       Send("123457")
-      If $cooldowns_ready[8] And $cooldowns_ready[9] Then
+      If $cooldowns_ready[$ENERGIZE] And $cooldowns_ready[$RELOAD] Then
          Send("869")
       EndIf
-   ElseIf $cooldowns_ready[8] And $cooldowns_ready[9] Then
+   ElseIf $cooldowns_ready[$ENERGIZE] And $cooldowns_ready[$RELOAD] Then
       Send("89")
    EndIf
 EndFunc
 
+Func SkillEnabled($skill)
+   Local $range = NewPixelRange($TOP_COOLDOWN[0], $TOP_COOLDOWN[1] + ($skill * $COOLDOWN_Y_OFFSET))
+   Return Not BoardRangeContainsColor($range, $COOLDOWN_COLOR)
+EndFunc
+
 Func EnableProgression()
-
-   Local $topLeft       = TranslateCoords($PROGRESSION_TOP_LEFT[0], $PROGRESSION_TOP_LEFT[1])
-   Local $bottomRight   = TranslateCoords($PROGRESSION_BOTTOM_RIGHT[0], $PROGRESSION_BOTTOM_RIGHT[1])
-
-   Local $left    = $topLeft[0]
-   Local $top     = $topLeft[1]
-   Local $right   = $bottomRight[0]
-   Local $bottom  = $bottomRight[1]
-
-   Local $coord = ColorSearch($left, $top, $right, $bottom, $PROGRESSION_COLOR, 10)
-
    ;Didn't find progression mode, turn it on!
-    If IsArray($coord) Then
+   If Not ProgressionEnabled() Then
       Send("a")
    EndIf
+EndFunc
+
+Func EnableFarming()
+   If ProgressionEnabled() Then
+      Send("a")
+   EndIf
+EndFunc
+
+Func ProgressionEnabled()
+   Local $range = $PROGRESSION_PIXEL_RANGE
+   Local $color = $PROGRESSION_COLOR
+   Return Not BoardRangeContainsColor($range, $color, 10)
 EndFunc
 
 Func ClickInKillZone($count=1)
@@ -199,18 +201,16 @@ Func CanLevel($hero)
 
    Local $row = $HERO_BUTTON[$hero][1]
 
-   Local $topLeft       = TranslateCoords($HERO_ROW_X - 20, $HERO_ROW_Y[$row] - 20)
-   Local $bottomRight   = TranslateCoords($HERO_ROW_X + 20, $HERO_ROW_Y[$row] + 20)
+   Local Const $SEARCH_RADIUS = 20
 
-   Local $left    = $topLeft[0]
-   Local $top     = $topLeft[1]
-   Local $right   = $bottomRight[0]
-   Local $bottom  = $bottomRight[1]
+   Local $range = NewPixelRange( $HERO_ROW_X - $SEARCH_RADIUS, _
+                              $HERO_ROW_Y[$row] - $SEARCH_RADIUS, _
+                              $HERO_ROW_X + $SEARCH_RADIUS, _ 
+                              $HERO_ROW_Y[$row] + $SEARCH_RADIUS)
+
    For $cannotBuyColor in $CANNOT_BUY_COLORS
-      Local $coord = ColorSearch($left, $top, $right, $bottom, $cannotBuyColor, 40)
-
       ;Found the CANNOT_BUY_COLOR, cannot buy this amount
-      If IsArray($coord) Then
+      If BoardRangeContainsColor($range, $cannotBuyColor, 40) Then
          Return False
       EndIf
    Next
@@ -278,10 +278,11 @@ EndFunc
 ; Scroll to a given hero page
 ; @param {Int} $page
 Func ScrollToPage($p)
-   If $g_page <> $p Then
+   Static Local $current_page = -1
+   If $current_page <> $p Then
       Click($SCROLL_TOP[0], $PAGE_SCROLL[$p])
       Sleep(200)
-      $g_page = $p
+      $current_page = $p
    EndIf
 EndFunc
 
@@ -299,6 +300,54 @@ Func Click($x, $y, $count=1)
      MouseClick("left", $x + $board[0], $y + $board[1], 1, $MOUSE_SPEED)
      Sleep($CLICK_DELAY)
    Next
+EndFunc
+
+; Create a Pixel Range array
+; @param {Int} $left
+; @param {Int} $top
+; @param {Int} [$right]
+; @param {Int} [$bottom]
+; @return {Array<Int x1, Int y1, Int x2, Int y2>}
+Func NewPixelRange($left, $top, $right=Null, $bottom=Null)
+   If $right == Null Then
+      $right = $left
+   EndIf
+   If $bottom == Null Then
+      $bottom = $top
+   EndIf
+   Local $range[] = [$left, $top, $right, $bottom]
+   Return $range
+EndFunc
+
+; Tests if a color exists in a given board pixel range
+; @param {Array<Int x1, Int y1, Int x2, Int y2>} $range
+; @param {Hex|Int} $color
+; @param {Int} [$variance]
+; @return {Boolean}
+Func BoardRangeContainsColor($range, $color, $variance=0)
+   Local $coord = BoardSearch($range[0], $range[1], $range[2], $range[3], $color, $variance)
+   Return IsArray($coord)
+EndFunc
+
+; Search the game board for a color in a given pixel range
+; @param {Int} $left
+; @param {Int} $top
+; @param {Int} $right
+; @param {Int} $bottom
+; @param {Int|Hex} $color
+; @param {Int} [$variance]
+;
+; @return {Array<Int,Int>}
+Func BoardSearch($left, $top, $right, $bottom, $color, $variance=0)
+   Local $topLeft       = TranslateCoords($left, $top)
+   Local $bottomRight   = TranslateCoords($right, $bottom)
+
+   $left    = $topLeft[0]
+   $top     = $topLeft[1]
+   $right   = $bottomRight[0]
+   $bottom  = $bottomRight[1]
+   
+   Return ColorSearch($left, $top, $right, $bottom, $color, $variance)
 EndFunc
 
 ; Find the game board within the browser window
@@ -471,21 +520,42 @@ Func Range($start, $end=Null, $step = 1)
    Return $r
 EndFunc
 
+Func Paused($pause=Null)
+   Static Local $is_paused = False
+
+   If $pause == Null Then
+      Return $is_paused
+   EndIf
+
+   $is_paused = $pause
+   Return $is_paused
+EndFunc
+
 Func Toggle_Pause()
-     $g_paused = Not $g_paused
-     While $g_paused And $g_run
-       Sleep(100)
-       ToolTip("Paused", 0, 0)
-    WEnd
-    WinActivate($WINDOW)
-    $g_page = -1
-    ToolTip("")
+   Paused(Not Paused())
+   While Paused() And RunBot()
+      Sleep(100)
+      ToolTip("Paused", 0, 0)
+   WEnd
+   ToolTip("")
+   WinActivate($WINDOW)
+   $g_page = -1
+EndFunc
+
+Func RunBot($run=Null)
+   Static Local $is_running = True
+
+   If $run == Null Then
+      Return $is_running
+   EndIf
+
+   $is_running = $run
+   Return $is_running
 EndFunc
 
 Func Shut_Down()
-    $g_run = False
-    $g_page = -1
-    ToolTip("")
+    RunBot(false)
+    ToolTip("Shutting Down")
 EndFunc
 
 Func HexStr($h)
