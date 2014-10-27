@@ -120,7 +120,7 @@ Func Main()
 
    Local $pipeline[] = [AlwaysWithTheClicking, LateGameLeveling, EnhancedDarkRitual]
    Local $tick = 0
-   While RunBot()
+   While RunBot() And Not Paused()
       For $step in $pipeline
          $step($tick)
       Next
