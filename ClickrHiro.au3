@@ -240,15 +240,15 @@ Func TryToLevel($hero)
 EndFunc
 
 Func TryToLevelBy10($hero)
-   WithKeyPress($KEY_SHIFT, TryToLevel, $hero)
+   Return WithKeyPress($KEY_SHIFT, TryToLevel, $hero)
 EndFunc
 
 Func TryToLevelBy25($hero)
-   WithKeyPress($KEY_Z, TryToLevel, $hero)
+   Return WithKeyPress($KEY_Z, TryToLevel, $hero)
 EndFunc
 
 Func TryToLevelBy100($hero)
-   WithKeyPress($KEY_CTRL, TryToLevel, $hero)
+   Return WithKeyPress($KEY_CTRL, TryToLevel, $hero)
 EndFunc
 
 Func CanLevel($hero)
