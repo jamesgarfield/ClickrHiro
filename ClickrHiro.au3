@@ -124,16 +124,58 @@ Func Main()
          Map(TryToLevelBy25, $levelingHeros)
          EnableProgression()
       EndIf
-      PerformCooldowns()
+      EnhancedDarkRitual()
 
       $cnt += 1
    WEnd
 EndFunc
 
+Func EnhancedDarkRitual()
+   Local Enum  $PHASE_NONE, _       ;Spam skills while waiting for EDR combo
+               $PHASE_RELOAD, _     ;Wait for 2nd DR Reload
+               $PHASE_SKILLS, _     ;Spam Skills waiting for E&R
+               $PHASE_SUPER_GOLD    ;Wait for SuperGold run before restarting
+
+   Static Local $phase = $PHASE_NONE
+
+   Local $skill = Map(SkillEnabled, Range(9))
+
+   Switch $phase
+      Case $PHASE_NONE
+         Send("123457")
+         If $skill[$DARK_RITUAL] And _
+            $skill[$ENERGIZE] And _
+            $skill[$RELOAD] Then
+               Send("869")
+               $phase = $PHASE_RELOAD
+         EndIf
+
+      Case $PHASE_RELOAD
+         If $skill[$ENERGIZE] And _
+            $skill[$RELOAD] Then
+               Send("89")
+               $phase = $PHASE_SKILLS
+         EndIf
+
+      Case $PHASE_SKILLS
+         If $skill[$ENERGIZE] And _
+            $skill[$RELOAD] Then
+               $phase = $PHASE_SUPER_GOLD
+         Else
+            Send("123457")
+         EndIf
+
+      Case $PHASE_SUPER_GOLD
+         If Every(IsTrue, $skill) Then
+               $phase = $PHASE_NONE
+         EndIf
+   EndSwitch
+EndFunc
+
 Func PerformCooldowns()
    Local $cd_index = 1
    Local $cooldowns_ready = Map(SkillEnabled, Range(9))
-   
+
    If $cooldowns_ready[$DARK_RITUAL] Then
       Send("123457")
       If $cooldowns_ready[$ENERGIZE] And $cooldowns_ready[$RELOAD] Then
@@ -208,7 +250,7 @@ Func CanLevel($hero)
 
    Local $range = NewPixelRange( $HERO_ROW_X - $SEARCH_RADIUS, _
                               $HERO_ROW_Y[$row] - $SEARCH_RADIUS, _
-                              $HERO_ROW_X + $SEARCH_RADIUS, _ 
+                              $HERO_ROW_X + $SEARCH_RADIUS, _
                               $HERO_ROW_Y[$row] + $SEARCH_RADIUS)
 
    For $cannotBuyColor in $CANNOT_BUY_COLORS
@@ -349,7 +391,7 @@ Func BoardSearch($left, $top, $right, $bottom, $color, $variance=0)
    $top     = $topLeft[1]
    $right   = $bottomRight[0]
    $bottom  = $bottomRight[1]
-   
+
    Return ColorSearch($left, $top, $right, $bottom, $color, $variance)
 EndFunc
 
@@ -500,6 +542,21 @@ Func BindRMap($f, ByRef $arg, ByRef $a)
    Next
 
    Return $result
+EndFunc
+
+Func Every($f, ByRef $a)
+   Local $len = UBound($a)
+   
+   For $i = 0 To $len-1 Step 1
+      If Not $f($a[$i]) Then
+         Return False
+      EndIf
+   Next
+   Return True
+EndFunc
+
+Func IsTrue($b)
+   Return $b == True
 EndFunc
 
 ; Create a range of numbers
