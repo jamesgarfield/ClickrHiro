@@ -143,22 +143,22 @@ Func EnhancedDarkRitual()
    Switch $phase
       Case $PHASE_NONE
          Send("123457")
-         If $skill[$DARK_RITUAL] And
-            $skill[$ENERGIZE] And
+         If $skill[$DARK_RITUAL] And _
+            $skill[$ENERGIZE] And _
             $skill[$RELOAD] Then
                Send("869")
                $phase = $PHASE_RELOAD
          EndIf
 
       Case $PHASE_RELOAD
-         If $skill[$ENERGIZE] And
+         If $skill[$ENERGIZE] And _
             $skill[$RELOAD] Then
                Send("89")
                $phase = $PHASE_SKILLS
-         EndIf         
+         EndIf
 
       Case $PHASE_SKILLS
-         If $skill[$ENERGIZE] And
+         If $skill[$ENERGIZE] And _
             $skill[$RELOAD] Then
                $phase = $PHASE_SUPER_GOLD
          Else
@@ -166,7 +166,7 @@ Func EnhancedDarkRitual()
          EndIf
 
       Case $PHASE_SUPER_GOLD
-         If $skill[$SUPER_CLICKS] And
+         If $skill[$SUPER_CLICKS] And _
             $skill[$GOLDEN_CLICKS] Then
                $phase = $PHASE_NONE
          EndIf
@@ -176,7 +176,7 @@ EndFunc
 Func PerformCooldowns()
    Local $cd_index = 1
    Local $cooldowns_ready = Map(SkillEnabled, Range(9))
-   
+
    If $cooldowns_ready[$DARK_RITUAL] Then
       Send("123457")
       If $cooldowns_ready[$ENERGIZE] And $cooldowns_ready[$RELOAD] Then
@@ -251,7 +251,7 @@ Func CanLevel($hero)
 
    Local $range = NewPixelRange( $HERO_ROW_X - $SEARCH_RADIUS, _
                               $HERO_ROW_Y[$row] - $SEARCH_RADIUS, _
-                              $HERO_ROW_X + $SEARCH_RADIUS, _ 
+                              $HERO_ROW_X + $SEARCH_RADIUS, _
                               $HERO_ROW_Y[$row] + $SEARCH_RADIUS)
 
    For $cannotBuyColor in $CANNOT_BUY_COLORS
@@ -392,7 +392,7 @@ Func BoardSearch($left, $top, $right, $bottom, $color, $variance=0)
    $top     = $topLeft[1]
    $right   = $bottomRight[0]
    $bottom  = $bottomRight[1]
-   
+
    Return ColorSearch($left, $top, $right, $bottom, $color, $variance)
 EndFunc
 
