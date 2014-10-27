@@ -124,10 +124,53 @@ Func Main()
          Map(TryToLevelBy25, $levelingHeros)
          EnableProgression()
       EndIf
-      PerformCooldowns()
+      EnhancedDarkRitual()
 
       $cnt += 1
    WEnd
+EndFunc
+
+Func EnhancedDarkRitual()
+   Local Enum  $PHASE_NONE, _
+               $PHASE_RELOAD, _
+               $PHASE_SKILLS, _
+               $PHASE_SUPER_GOLD
+
+   Static Local $phase = $PHASE_NONE
+
+   Local Const $skill = Map(SkillEnabled, Range(9))
+
+   Select $phase
+      Case $PHASE_NONE
+         Send("123457")
+         If $skill[$DARK_RITUAL] And
+            $skill[$ENERGIZE] And
+            $skill[$RELOAD] Then
+               Send("869")
+               $phase = $PHASE_RELOAD
+         EndIf
+
+      Case $PHASE_RELOAD
+         If $skill[$ENERGIZE] And
+            $skill[$RELOAD] Then
+               Send("89")
+               $phase = $PHASE_SKILLS
+         EndIf         
+
+      Case $PHASE_SKILLS
+         If $skill[$ENERGIZE] And
+            $skill[$RELOAD] Then
+               $phase = $PHASE_SUPER_GOLD
+         Else
+            Send("123457")
+         EndIf
+
+      Case $PHASE_SUPER_GOLD
+         If $skill[$SUPER_CLICKS] And
+            $skill[$GOLDEN_CLICKS] Then
+               $phase = $PHASE_NONE
+         EndIf
+   EndSelect
 EndFunc
 
 Func PerformCooldowns()
