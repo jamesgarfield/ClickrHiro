@@ -138,7 +138,7 @@ Func EnhancedDarkRitual()
 
    Static Local $phase = $PHASE_NONE
 
-   Local Const $skill = Map(SkillEnabled, Range(9))
+   Local $skill = Map(SkillEnabled, Range(9))
 
    Switch $phase
       Case $PHASE_NONE
