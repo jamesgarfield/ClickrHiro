@@ -326,7 +326,7 @@ Func ScrollToPage($p)
    Static Local $current_page = -1
    If $current_page <> $p Then
       Click($SCROLL_TOP[0], $PAGE_SCROLL[$p])
-      Sleep(200)
+      Sleep(500)
       $current_page = $p
    EndIf
 EndFunc
