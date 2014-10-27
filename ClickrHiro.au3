@@ -193,6 +193,7 @@ Func EnhancedDarkRitual($tick)
          EndIf
 
       Case $PHASE_NONE
+         EnableProgression()
          Send("123457")
          If $skill[$DARK_RITUAL] And _
             $skill[$ENERGIZE] And _
@@ -213,6 +214,7 @@ Func EnhancedDarkRitual($tick)
             $skill[$RELOAD] Then
                $phase = $PHASE_SUPER_GOLD
          Else
+            EnableProgression()
             Send("123457")
          EndIf
 
