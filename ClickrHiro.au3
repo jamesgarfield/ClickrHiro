@@ -554,6 +554,7 @@ Func BindRMap($f, ByRef $arg, ByRef $a)
    Return $result
 EndFunc
 
+; Returns true if the provided function returns true for Every element of the array
 Func Every($f, ByRef $a)
    Local $len = UBound($a)
    
@@ -564,6 +565,20 @@ Func Every($f, ByRef $a)
    Next
    Return True
 EndFunc
+
+; Returns true if the provided function returns true for Any element of the array
+Func Any($f, ByRef $a)
+   Local $len = UBound($a)
+   
+   For $i = 0 To $len-1 Step 1
+      If $f($a[$i]) Then
+         Return True
+      EndIf
+   Next
+   Return False
+EndFunc
+
+
 
 Func IsTrue($b)
    Return $b == True
