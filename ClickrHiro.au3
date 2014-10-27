@@ -140,7 +140,7 @@ Func EnhancedDarkRitual()
 
    Local Const $skill = Map(SkillEnabled, Range(9))
 
-   Select $phase
+   Switch $phase
       Case $PHASE_NONE
          Send("123457")
          If $skill[$DARK_RITUAL] And
