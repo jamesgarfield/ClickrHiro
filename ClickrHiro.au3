@@ -1,6 +1,8 @@
 #include <MsgBoxConstants.au3>
 #include <Array.au3>
 
+Opt("WinTitleMatchMode", 2)
+
 Global Const $VERSION = "0.2.0"
 
 Global Const $DEBUG = False
@@ -106,13 +108,13 @@ Func Main()
    Local $levelingHeros[] = [$BRITTANY, $IVAN, $TREEBEAST, $SAMURAI, $SEER]
 
    While $g_run
+      ClickInKillZone(40)
+
       If Mod($cnt, 30) == 0 Then
          Map(TryToLevelBy25, $levelingHeros)
          EnableProgression()
       EndIf
       PerformCooldowns()
-
-      ClickInKillZone(40)
 
       $cnt += 1
    WEnd
@@ -278,6 +280,7 @@ EndFunc
 Func ScrollToPage($p)
    If $g_page <> $p Then
       Click($SCROLL_TOP[0], $PAGE_SCROLL[$p])
+      Sleep(200)
       $g_page = $p
    EndIf
 EndFunc
