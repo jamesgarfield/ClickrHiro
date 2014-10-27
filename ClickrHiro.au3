@@ -131,16 +131,26 @@ Func Main()
 EndFunc
 
 Func EnhancedDarkRitual()
-   Local Enum  $PHASE_NONE, _       ;Spam skills while waiting for EDR combo
-               $PHASE_RELOAD, _     ;Wait for 2nd DR Reload
-               $PHASE_SKILLS, _     ;Spam Skills waiting for E&R
-               $PHASE_SUPER_GOLD    ;Wait for SuperGold run before restarting
+   Local Enum  $PHASE_UNDETERMINED, _ ;Script just started
+               $PHASE_NONE, _         ;Spam skills while waiting for EDR combo
+               $PHASE_RELOAD, _       ;Wait for 2nd DR Reload
+               $PHASE_SKILLS, _       ;Spam Skills waiting for E&R
+               $PHASE_SUPER_GOLD      ;Wait for SuperGold run before restarting
 
-   Static Local $phase = $PHASE_NONE
+   Static Local $phase = $PHASE_UNDETERMINED
 
    Local $skill = Map(SkillEnabled, Range(9))
 
    Switch $phase
+      Case $PHASE_UNDETERMINED:
+         If Every(IsTrue, $skill) Then
+            $phase = $PHASE_NONE
+         ElseIf $skill[$DARK_RITUAL] Then
+            $phase = $PHASE_SKILLS
+         Else
+            $phase = $PHASE_RELOAD
+         EndIf
+
       Case $PHASE_NONE
          Send("123457")
          If $skill[$DARK_RITUAL] And _
