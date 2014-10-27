@@ -166,8 +166,7 @@ Func EnhancedDarkRitual()
          EndIf
 
       Case $PHASE_SUPER_GOLD
-         If $skill[$SUPER_CLICKS] And _
-            $skill[$GOLDEN_CLICKS] Then
+         If Every(IsTrue, $skills) Then
                $phase = $PHASE_NONE
          EndIf
    EndSwitch
