@@ -131,11 +131,11 @@ Func Main()
 EndFunc
 
 Func EnhancedDarkRitual()
-   Local Enum  $PHASE_NONE, _       ;Spam skills while waiting for EDR combo
-               $PHASE_RELOAD, _     ;Wait for 2nd DR Reload
-               $PHASE_SKILLS, _     ;Spam Skills waiting for E&R
-               $PHASE_SUPER_GOLD, _ ;Wait for SuperGold run before restarting
-               $PHASE_UNDETERMINED  ;Script just started
+   Local Enum  $PHASE_UNDETERMINED, _ ;Script just started
+               $PHASE_NONE, _         ;Spam skills while waiting for EDR combo
+               $PHASE_RELOAD, _       ;Wait for 2nd DR Reload
+               $PHASE_SKILLS, _       ;Spam Skills waiting for E&R
+               $PHASE_SUPER_GOLD      ;Wait for SuperGold run before restarting
 
    Static Local $phase = $PHASE_UNDETERMINED
 
