@@ -402,6 +402,146 @@ Func GetZone()
    Return Int(StringRegExpReplace($title, "[^0-9]", ""))
 EndFunc
 
+; See a specific hero, or all heroes, have reached their target level
+; @param {HeroEnum} [@hero] If omitted, returns if all targets are reached
+; @return {Boolean}
+Func TargetHeroLevelReached($hero = Null)
+   If $hero == Null Then
+      For $i In Range($FROSTLEAF+1)
+         If Not TargetHeroLevelReached($i) Then
+            Return False
+         EndIf
+      Next
+      Return True
+   Else
+      Local $target = TargetHeroLevel($hero)
+      Local $level = HeroLevel($hero)
+      Return $level >= $target
+   EndIf
+EndFunc
+
+Func LevelHeroTowardTarget($hero)
+   Local $level = HeroLevel($hero)
+   Local $target = TargetHeroLevel($hero)
+
+   If $level >= $target Then
+      Return False
+   EndIf
+
+   Local $diff = $target - $level
+   Switch $level
+      Case 0 To 50   
+         If GetZone() < 100 Then
+            Return LevelForTargetBy25Max($hero)
+         Else
+            Return LevelForTargetBy100Max($hero)
+         EndIf
+
+      Case 50 To 200
+         Return LevelForTargetBy25Or100($hero)
+
+      Case 200 To 1000
+         Return LevelForTargetBy100($hero)
+
+      Case Else
+         Return LevelForTargetBy25Or100($hero)
+   EndSwitch
+
+   Return False
+EndFunc
+
+; Leveling strategy that increments by 25 or 10
+; @param {HeroEnum} @hero
+; @return {Boolean} If the hero was leveled
+Func LevelForTargetBy25Max($hero)
+   Local $level = HeroLevel($hero)
+   Local $target = TargetHeroLevel($hero)
+   Local $diff = $target - $level
+
+   If $diff >= 25 And Mod($level, 25) == 0 And CanLevelBy25($hero) Then
+      LevelUp($hero, 25)
+      Return True
+   ElseIf $diff >= 10 And Mod($level, 10) == 0 And CanLevelBy10($hero) Then
+      LevelUp($hero, 10)
+      Return True
+   ElseIf (Mod($diff, 5) <> 0 Or $diff < 10) And CanLevel($hero) Then
+      LevelUp($hero, 1)
+      Return True
+   EndIf
+   Return False
+EndFunc
+
+; Leveling strategy that increments by 100, 25, or 10
+; @param {HeroEnum} @hero
+; @return {Boolean} If the hero was leveled
+Func LevelForTargetBy100Max($hero)
+   Local $level = HeroLevel($hero)
+   Local $target = TargetHeroLevel($hero)
+   Local $diff = $target - $level
+
+   If $diff >= 100 And Mod($level, 100) == 0 And CanLevelBy100($hero) Then
+      LevelUp($hero, 100)
+      Return True
+   ElseIf $diff >= 25 And Mod($level, 25) == 0 And CanLevelBy25($hero) Then
+      LevelUp($hero, 25)
+      Return True
+   ElseIf $diff >= 10 And Mod($level, 10) == 0 And CanLevelBy10($hero) Then
+      LevelUp($hero, 10)
+      Return True
+   ElseIf (Mod($diff, 5) <> 0 Or $diff < 10) And CanLevel($hero) Then
+      LevelUp($hero, 1)
+      Return True
+   EndIf
+   Return False
+EndFunc
+
+; Leveling strategy that prefers leveling in increments of 100 or 25
+; @param {HeroEnum} @hero
+; @return {Boolean} If the hero was leveled
+Func LevelForTargetBy25Or100($hero)
+   Local $level = HeroLevel($hero)
+   Local $target = TargetHeroLevel($hero)
+   Local $diff = $target - $level
+
+   If $diff >= 100 And Mod($level, 100) == 0 And CanLevelBy100($hero) Then
+      LevelUp($hero, 100)
+      Return True
+   ElseIf $diff >= 25 And Mod($level, 25) == 0 And CanLevelBy25($hero) Then
+      LevelUp($hero, 25)
+      Return True
+   ElseIf $diff >= 10 And Mod($level, 25) <> 0 And CanLevelBy10($hero) Then
+      ;Handles scnearios where the current level is not a proper multiple
+      LevelUp($hero, 10)
+      Return True
+   ElseIf (Mod($diff, 5) <> 0 Or $diff < 10)  And CanLevel($hero) Then
+      ;Handles scnearios where the current level is not a proper multiple
+      LevelUp($hero, 1)
+      Return True
+   EndIf
+   Return False
+EndFunc
+
+; Leveling strategy that prefers incrementing by 100
+; @param {HeroEnum} @hero
+; @return {Boolean} If the hero was leveled
+Func LevelForTargetBy100($hero)
+   Local $level = HeroLevel($hero)
+   Local $target = TargetHeroLevel($hero)
+   Local $diff = $target - $level
+
+   If $diff >= 100 And Mod($level, 100) == 0 And CanLevelBy100($hero) Then
+      LevelUp($hero, 100)
+      Return True
+   ElseIf $diff >= 25 And Mod($level, 100) <> 0 And CanLevelBy25($hero) Then
+      LevelUp($hero, 25)
+      Return True
+   ElseIf (Mod($diff, 5) <> 0 Or $diff < 10) And CanLevel($hero) Then
+      ;Handles scnearios where the current level is not a proper multiple
+      LevelUp($hero, 1)
+      Return True
+   EndIf
+   Return False
+EndFunc
 
 
 ; LevelUp a Hero a given number of levels
