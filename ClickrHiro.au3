@@ -106,19 +106,17 @@ Global Const $KEY_ACTION[3][2] = _
                ["{z down}", "{z up}"]]
 
 
-HotKeySet("^{PAUSE}", "Toggle_Pause")     ;Ctrl+Pause
-HotKeySet("+!{END}", "Shut_Down")         ;Alt+Shift+End
+#include <ClickrConfig.au3>
 
 Main()
 
 Func Main()
    WinActivate($WINDOW)
    
-   Local $levelingHeros[] = [$BRITTANY, $IVAN, $TREEBEAST, $SAMURAI, $SEER]
+   Local $levelingHeros[] = $defaultLevelingHeros
    PrimaryHeroes($levelingHeros)
 
-
-   Local $pipeline[] = [AlwaysWithTheClicking, LateGameLeveling, EnhancedDarkRitual]
+   Local $pipeline[] = $defaultPipeline
    Local $tick = 0
    While RunBot() And Not Paused()
       For $step in $pipeline
