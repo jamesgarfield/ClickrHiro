@@ -119,6 +119,11 @@ Func Main()
    Local $levelingHeros = $DEFAULT_LEVELING_HEROS
    PrimaryHeroes($levelingHeros)
 
+   ClickInKillZone()
+   EnableProgression()
+
+   Pipeline(NextPipeline())
+   ;Local $pipeline[] = [AlwaysWithTheClicking, FabulousFourLeveling, SpamEarlySkills]
    ;Local $pipeline[] = [AlwaysWithTheClicking, FabulousFourLeveling, SpamEarlySkills]
    Local $tick = 0
    While RunBot() And Not Paused()
