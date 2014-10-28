@@ -18,7 +18,7 @@ Global Const $WINDOW = "Clicker Heroes"
    Global Const $SCROLL_TOP[] = [547, 201]
 
    ;Page scrolling postions (4 heroes per page)
-   Global Const $PAGE_SCROLL[] = [201, 304, 359, 419, 474, 529, 559]
+   Global Const $PAGE_SCROLL[] = [201, 304, 359, 418, 474, 529, 559, 605]
 
    ; Cooldowns Position
    Global Const $TOP_COOLDOWN[] = [607, 169]
