@@ -144,8 +144,9 @@ Func NextPipeline($restart = False)
    If $restart Then
       $index = 0
    EndIf
-
-   Return $PIPELINE_CHAIN[$index]
+   $p = $PIPELINE_CHAIN[$index]
+   $index += 1
+   Return $p
 EndFunc
 
 Func GetPipeline()
