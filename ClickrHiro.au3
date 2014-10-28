@@ -11,6 +11,7 @@ Global Const $DEBUG = False
 Global Const $WINDOW = "Clicker Heroes"
 Global Const $CLICK_DELAY = 3
 Global Const $MOUSE_SPEED = 3
+Global Const $CLICKING_LEVEL = 600
 
 ;Pixels Go Here
    ;Game area
@@ -180,6 +181,10 @@ Func EnhancedDarkRitual($tick)
 
    Static Local $phase = $PHASE_UNDETERMINED
 
+   If GetZone() < $CLICKING_LEVEL Then
+      Return
+   EndIf
+
    Local $skill = Map(SkillEnabled, Range(9))
 
    Switch $phase
@@ -264,10 +269,12 @@ Func ProgressionEnabled()
 EndFunc
 
 Func ClickInKillZone($count=1)
-   Local Const $x = Int(Floor($BOARD_WIDTH/4)*3)
-   Local Const $y = Int(Floor($BOARD_HEIGHT/3)*2)
+   If GetZone() > $CLICKING_LEVEL Then
+      Local Const $x = Int(Floor($BOARD_WIDTH/4)*3)
+      Local Const $y = Int(Floor($BOARD_HEIGHT/3)*2)
 
-   Click($x, $y, $count)
+      Click($x, $y, $count)
+   EndIf
 EndFunc
 
 Func TryToLevel($hero)
