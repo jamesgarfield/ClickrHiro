@@ -183,6 +183,77 @@ Func PrimaryHeroes($heroes = Null)
    Return $primary_heroes
 EndFunc
 
+; Leveling stragegy for early game that focuses on levelling the four Page 0 heroes until all heroes are available
+; @param {Int} @tick
+Func FabulousFourLeveling($tick)
+   If Mod($tick, 5) <> 0 Then
+      Return
+   EndIf
+
+   TargetHeroLevel($CID, 150)
+   TargetHeroLevel($TREEBEAST, 1000)
+   TargetHeroLevel($IVAN, 1000)
+   TargetHeroLevel($BRITTANY, 1000)
+   
+   Local $leveledAHero = False
+   Local $doUpgrades = False
+   Static Local $fully_targetted = False
+
+   ;Frostleaf should be available by zone 120
+   If GetZone() < 120 Then
+      ;Only upgrade if it's possible we don't have all upgrades yet
+      $doUpgrades = (HeroLevel($CID) <= 125 Or _
+                     HeroLevel($TREEBEAST) <= 125 Or _
+                     HeroLevel($IVAN) <= 125 Or _
+                     HeroLevel($BRITTANY) <= 125)
+
+      ;Loop backwards from Brittany and level towards target levels
+      For $hero in Range(3, -1, -1)
+         ClickInKillZone(10)
+         While LevelHeroTowardTarget($hero) And Not Paused() And RunBot()
+            ClickInKillZone(1)
+            $leveledAHero = True
+         WEnd
+      Next
+      If $leveledAHero And $doUpgrades And RunBot() Then
+         BuyAllUpgrades()
+         ScrollToPage(0)
+      EndIf
+      EnableProgression()
+   ;After Frostleaf is available, level all heroes to their 100s area level
+   ElseIf Not Every(TargetHeroLevelReached, Range($FISHERMAN, $FROSTLEAF+1)) Or Not $fully_targetted Then
+      If Not $fully_targetted Then
+         BindRMap(TargetHeroLevel, 125, Range($FISHERMAN, $FROSTLEAF+1))
+         TargetHeroLevel($AMENHOTEP, 150)
+         TargetHeroLevel($FROSTLEAF, 105)
+         $fully_targetted = True
+      EndIf
+
+      ;Loop forward through the rest of heroes after Brittany, incrementing levels
+      For $hero in Range($FISHERMAN, $FROSTLEAF+1)
+         $leveledAHero = False
+         While LevelHeroTowardTarget($hero) And Not Paused() And RunBot()
+            ClickInKillZone(1)
+            $leveledAHero = True
+         WEnd
+         ClickInKillZone(5)
+         EnableProgression()
+         ;Only Buy Upgrades once per page, unless working on Grant or FrostLeaf
+         If $leveledAHero And (Mod($hero, 4) == 3 Or $hero == $GRANT Or $hero == $FROSTLEAF) Then
+            BuyAllUpgrades()
+            ClickInKillZone(5)
+         EndIf
+      Next
+   Else
+      ;Early Game leveling done, move onto to next play pipeline
+      Pipeline(NextPipeline())
+   EndIf
+   ClickInKillZone(10)
+EndFunc
+
+Func LessThan125($n)
+   Return $n < 125
+EndFunc
 
 Func SpamEarlySkills($tick)
    Send("12")
