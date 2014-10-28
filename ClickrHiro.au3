@@ -112,14 +112,33 @@ Func Main()
    Local $levelingHeros = $DEFAULT_LEVELING_HEROS
    PrimaryHeroes($levelingHeros)
 
+   ;Local $pipeline[] = [AlwaysWithTheClicking, FabulousFourLeveling, SpamEarlySkills]
    Local $tick = 0
    While RunBot() And Not Paused()
-      Local $pipeline = GetPipeline()
+      Local $pipeline = Pipeline()
       For $step in $pipeline
          $step($tick)
       Next
       $tick += 1
    WEnd
+EndFunc
+
+Func Pipeline($p=Null)
+   Static Local $pipeline
+   If $p <> Null Then
+      $pipeline = $p
+   EndIf
+
+   Return $pipeline
+EndFunc
+
+Func NextPipeline($restart = False)
+   Static Local $index = 0
+   If $restart Then
+      $index = 0
+   EndIf
+
+   Return $PIPELINE_CHAIN[$index]
 EndFunc
 
 Func GetPipeLine()
@@ -157,6 +176,8 @@ Func PrimaryHeroes($heroes = Null)
    Return $primary_heroes
 EndFunc
 
+   Else
+      Pipeline(NextPipeline())
 ; Levels all Primary Heroes and ensures that progression is enabled if any were leveled
 ; @param {Int} $tick
 Func LateGameLeveling($tick)
