@@ -261,11 +261,14 @@ Func ProgressionEnabled()
 EndFunc
 
 Func ClickInKillZone($count=1)
-   If GetZone() < $IDLE_LEVEL Then
-	  Return
-   EndIf
    Local Const $x = Int(Floor($BOARD_WIDTH/4)*3)
    Local Const $y = Int(Floor($BOARD_HEIGHT/3)*2)
+
+   If GetZone() < $IDLE_LEVEL Then
+	  MouseMove($x, $y)
+	  Sleep(100)
+	  Return
+   EndIf
 
    Click($x, $y, $count)
 EndFunc
@@ -524,7 +527,7 @@ Func WithKeyPress($key, $f, $arg = Null)
    Local $result
 
    Send($KEY_ACTION[$key][0])
-   Sleep(400)  ;Sometimes you need the delay to be sure the color has changed
+   Sleep(800)  ;Sometimes you need the delay to be sure the color has changed
    If $arg == Null Then
     $result = $f()
    Else
