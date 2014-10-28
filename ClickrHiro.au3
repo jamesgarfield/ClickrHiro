@@ -109,18 +109,35 @@ Main()
 Func Main()
    WinActivate($WINDOW)
 
-   Local $levelingHeros = $defaultLevelingHeros
+   Local $levelingHeros = $DEFAULT_LEVELING_HEROS
    PrimaryHeroes($levelingHeros)
 
-   Local $pipeline = $defaultPipeline
    Local $tick = 0
    While RunBot() And Not Paused()
+      Local $pipeline = GetPipeline()
       For $step in $pipeline
          $step($tick)
       Next
       $tick += 1
    WEnd
 EndFunc
+
+Func GetPipeLine()
+   Local $zone = GetZone()
+   Local $pipeline = []
+   Local $index = 0
+   For $level In $PIPELINE_LEVELS
+      If $zone < $level Then
+         $pipeline = $PIPELINES[$index]
+      Else
+         ExitLoop
+      EndIf
+      $index += 1
+   Next
+
+   Return $pipeline
+EndIf
+
 
 ; Always clicks mobs for every tick count
 Func AlwaysWithTheClicking($tick)
@@ -153,6 +170,17 @@ Func LateGameLeveling($tick)
    EndIf
 EndFunc
 
+Func IdleLateGameLeveling($tick)
+   If Mod($tick, 30) <> 0 Then
+      Return
+   EndIf
+
+   Local $leveledAHero = Any(IsTrue, Map(IdleMaxLevelHero, PrimaryHeroes()))
+   If $leveledAHero Then
+      EnableProgression()
+   EndIf
+EndFunc
+
 ; Levels a hero either by 100 or 25 until they cannot be leveled anymore
 ; @param {HeroEnum} $hero
 ; @return {Boolean} If the hero was leveled
@@ -162,13 +190,20 @@ Func MaxLevelHero($hero)
       MaxLevelHero($hero)
       Return True
    EndIf
+   ClickInKillZone()
+   Return False
+EndFunc
+
+Func IdleMaxLevelHero($hero)
+   If TryToLevelBy100($hero) Or _
+      TryToLevelBy25($hero) Then
+      MaxLevelHero($hero)
+      Return True
+   EndIf
    Return False
 EndFunc
 
 Func EnhancedDarkRitual($tick)
-   If GetZone() < $IDLE_LEVEL Then
-     Return
-   EndIf
    Local Enum  $PHASE_UNDETERMINED, _ ;Script just started
                $PHASE_NONE, _         ;Spam skills while waiting for EDR combo
                $PHASE_RELOAD, _       ;Wait for 2nd DR Reload
@@ -264,12 +299,6 @@ Func ClickInKillZone($count=1)
    Local Const $x = Int(Floor($BOARD_WIDTH/4)*3)
    Local Const $y = Int(Floor($BOARD_HEIGHT/3)*2)
 
-   If GetZone() < $IDLE_LEVEL Then
-     MouseMove($x, $y)
-     Sleep(100)
-     Return
-   EndIf
-
    Click($x, $y, $count)
 EndFunc
 
@@ -277,11 +306,9 @@ Func TryToLevel($hero)
    Local $levelled = False
    While CanLevel($hero)
       LevelUp($hero, 1)
-      ClickInKillZone()
       $levelled = True
    Wend
 
-   ClickInKillZone()
    Return $levelled
 EndFunc
 
