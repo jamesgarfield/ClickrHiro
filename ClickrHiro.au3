@@ -122,21 +122,21 @@ Func Main()
    WEnd
 EndFunc
 
-Func GetPipeLine()
+Func GetPipeline()
    Local $zone = GetZone()
-   Local $pipeline = []
+   Local $pipeline = $PIPELINES[0]
    Local $index = 0
    For $level In $PIPELINE_LEVELS
-      If $zone < $level Then
-         $pipeline = $PIPELINES[$index]
-      Else
-         ExitLoop
+      If $zone > $level Then
+		 $pipeline =  $PIPELINES[$index]
+	  Else
+		 ExitLoop
       EndIf
       $index += 1
    Next
 
    Return $pipeline
-EndIf
+EndFunc
 
 
 ; Always clicks mobs for every tick count
@@ -197,7 +197,7 @@ EndFunc
 Func IdleMaxLevelHero($hero)
    If TryToLevelBy100($hero) Or _
       TryToLevelBy25($hero) Then
-      MaxLevelHero($hero)
+      IdleMaxLevelHero($hero)
       Return True
    EndIf
    Return False
@@ -326,6 +326,7 @@ EndFunc
 
 Func CanLevel($hero)
    ScrollToHero($hero)
+   Sleep(400)
 
    Local $row = $HERO_BUTTON[$hero][1]
 
@@ -554,7 +555,7 @@ Func WithKeyPress($key, $f, $arg = Null)
    Local $result
 
    Send($KEY_ACTION[$key][0])
-   Sleep(800)  ;Sometimes you need the delay to be sure the color has changed
+   Sleep(600)  ;Sometimes you need the delay to be sure the color has changed
    If $arg == Null Then
     $result = $f()
    Else
