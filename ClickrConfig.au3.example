@@ -4,6 +4,8 @@ Global Const $CLICK_DELAY = 3
 Global Const $MOUSE_SPEED = 3
 Global Const $defaultLevelingHeros[] = [$BRITTANY, $IVAN, $TREEBEAST, $SAMURAI, $SEER]
 Global Const $defaultPipeline[] = [AlwaysWithTheClicking, LateGameLeveling, EnhancedDarkRitual]
+Global Const $IDLE_LEVEL = 0
+
 
 HotKeySet("^{PAUSE}", "Toggle_Pause")     ;Ctrl+Pause
 HotKeySet("+!{END}", "Shut_Down")         ;Alt+Shift+End

@@ -108,11 +108,11 @@ Main()
 
 Func Main()
    WinActivate($WINDOW)
-   
-   Local $levelingHeros[] = $defaultLevelingHeros
+
+   Local $levelingHeros = $defaultLevelingHeros
    PrimaryHeroes($levelingHeros)
 
-   Local $pipeline[] = $defaultPipeline
+   Local $pipeline = $defaultPipeline
    Local $tick = 0
    While RunBot() And Not Paused()
       For $step in $pipeline
@@ -155,7 +155,7 @@ EndFunc
 
 ; Levels a hero either by 100 or 25 until they cannot be leveled anymore
 ; @param {HeroEnum} $hero
-; @return {Boolean} If the hero was leveled 
+; @return {Boolean} If the hero was leveled
 Func MaxLevelHero($hero)
    If TryToLevelBy100($hero) Or _
       TryToLevelBy25($hero) Then
@@ -166,6 +166,9 @@ Func MaxLevelHero($hero)
 EndFunc
 
 Func EnhancedDarkRitual($tick)
+   If GetZone() < $IDLE_LEVEL Then
+	  Return
+   EndIf
    Local Enum  $PHASE_UNDETERMINED, _ ;Script just started
                $PHASE_NONE, _         ;Spam skills while waiting for EDR combo
                $PHASE_RELOAD, _       ;Wait for 2nd DR Reload
@@ -258,6 +261,9 @@ Func ProgressionEnabled()
 EndFunc
 
 Func ClickInKillZone($count=1)
+   If GetZone() < $IDLE_LEVEL Then
+	  Return
+   EndIf
    Local Const $x = Int(Floor($BOARD_WIDTH/4)*3)
    Local Const $y = Int(Floor($BOARD_HEIGHT/3)*2)
 
@@ -378,7 +384,7 @@ Func ScrollToPage($p)
    Static Local $current_page = -1
    If $current_page <> $p Then
       Click($SCROLL_TOP[0], $PAGE_SCROLL[$p])
-      Sleep(500)
+      Sleep(600)
       $current_page = $p
    EndIf
 EndFunc
@@ -599,7 +605,7 @@ EndFunc
 ; Returns true if the provided function returns true for Every element of the array
 Func Every($f, ByRef $a)
    Local $len = UBound($a)
-   
+
    For $i = 0 To $len-1 Step 1
       If Not $f($a[$i]) Then
          Return False
@@ -611,7 +617,7 @@ EndFunc
 ; Returns true if the provided function returns true for Any element of the array
 Func Any($f, ByRef $a)
    Local $len = UBound($a)
-   
+
    For $i = 0 To $len-1 Step 1
       If $f($a[$i]) Then
          Return True
