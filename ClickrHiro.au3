@@ -416,6 +416,43 @@ Func LevelUp($hero, $levels=1)
 
    Local $row = $HERO_BUTTON[$hero][1]
    ClickHeroRow($row, $levels)
+   HeroLevel($hero, HeroLevel($hero) + $levels)
+EndFunc
+
+; Get/Set a hero's level
+; @param {HeroEnum} [@hero] If omitted, return is all hero levels as array
+; @param {Int} [@level] Sets the hero level. If omitted return is current hero level
+; @return {Int|Array<Int>}
+Func HeroLevel($hero = Null, $level = Null)
+   Local Static $hero_level[$FROSTLEAF+1]
+
+   If $hero == Null Then
+      Return $hero_level
+   EndIf
+
+   If $level <> Null Then
+      $hero_level[$hero] = $level
+   EndIf
+
+   Return $hero_level[$hero]
+EndFunc
+
+; Get/Set a hero's target (desired) level
+; @param {HeroEnum} [@hero] If omitted, return is all target levels as array
+; @param {Int} [@level] Sets the target level. If omitted return is current target level
+; @return {Int|Array<Int>}
+Func TargetHeroLevel($hero = Null, $level = Null)
+   Local Static $target_level[$FROSTLEAF+1]
+
+   If $hero == Null Then
+      Return $target_level
+   EndIf
+
+   If $level <> Null Then
+      $target_level[$hero] = $level
+   EndIf
+
+   Return $target_level[$hero]
 EndFunc
 
 ; Send a given number of clicks to a hero row
