@@ -167,7 +167,7 @@ EndFunc
 
 Func EnhancedDarkRitual($tick)
    If GetZone() < $IDLE_LEVEL Then
-	  Return
+     Return
    EndIf
    Local Enum  $PHASE_UNDETERMINED, _ ;Script just started
                $PHASE_NONE, _         ;Spam skills while waiting for EDR combo
@@ -265,9 +265,9 @@ Func ClickInKillZone($count=1)
    Local Const $y = Int(Floor($BOARD_HEIGHT/3)*2)
 
    If GetZone() < $IDLE_LEVEL Then
-	  MouseMove($x, $y)
-	  Sleep(100)
-	  Return
+     MouseMove($x, $y)
+     Sleep(100)
+     Return
    EndIf
 
    Click($x, $y, $count)
