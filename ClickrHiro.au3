@@ -302,6 +302,12 @@ Func SkillEnabled($skill)
    Return Not BoardRangeContainsColor($range, $COOLDOWN_COLOR)
 EndFunc
 
+Func BuyAllUpgrades()
+   ScrollToBuyUpgrades()
+   Sleep(200)
+   Click($BUY_UPGRADES_RANGE[0], $BUY_UPGRADES_RANGE[1], 3)
+EndFunc
+
 Func EnableProgression()
    ;Didn't find progression mode, turn it on!
    If Not ProgressionEnabled() Then
@@ -449,6 +455,10 @@ EndFunc
 Func ScrollToHero($hero)
    Local $page = $HERO_BUTTON[$hero][0]
    ScrollToPage($page)
+EndFunc
+
+Func ScrollToBuyUpgrades()
+   ScrollToPage(7)
 EndFunc
 
 ; Click on the game board a given number of times.
