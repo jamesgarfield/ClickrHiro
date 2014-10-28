@@ -329,6 +329,11 @@ Func CanLevelBy100($hero)
    Return WithKeyPress($KEY_CTRL, CanLevel, $hero)
 EndFunc
 
+Func GetZone()
+   Local $title = WinGetTitle($WINDOW)
+   Return StringRegExpReplace($title, "[^0-9]", "")
+EndFunc
+
 
 
 ; LevelUp a Hero a given number of levels
