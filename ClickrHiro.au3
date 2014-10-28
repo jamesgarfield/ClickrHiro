@@ -451,6 +451,10 @@ EndFunc
 Func ScrollToPage($p)
    Static Local $current_page = -1
    If $current_page <> $p Then
+      ;Pages at the end get really close together, rescroll to top to ensure a good click
+      If $current_page >= 5 And $p >= 5 Then
+         Click($SCROLL_TOP[0], $PAGE_SCROLL[0])
+      EndIf
       Click($SCROLL_TOP[0], $PAGE_SCROLL[$p])
       Sleep(600)
       $current_page = $p
