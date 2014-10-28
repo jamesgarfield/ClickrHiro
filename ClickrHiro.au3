@@ -106,9 +106,6 @@ Global Const $KEY_ACTION[3][2] = _
                ["{z down}", "{z up}"]]
 
 
-HotKeySet("^{PAUSE}", "Toggle_Pause")     ;Ctrl+Pause
-HotKeySet("+!{END}", "Shut_Down")         ;Alt+Shift+End
-
 #include <ClickrConfig.au3>
 
 Main()
