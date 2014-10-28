@@ -1,5 +1,6 @@
 #include <MsgBoxConstants.au3>
 #include <Array.au3>
+#include <Math.au3>
 
 ; Set Options
 Opt("WinTitleMatchMode", 2) ; Set window title match for any substring instead of start with
@@ -692,13 +693,17 @@ Func Range($start, $end=Null, $step = 1)
      $start = 0
    EndIf
 
-   Local $size = Int(Ceiling(($end - $start)/$step))
+   Local $max = _Max($start, $end)
+   Local $min = _Min($start, $end)
+   Local $size = Abs(Int(Ceiling(($max - $min)/$step)))
    Local $r[$size]
    Local $index = 0
-   For $i = $start To $end-1 Step $step
-     $r[$index] = $i
-     $index += 1
-   Next
+   Local $i = $start
+   Do
+      $r[$index] = $i
+      $index += 1
+      $i += $step
+   Until $i == $end
 
    Return $r
 EndFunc
