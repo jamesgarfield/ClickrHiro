@@ -183,6 +183,11 @@ Func PrimaryHeroes($heroes = Null)
    Return $primary_heroes
 EndFunc
 
+
+Func SpamEarlySkills($tick)
+   Send("12")
+EndFunc
+
 ; Levels all Primary Heroes and ensures that progression is enabled if any were leveled
 ; @param {Int} $tick
 Func LateGameLeveling($tick)
