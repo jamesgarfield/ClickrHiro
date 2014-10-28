@@ -6,11 +6,7 @@ Opt("WinTitleMatchMode", 2) ; Set window title match for any substring instead o
 
 Global Const $VERSION = "0.4.0"
 
-Global Const $DEBUG = False
-
 Global Const $WINDOW = "Clicker Heroes"
-Global Const $CLICK_DELAY = 3
-Global Const $MOUSE_SPEED = 3
 
 ;Pixels Go Here
    ;Game area
