@@ -331,7 +331,7 @@ EndFunc
 
 Func GetZone()
    Local $title = WinGetTitle($WINDOW)
-   Return StringRegExpReplace($title, "[^0-9]", "")
+   Return Int(StringRegExpReplace($title, "[^0-9]", ""))
 EndFunc
 
 
