@@ -17,7 +17,10 @@ Global Const $WINDOW = "Clicker Heroes"
    ;Top of scroll bar, under up arrow
    Global Const $SCROLL_TOP[] = [547, 201]
 
-   ;Page scrolling postions (4 heroes per page)
+   ;Bottom of scroll bar, above down arrow
+   Global Const $SCROLL_BOTTOM = NewPixelRange(550, 605)
+
+   ;Page scrolling postions (4 heroes per page), final page is for Buy All Upgrades
    Global Const $PAGE_SCROLL[] = [201, 304, 359, 418, 474, 529, 559, 605]
 
    ; Cooldowns Position
