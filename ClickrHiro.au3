@@ -880,6 +880,11 @@ Func BoardSearch($left, $top, $right, $bottom, $color, $variance=0)
    Return ColorSearch($left, $top, $right, $bottom, $color, $variance)
 EndFunc
 
+Func ActivateBoard()
+   ScrollToPage(7)
+   ScrollToPage(0)
+EndFunc
+
 ; Find the game board within the browser window
 ; @return {Array<Int,Int>}
 Func FindBoard()
