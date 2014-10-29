@@ -317,6 +317,10 @@ Func SpamEarlySkills($tick)
    Send("12")
 EndFunc
 
+Func AlwaysProgress($tick)
+   EnableProgression()
+EndFunc
+
 ; Levels a hero towards their target level and enables progression if successful
 ; @param {HeroEnum} $hero
 ; @return {Boolean} If leveling happened
