@@ -528,6 +528,12 @@ Func CanLevelBy100($hero)
    Return WithKeyPress($KEY_CTRL, CanLevel, $hero)
 EndFunc
 
+; Indicates if the current zone is a boss
+; @return {Boolean}
+Func BossFight()
+   Return Mod(GetZone(), 5) == 0
+EndFunc
+
 Func GetZone()
    Local $title = WinGetTitle($WINDOW)
    Return Int(StringRegExpReplace($title, "[^0-9]", ""))
