@@ -464,6 +464,24 @@ Func BuyAllUpgrades()
    Click($BUY_UPGRADES_RANGE[0], $BUY_UPGRADES_RANGE[1], 3)
 EndFunc
 
+Func Ascend()
+   If HeroLevel($AMENHOTEP) < 150 Then
+      TargetHeroLevel($AMENHOTEP, 150)
+      While LevelHeroTowardTarget($AMENHOTEP)
+      WEnd
+      BuyAllUpgrades()
+   EndIf
+
+   ScrollToHero($AMENHOTEP)
+   Click($ASCEND_RANGE[0], $ASCEND_RANGE[1])
+   Sleep(200)
+   Click($CONFIRM_ASCEND_RANGE[0], $CONFIRM_ASCEND_RANGE[1])
+   BindRMap(HeroLevel, 0, Range($FROSTLEAF+1))
+   ClearAllTargets()
+   ClearPrimaryHeroes()
+   Pipeline(NextPipeline(True))
+EndFunc
+
 Func EnableProgression()
    ;Didn't find progression mode, turn it on!
    If Not ProgressionEnabled() Then
