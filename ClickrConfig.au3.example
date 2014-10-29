@@ -1,21 +1,39 @@
-
 Global Const $DEBUG = False
-Global Const $CLICK_DELAY = 3
-Global Const $MOUSE_SPEED = 3
-Global Const $DEFAULT_LEVELING_HEROS[] = [$BRITTANY, $IVAN, $TREEBEAST, $SAMURAI, $SEER]
-Global Const $PIPELINE_LEVELS[] = [0, 600]
-
-Global Const $IDLE_PIPELINE[] = [IdleLateGameLeveling]
-Global Const $ACTIVE_PIPELINE[] = [AlwaysWithTheClicking, LateGameLeveling, EnhancedDarkRitual]
-Global Const $FAB_FOUR_PIPELINE[] = [AlwaysWithTheClicking, FabulousFourLeveling, SpamEarlySkills]
-
-Global Const $PIPELINE_CHAIN[] = [$FAB_FOUR_PIPELINE, $ACTIVE_PIPELINE]
 
 HotKeySet("^{PAUSE}", "Toggle_Pause")     ;Ctrl+Pause
 HotKeySet("+!{END}", "Shut_Down")         ;Alt+Shift+End
 
-Func TransitionAfter600()
-	If GetZone() > 600 Then
+Global Const $CLICK_DELAY = 3
+Global Const $MOUSE_SPEED = 3
+
+Global Const $DEFAULT_LEVELING_HEROS[] = [$BRITTANY, $IVAN, $TREEBEAST, $SEER, $SAMURAI]
+
+Global Const $IDLE_PIPELINE[] = [LateGameLeveling]
+Global Const $ACTIVE_PIPELINE[] = [AlwaysWithTheClicking, LateGameLeveling, EnhancedDarkRitual, AscendAtInflection]
+Global Const $FAB_FOUR_PIPELINE[] = [FabulousFourLeveling]
+Global Const $LADDER_PIPELINE[] = [LadderLeveling]
+Global Const $CLICKSTARTER_PIPELINE[] = [AlwaysProgress, StartBuying, AlwaysWithTheClicking]
+
+Global Const $PIPELINE_CHAIN[] = [$CLICKSTARTER_PIPELINE, $FAB_FOUR_PIPELINE, $LADDER_PIPELINE, $ACTIVE_PIPELINE]
+
+Global Const $INFLECTION_LEVEL = 190
+
+Func AscendAtInflection($tick)
+	Static Local $ascensions = 0
+
+	If GetZone() >= $INFLECTION_LEVEL Then
+		$ascensions += 1
+		Dbg("Ascension " & $ascensions)
+		Dbg(HeroLevel())
+		Ascend()
+	EndIf
+EndFunc
+
+Func StartBuying($tick)
+	If CanLevelBy10($TREEBEAST) Then
+		Local $zone = GetZone()
+		Dbg("Start buying @ zone " & $zone)
+		LevelUp($TREEBEAST, 10)
 		Pipeline(NextPipeline())
 	EndIf
 EndFunc

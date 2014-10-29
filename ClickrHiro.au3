@@ -154,23 +154,6 @@ Func NextPipeline($restart = False)
    Return $p
 EndFunc
 
-Func GetPipeline()
-   Local $zone = GetZone()
-   Local $pipeline = $PIPELINES[0]
-   Local $index = 0
-   For $level In $PIPELINE_LEVELS
-      If $zone > $level Then
-		 $pipeline =  $PIPELINES[$index]
-	  Else
-		 ExitLoop
-      EndIf
-      $index += 1
-   Next
-
-   Return $pipeline
-EndFunc
-
-
 ; Always clicks mobs for every tick count
 Func AlwaysWithTheClicking($tick)
    ClickInKillZone(40)
@@ -388,38 +371,6 @@ Func Plus1k($n)
    Return $n + 1000
 EndFunc
 
-Func IdleLateGameLeveling($tick)
-   If Mod($tick, 30) <> 0 Then
-      Return
-   EndIf
-
-   Local $leveledAHero = Any(IsTrue, Map(IdleMaxLevelHero, PrimaryHeroes()))
-   If $leveledAHero Then
-      EnableProgression()
-   EndIf
-EndFunc
-
-; Levels a hero either by 100 or 25 until they cannot be leveled anymore
-; @param {HeroEnum} $hero
-; @return {Boolean} If the hero was leveled
-Func MaxLevelHero($hero)
-   If TryToLevelBy100($hero) Or _
-      TryToLevelBy25($hero) Then
-      MaxLevelHero($hero)
-      Return True
-   EndIf
-   ClickInKillZone()
-   Return False
-EndFunc
-
-Func IdleMaxLevelHero($hero)
-   If TryToLevelBy100($hero) Or _
-      TryToLevelBy25($hero) Then
-      IdleMaxLevelHero($hero)
-      Return True
-   EndIf
-   Return False
-EndFunc
 
 Func EnhancedDarkRitual($tick)
    Local Enum  $PHASE_UNDETERMINED, _ ;Script just started
@@ -475,20 +426,6 @@ Func EnhancedDarkRitual($tick)
    EndSwitch
 EndFunc
 
-Func PerformCooldowns()
-   Local $cd_index = 1
-   Local $cooldowns_ready = Map(SkillEnabled, Range(9))
-
-   If $cooldowns_ready[$DARK_RITUAL] Then
-      Send("123457")
-      If $cooldowns_ready[$ENERGIZE] And $cooldowns_ready[$RELOAD] Then
-         Send("869")
-      EndIf
-   ElseIf $cooldowns_ready[$ENERGIZE] And $cooldowns_ready[$RELOAD] Then
-      Send("89")
-   EndIf
-EndFunc
-
 Func SkillEnabled($skill)
    Local $range = NewPixelRange($TOP_COOLDOWN[0], $TOP_COOLDOWN[1] + ($skill * $COOLDOWN_Y_OFFSET))
    Return Not BoardRangeContainsColor($range, $COOLDOWN_COLOR)
@@ -542,28 +479,6 @@ Func ClickInKillZone($count=1)
    Local Const $y = Int(Floor($BOARD_HEIGHT/3)*2)
 
    Click($x, $y, $count)
-EndFunc
-
-Func TryToLevel($hero)
-   Local $levelled = False
-   While CanLevel($hero)
-      LevelUp($hero, 1)
-      $levelled = True
-   Wend
-
-   Return $levelled
-EndFunc
-
-Func TryToLevelBy10($hero)
-   Return WithKeyPress($KEY_SHIFT, TryToLevel, $hero)
-EndFunc
-
-Func TryToLevelBy25($hero)
-   Return WithKeyPress($KEY_Z, TryToLevel, $hero)
-EndFunc
-
-Func TryToLevelBy100($hero)
-   Return WithKeyPress($KEY_CTRL, TryToLevel, $hero)
 EndFunc
 
 Func CanLevel($hero)
