@@ -36,6 +36,10 @@ Global Const $WINDOW = "Clicker Heroes"
 
    ;Buy All Upgrades
    Global Const $BUY_UPGRADES_RANGE = NewPixelRange(250, 550)
+
+   ;Ascend
+   Global Const $ASCEND_RANGE = NewPixelRange(300, 555)
+   Global Const $CONFIRM_ASCEND_RANGE = NewPixelRange(490, 415)
 ;End of Pixels
 
 ;Used to find the game board within the browser window
