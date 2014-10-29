@@ -119,16 +119,12 @@ Main()
 
 Func Main()
    WinActivate($WINDOW)
-
-   Local $levelingHeros = $DEFAULT_LEVELING_HEROS
-   PrimaryHeroes($levelingHeros)
-
-   ClickInKillZone()
-   EnableProgression()
-
+   
+   FindBoard(true)
+   ActivateBoard()
+   
    Pipeline(NextPipeline())
-   ;Local $pipeline[] = [AlwaysWithTheClicking, FabulousFourLeveling, SpamEarlySkills]
-   ;Local $pipeline[] = [AlwaysWithTheClicking, FabulousFourLeveling, SpamEarlySkills]
+   
    Local $tick = 0
    While RunBot() And Not Paused()
       Local $pipeline = Pipeline()
@@ -1110,7 +1106,8 @@ Func Toggle_Pause()
    WEnd
    ToolTip("")
    WinActivate($WINDOW)
-   $g_page = -1
+   FindBoard(true)
+   ActivateBoard()
 EndFunc
 
 Func RunBot($run=Null)
