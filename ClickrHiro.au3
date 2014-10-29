@@ -317,16 +317,37 @@ Func SpamEarlySkills($tick)
    Send("12")
 EndFunc
 
-; Levels all Primary Heroes and ensures that progression is enabled if any were leveled
-; @param {Int} $tick
-Func LateGameLeveling($tick)
-   If Mod($tick, 30) <> 0 Then
-      Return
+; Levels a hero towards their target level and enables progression if successful
+; @param {HeroEnum} $hero
+; @return {Boolean} If leveling happened
+Func DoLeveling($hero)
+   Static Local $index = 0
+
+
+   If LevelHeroTowardTarget($hero) Then
+      EnableProgression()
+      Return True
    EndIf
 
-   Static Local $init = False
-   If Not $init Then
-      BindRMap(TargetHeroLevel, 2000, PrimaryHeroes())
+   Return False
+EndFunc
+
+; Keep an eye on hero target levels duing late game
+; @param {Int} $tick
+Func LateGameLeveling($tick)
+
+   Static Local $index = 0
+
+   If UBound(PrimaryHeroes()) == 1 Then
+      PrimaryHeroes($DEFAULT_LEVELING_HEROS)
+      $index = 0
+   EndIf
+
+   Local $heroes = PrimaryHeroes()
+
+   If Any(LessThan1k, Map(TargetHeroLevel, $heroes)) Then
+      BindRMap(TargetHeroLevel, 2000, $heroes)
+      $index = 0
    EndIf
 
    If TargetHeroLevelReached() Then
@@ -334,14 +355,29 @@ Func LateGameLeveling($tick)
       For $hero in Range($FROSTLEAF + 1)
          TargetHeroLevel($hero, $newLevel[$hero])
       Next
+      $index = 0
    EndIf
 
-   For $hero in PrimaryHeroes()
-      While LevelHeroTowardTarget($hero) And RunBot() And Not Paused()
-         EnableProgression()
-         ClickInKillZone(5)
-      WEnd
-   Next
+   
+   Local $hero = $heroes[$index]
+
+   Local $leveled = False
+   While DoLeveling($hero)
+      $leveled = True
+   WEnd
+   
+   If $leveled Then
+      EnableProgression()
+   EndIf
+
+   $index += 1
+   If $index >= UBound($heroes) Then
+      $index = 0
+   EndIf
+EndFunc
+
+Func LessThan1k($n)
+   Return $n < 1000
 EndFunc
 
 Func Plus1k($n)
