@@ -4,11 +4,12 @@ Global Const $CLICK_DELAY = 3
 Global Const $MOUSE_SPEED = 3
 Global Const $DEFAULT_LEVELING_HEROS[] = [$BRITTANY, $IVAN, $TREEBEAST, $SAMURAI, $SEER]
 Global Const $PIPELINE_LEVELS[] = [0, 600]
-Global Const $IDLE_PIPELINE[] = [IdleLateGameLeveling, TransitionAfter600]
-Global Const $ACTIVE_PIPELINE[] = [AlwaysWithTheClicking, LateGameLeveling, EnhancedDarkRitual]
-Global Const $PIPELINES[] = [$IDLE_PIPELINE, $ACTIVE_PIPELINE]
 
-Global Const $PIPELINE_CHAIN[$IDLE_PIPELINE, $ACTIVE_PIPELINE]
+Global Const $IDLE_PIPELINE[] = [IdleLateGameLeveling]
+Global Const $ACTIVE_PIPELINE[] = [AlwaysWithTheClicking, LateGameLeveling, EnhancedDarkRitual]
+Global Const $FAB_FOUR_PIPELINE[] = [AlwaysWithTheClicking, FabulousFourLeveling, SpamEarlySkills]
+
+Global Const $PIPELINE_CHAIN[] = [$FAB_FOUR_PIPELINE, $ACTIVE_PIPELINE]
 
 HotKeySet("^{PAUSE}", "Toggle_Pause")     ;Ctrl+Pause
 HotKeySet("+!{END}", "Shut_Down")         ;Alt+Shift+End
