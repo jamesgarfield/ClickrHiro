@@ -332,6 +332,10 @@ EndFunc
 ; Keep an eye on hero target levels duing late game
 ; @param {Int} $tick
 Func LateGameLeveling($tick)
+   
+   If BossFight() Then
+      Return
+   EndIf
 
    Static Local $index = 0
 
@@ -342,11 +346,13 @@ Func LateGameLeveling($tick)
 
    Local $heroes = PrimaryHeroes()
 
+   ; If any target levels are too low, bump them up
    If Any(LessThan1k, Map(TargetHeroLevel, $heroes)) Then
       BindRMap(TargetHeroLevel, 2000, $heroes)
       $index = 0
    EndIf
 
+   ; If all heroes are at their target level, increase everyones target
    If TargetHeroLevelReached() Then
       Local $newLevel = Map(Plus1k, TargetHeroLevel())
       For $hero in Range($FROSTLEAF + 1)
@@ -359,7 +365,7 @@ Func LateGameLeveling($tick)
    Local $hero = $heroes[$index]
 
    Local $leveled = False
-   While DoLeveling($hero)
+   While DoLeveling($hero) And Not BossFight()
       $leveled = True
    WEnd
    
