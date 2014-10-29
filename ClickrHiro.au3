@@ -886,8 +886,9 @@ Func ActivateBoard()
 EndFunc
 
 ; Find the game board within the browser window
+; @param {Boolean} [$reset]
 ; @return {Array<Int,Int>}
-Func FindBoard()
+Func FindBoard($reset = False)
 
    Static Local $lastLeftX = 0
    Static Local $lastTopY = 0
@@ -902,7 +903,8 @@ Func FindBoard()
    Local $width = $poz[2]
    Local $height = $poz[3]
 
-   If $boardLeftX = $lastLeftX And _
+   If Not $reset And _
+      $boardLeftX = $lastLeftX And _
       $boardTopY  = $lastTopY And _
       $width      = $lastWidth And _
       $height     = $lastHeight Then
