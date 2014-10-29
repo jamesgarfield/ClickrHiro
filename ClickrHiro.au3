@@ -272,10 +272,28 @@ Func LateGameLeveling($tick)
       Return
    EndIf
 
-   Local $leveledAHero = Any(IsTrue, Map(MaxLevelHero, PrimaryHeroes()))
-   If $leveledAHero Then
-      EnableProgression()
+   Static Local $init = False
+   If Not $init Then
+      BindRMap(TargetHeroLevel, 2000, PrimaryHeroes())
    EndIf
+
+   If TargetHeroLevelReached() Then
+      Local $newLevel = Map(Plus1k, TargetHeroLevel())
+      For $hero in Range($FROSTLEAF + 1)
+         TargetHeroLevel($hero, $newLevel[$hero])
+      Next
+   EndIf
+
+   For $hero in PrimaryHeroes()
+      While LevelHeroTowardTarget($hero) And RunBot() And Not Paused()
+         EnableProgression()
+         ClickInKillZone(5)
+      WEnd
+   Next
+EndFunc
+
+Func Plus1k($n)
+   Return $n + 1000
 EndFunc
 
 Func IdleLateGameLeveling($tick)
