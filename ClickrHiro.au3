@@ -135,6 +135,9 @@ Func Main()
    WEnd
 EndFunc
 
+; Get/Set the current action pipeline
+; @param {Array<Function(Int)>} [$p]
+; @return {Array<Function(Int)>}
 Func Pipeline($p=Null)
    Static Local $pipeline
    If $p <> Null Then
@@ -144,6 +147,9 @@ Func Pipeline($p=Null)
    Return $pipeline
 EndFunc
 
+; Get the next pipeline in the current pipeline chain
+; @param {Boolean} [$restart] Resets the pipeline chain to the start
+; @return {Array<Function(Int)>}
 Func NextPipeline($restart = False)
    Static Local $index = 0
    If $restart Then
@@ -172,6 +178,7 @@ Func PrimaryHeroes($heroes = Null)
    Return $primary_heroes
 EndFunc
 
+; Clear out all primary heroes
 Func ClearPrimaryHeroes()
    Static Local $none[] = []
    PrimaryHeroes($none)
@@ -235,9 +242,10 @@ Func FabulousFourLeveling($tick)
    EnableProgression()
 EndFunc
 
+; Leveling strategy to iteratively go down the hero ladder leveling each to their 100's max
 Func LadderLeveling($tick)
    
-   ;All Heroes should be levelled by 180
+   ;All Heroes should be levelled by zone 180
    If GetZone() >= 180 Then
       ClearPrimaryHeroes()
       Pipeline(NextPipeline())
@@ -250,6 +258,7 @@ Func LadderLeveling($tick)
 
    Static Local $index = 0
 
+   ; Newly in pipeline, setup heroes
    If UBound($heroes) == 1 Then
       PrimaryHeroes(Range($TREEBEAST, $FROSTLEAF+1))
       $heroes = PrimaryHeroes()
@@ -278,6 +287,7 @@ Func LadderLeveling($tick)
       $upgrade_tick += 1
    EndIf
 
+   ; Try to only buy upgrades once per page
    If $upgrade_tick == 4 Then
       BuyAllUpgrades()
       $upgrade_tick = 0
@@ -437,6 +447,7 @@ Func BuyAllUpgrades()
    Click($BUY_UPGRADES_RANGE[0], $BUY_UPGRADES_RANGE[1], 3)
 EndFunc
 
+; Ensures that Amenhotep has enough levels and ascends the world
 Func Ascend()
    If HeroLevel($AMENHOTEP) < 150 Then
       TargetHeroLevel($AMENHOTEP, 150)
@@ -522,6 +533,7 @@ Func GetZone()
    Return Int(StringRegExpReplace($title, "[^0-9]", ""))
 EndFunc
 
+; Set all target hero levels to 0
 Func ClearAllTargets()
    ;Clear Targets
    BindRMap(TargetHeroLevel, 0, Range($FROSTLEAF+1))
@@ -545,6 +557,9 @@ Func TargetHeroLevelReached($hero = Null)
    EndIf
 EndFunc
 
+; Select a level incrementing strategy and try to level the provided hero
+; @param {HeroEnum} $hero
+; @return {Boolean} True if the hero gained levels
 Func LevelHeroTowardTarget($hero)
    Local $level = HeroLevel($hero)
    Local $target = TargetHeroLevel($hero)
