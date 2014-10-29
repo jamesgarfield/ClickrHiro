@@ -193,72 +193,124 @@ Func PrimaryHeroes($heroes = Null)
    Return $primary_heroes
 EndFunc
 
+Func ClearPrimaryHeroes()
+   Static Local $none[] = []
+   PrimaryHeroes($none)
+EndFunc
+
 ; Leveling stragegy for early game that focuses on levelling the four Page 0 heroes until all heroes are available
 ; @param {Int} @tick
 Func FabulousFourLeveling($tick)
-   If Mod($tick, 5) <> 0 Then
+   ;Frostleaf should be available by zone 120
+   If GetZone() >= 120 Then
+      ClearPrimaryHeroes()
+      Pipeline(NextPipeline())
       Return
    EndIf
 
-   TargetHeroLevel($CID, 150)
-   TargetHeroLevel($TREEBEAST, 1000)
-   TargetHeroLevel($IVAN, 1000)
-   TargetHeroLevel($BRITTANY, 1000)
+   If Mod($tick, 2) <> 0 Then
+      Return
+   EndIf
+
+   Static Local $fab4[] = [$BRITTANY, $IVAN, $TREEBEAST, $CID]
+
+   Static Local $index = 0
    
-   Local $leveledAHero = False
-   Local $doUpgrades = False
-   Static Local $fully_targetted = False
+   Local $heroes = PrimaryHeroes()
+   If UBound($heroes) == 1 Then
+      PrimaryHeroes($fab4)
+   
+      ClearAllTargets()
+      TargetHeroLevel($CID, 150)
+      TargetHeroLevel($TREEBEAST, 1000)
+      TargetHeroLevel($IVAN, 1000)
+      TargetHeroLevel($BRITTANY, 1000)   
 
-   ;Frostleaf should be available by zone 120
-   If GetZone() < 120 Then
-      ;Only upgrade if it's possible we don't have all upgrades yet
-      $doUpgrades = (HeroLevel($CID) <= 125 Or _
-                     HeroLevel($TREEBEAST) <= 125 Or _
-                     HeroLevel($IVAN) <= 125 Or _
-                     HeroLevel($BRITTANY) <= 125)
+      $heroes = PrimaryHeroes()
+      $index = 0
+   EndIf
 
-      ;Loop backwards from Brittany and level towards target levels
-      For $hero in Range(3, -1, -1)
-         ClickInKillZone(10)
-         While LevelHeroTowardTarget($hero) And Not Paused() And RunBot()
-            ClickInKillZone(1)
-            $leveledAHero = True
-         WEnd
-      Next
-      If $leveledAHero And $doUpgrades And RunBot() Then
-         BuyAllUpgrades()
-         ScrollToPage(0)
-      EndIf
-      EnableProgression()
-   ;After Frostleaf is available, level all heroes to their 100s area level
-   ElseIf Not Every(TargetHeroLevelReached, Range($FISHERMAN, $FROSTLEAF+1)) Or Not $fully_targetted Then
-      If Not $fully_targetted Then
-         BindRMap(TargetHeroLevel, 125, Range($FISHERMAN, $FROSTLEAF+1))
-         TargetHeroLevel($AMENHOTEP, 150)
-         TargetHeroLevel($FROSTLEAF, 105)
-         $fully_targetted = True
-      EndIf
+   Local $hero = $heroes[$index]
 
-      ;Loop forward through the rest of heroes after Brittany, incrementing levels
-      For $hero in Range($FISHERMAN, $FROSTLEAF+1)
-         $leveledAHero = False
-         While LevelHeroTowardTarget($hero) And Not Paused() And RunBot()
-            ClickInKillZone(1)
-            $leveledAHero = True
-         WEnd
-         ClickInKillZone(5)
-         EnableProgression()
-         ;Only Buy Upgrades once per page, unless working on Grant or FrostLeaf
-         If $leveledAHero And (Mod($hero, 4) == 3 Or $hero == $GRANT Or $hero == $FROSTLEAF) Then
-            BuyAllUpgrades()
-            ClickInKillZone(5)
-         EndIf
-      Next
-   Else
-      ;Early Game leveling done, move onto to next play pipeline
+   ;Only upgrade if it's possible we don't have all upgrades yet
+   Local $doUpgrades = (HeroLevel($CID) < 125 Or _
+                        HeroLevel($TREEBEAST) <= 125 Or _
+                        HeroLevel($IVAN) <= 125 Or _
+                        HeroLevel($BRITTANY) <= 125)
+
+   Local $leveled = False
+   While DoLeveling($hero)
+      $leveled = True
+   WEnd
+
+   $index += 1
+   If $index >= UBound(PrimaryHeroes()) Then
+      $index = 0
+   EndIf
+
+   If $leveled And $doUpgrades And RunBot() Then
+      BuyAllUpgrades()
+      ScrollToPage(0)
+   EndIf
+
+   EnableProgression()
+EndFunc
+
+Func LadderLeveling($tick)
+   
+   ;All Heroes should be levelled by 180
+   If GetZone() >= 180 Then
+      ClearPrimaryHeroes()
+      Pipeline(NextPipeline())
+      Return
+   EndIf
+
+   Static Local $upgrade_tick = 0
+
+   Local $heroes = PrimaryHeroes()
+
+   Static Local $index = 0
+
+   If UBound($heroes) == 1 Then
+      PrimaryHeroes(Range($TREEBEAST, $FROSTLEAF+1))
+      $heroes = PrimaryHeroes()
+
+      BindRMap(TargetHeroLevel, 125, $heroes)
+      TargetHeroLevel($AMENHOTEP, 150)
+      TargetHeroLevel($FROSTLEAF, 100)
+
+      $upgrade_tick = 0
+      $index = 0
+   EndIf
+
+   Local $hero = $heroes[$index]
+
+   Local $leveled = False
+   While DoLeveling($hero)
+      $leveled = True
+   WEnd
+   
+   $index += 1
+   If $index >= UBound(PrimaryHeroes()) Then
+      $index = 0
+   EndIf
+
+   If $leveled Then
+      $upgrade_tick += 1
+   EndIf
+
+   If $upgrade_tick == 4 Then
+      BuyAllUpgrades()
+      $upgrade_tick = 0
+   EndIf
+
+   If TargetHeroLevelReached() Then
+      ;ladder leveling done, move onto to next play pipeline
+      BuyAllUpgrades()
+      ClearPrimaryHeroes()
+      $upgrade_tick = 0
       Pipeline(NextPipeline())
    EndIf
-   ClickInKillZone(10)
 EndFunc
 
 Func LessThan125($n)
@@ -499,6 +551,11 @@ EndFunc
 Func GetZone()
    Local $title = WinGetTitle($WINDOW)
    Return Int(StringRegExpReplace($title, "[^0-9]", ""))
+EndFunc
+
+Func ClearAllTargets()
+   ;Clear Targets
+   BindRMap(TargetHeroLevel, 0, Range($FROSTLEAF+1))
 EndFunc
 
 ; See a specific hero, or all heroes, have reached their target level
