@@ -109,3 +109,14 @@ Func TranslateCoords($x, $y)
    Local $coords[] = [$x+$board[0], $y+$board[1]]
    Return $coords
 EndFunc
+
+Func ScreenCoordsToBoardCoords($x, $y=Null)
+   If $y == Null And IsArray($x) Then
+      $y = $x[1]
+      $x = $x[0]
+   EndIf
+
+   Local $board = FindBoard(true)
+   Local $coords[] = [$x - $board[0], $y - $board[1]]
+   Return $coords
+EndFunc 
