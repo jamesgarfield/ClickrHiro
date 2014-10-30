@@ -208,3 +208,8 @@ Func NewPixelRange($left, $top, $right=Null, $bottom=Null)
    Local $range[] = [$left, $top, $right, $bottom]
    Return $range
 EndFunc
+
+;Serialize a coordinates array into a string
+Func CoordStr($coord)
+   Return "[" & $coord[0] & ", " & $coord[1] & "]"
+EndFunc
