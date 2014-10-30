@@ -168,18 +168,10 @@ Func LateGameLeveling($tick)
 
    ; If any target levels are too low, bump them up
    If Any(LessThan1k, Map(TargetHeroLevel, $heroes)) Then
-      BindRMap(TargetHeroLevel, 2000, $heroes)
+      BindRMap(TargetHeroLevel, 4100, $heroes)
       $index = 0
    EndIf
 
-   ; If all heroes are at their target level, increase everyones target
-   If TargetHeroLevelReached() Then
-      Local $newLevel = Map(Plus1k, TargetHeroLevel())
-      For $hero in Range($FROSTLEAF + 1)
-         TargetHeroLevel($hero, $newLevel[$hero])
-      Next
-      $index = 0
-   EndIf
 
    ; Alternate between leveling top primary and rest of list
    Local $hero
