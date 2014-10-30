@@ -38,7 +38,7 @@ Global Const $WINDOW = "Clicker Heroes"
    Global Const $BUY_UPGRADES_RANGE = NewPixelRange(250, 550)
 
    ;Ascend
-   Global Const $ASCEND_RANGE = NewPixelRange(300, 555)
+   Global Const $ASCEND_RANGE = NewPixelRange(300, 560)
    Global Const $CONFIRM_ASCEND_RANGE = NewPixelRange(490, 415)
 ;End of Pixels
 
