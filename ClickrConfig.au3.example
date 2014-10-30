@@ -8,15 +8,19 @@ Global Const $MOUSE_SPEED = 3
 
 Global Const $DEFAULT_LEVELING_HEROS[] = [$BRITTANY, $IVAN, $TREEBEAST, $SEER, $SAMURAI]
 
-Global Const $IDLE_PIPELINE[] = [LateGameLeveling]
-Global Const $ACTIVE_PIPELINE[] = [AlwaysWithTheClicking, LateGameLeveling, EnhancedDarkRitual, AscendAtInflection]
+
+Global Const $CLICKSTARTER_PIPELINE[] = [AlwaysProgress, StartBuying, AlwaysWithTheClicking]
 Global Const $FAB_FOUR_PIPELINE[] = [FabulousFourLeveling]
 Global Const $LADDER_PIPELINE[] = [LadderLeveling]
-Global Const $CLICKSTARTER_PIPELINE[] = [AlwaysProgress, StartBuying, AlwaysWithTheClicking]
+Global Const $IDLE_PIPELINE[] = [LateGameLeveling, EnhancedDarkRitual, TransitionPipelineAtIdleCutoff]
+Global Const $ACTIVE_PIPELINE[] = [AlwaysWithTheClicking, LateGameLeveling, EnhancedDarkRitual, AscendAtInflection]
 
-Global Const $PIPELINE_CHAIN[] = [$CLICKSTARTER_PIPELINE, $FAB_FOUR_PIPELINE, $LADDER_PIPELINE, $ACTIVE_PIPELINE]
 
-Global Const $INFLECTION_LEVEL = 190
+Global Const $PIPELINE_CHAIN[] = [$CLICKSTARTER_PIPELINE, $FAB_FOUR_PIPELINE, $LADDER_PIPELINE, $IDLE_PIPELINE, $ACTIVE_PIPELINE]
+
+Global Const $INFLECTION_LEVEL = 760
+
+Global Const $IDLE_CUTOFF_LEVEL = 575
 
 Func AscendAtInflection($tick)
 	Static Local $ascensions = 0
@@ -34,6 +38,12 @@ Func StartBuying($tick)
 		Local $zone = GetZone()
 		Dbg("Start buying @ zone " & $zone)
 		LevelUp($TREEBEAST, 10)
+		Pipeline(NextPipeline())
+	EndIf
+EndFunc
+
+Func TransitionPipelineAtIdleCutoff($tick)
+	If GetZone() >= $IDLE_CUTOFF_LEVEL Then
 		Pipeline(NextPipeline())
 	EndIf
 EndFunc
