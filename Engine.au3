@@ -3,20 +3,44 @@
 #include <Utils.au3>
 #include <ClickrConstants.au3>
 
+Global Const $PROFILE_BOT_ENGINE = False
 
 Func StartBotEngine()
    WinActivate($WINDOW)
    
    Pipeline(NextPipeline())
    
-   Local $tick = 0
    While RunBot() And Not Paused()
+      Local $tick = Tick()
+
+      If $PROFILE_BOT_ENGINE Then
+         TickTimer($tick)
+      EndIf
+      
       Local $pipeline = Pipeline()
       For $step in $pipeline
-         $step($tick)
+         RunStep($step, $tick)  
       Next
-      $tick += 1
    WEnd
+EndFunc
+
+Func Tick($reset=False)
+   Static Local $tick = -1
+   If $reset Then
+      $tick = -1
+   EndIf
+
+   $tick += 1
+
+   Return $tick
+EndFunc
+
+Func RunStep($step, $tick)
+   If $PROFILE_BOT_ENGINE Then
+      StepTimer($step, $tick)
+   Else
+      $step($tick)
+   EndIf
 EndFunc
 
 Func PipelineChain($c = Null)
@@ -35,6 +59,7 @@ Func Pipeline($p=Null)
    Static Local $pipeline
    If $p <> Null Then
       $pipeline = $p
+      Tick(true)
    EndIf
 
    Return $pipeline
@@ -77,4 +102,25 @@ Func RunBot($run=Null)
    Return $is_running
 EndFunc
 
+Func TickTimer($tick)
+   Static Local $timer = TimerInit()
+   Static Local $total = 0
 
+   If $tick == 0 Then
+      Return
+   EndIf
+
+   Local $diff = TimerDiff($timer)
+   $total += $diff
+   Local $tps = Round($tick / Floor($total/1000))
+   Dbg("Tick: " & StrPad($tick, 25, " ") & " Time: " & TimeStr($diff) & ", t/sec: " & $tps)
+   Dbg("----------------------------------------------------------------")
+   $timer = TimerInit()
+EndFunc
+
+Func StepTimer($step, $tick)
+   Local $timer = TimerInit()
+   $step($tick)
+   Local $diff = TimerDiff($timer)
+   Dbg("Step: " & StrPad(FuncName($step), 25, " ") & " Time: " & TimeStr(TimerDiff($timer)))
+EndFunc
