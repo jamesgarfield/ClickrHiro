@@ -5,7 +5,7 @@
 ; Set Options
 Opt("WinTitleMatchMode", 2) ; Set window title match for any substring instead of start with
 
-Global Const $VERSION = "0.6.2"
+Global Const $VERSION = "0.6.3"
 
 Global Const $WINDOW = "Clicker Heroes"
 
