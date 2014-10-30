@@ -1,4 +1,5 @@
 #include <BoardState.au3>
+#include <ClickrConstants.au3>
 #include <Controls.au3>
 #include <Engine.au3>
 #include <Leveling.au3>

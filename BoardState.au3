@@ -1,7 +1,7 @@
 #include-once
 
 #include <Utils.au3>
-#include <Constants.au3>
+#include <ClickrConstants.au3>
 
 Func SkillEnabled($skill)
    Local $range = NewPixelRange($TOP_COOLDOWN[0], $TOP_COOLDOWN[1] + ($skill * $COOLDOWN_Y_OFFSET))

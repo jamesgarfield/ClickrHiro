@@ -2,7 +2,7 @@
 
 #include <Utils.au3>
 #include <BoardState.au3>
-#include <Constants.au3>
+#include <ClickrConstants.au3>
 
 Func EnableProgression()
    ;Didn't find progression mode, turn it on!

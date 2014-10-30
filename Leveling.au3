@@ -1,7 +1,7 @@
 #include-once
 
 #include <Utils.au3>
-#include <Constants.au3>
+#include <ClickrConstants.au3>
 #include <BoardState.au3>
 #include <Controls.au3>
 
