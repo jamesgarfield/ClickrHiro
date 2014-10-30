@@ -339,6 +339,8 @@ Func LateGameLeveling($tick)
 
    Static Local $index = 0
 
+   Static Local $do_primary = True
+
    If UBound(PrimaryHeroes()) == 1 Then
       PrimaryHeroes($DEFAULT_LEVELING_HEROS)
       $index = 0
@@ -361,8 +363,18 @@ Func LateGameLeveling($tick)
       $index = 0
    EndIf
 
-   
-   Local $hero = $heroes[$index]
+   ; Alternate between leveling top primary and rest of list
+   Local $hero
+   If $do_primary Then
+      $hero = $heroes[0]
+   Else
+      $hero = $heroes[$index]
+      $index += 1
+      If $index >= UBound($heroes) Then
+         $index = 0
+      EndIf
+   EndIf
+   $do_primary = Not $do_primary
 
    Local $leveled = False
    While DoLeveling($hero) And Not BossFight()
@@ -371,11 +383,6 @@ Func LateGameLeveling($tick)
    
    If $leveled Then
       EnableProgression()
-   EndIf
-
-   $index += 1
-   If $index >= UBound($heroes) Then
-      $index = 0
    EndIf
 EndFunc
 
