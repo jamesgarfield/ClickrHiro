@@ -176,6 +176,15 @@ Func WithKeyPress($key, $f, $arg = Null)
    Return $result
 EndFunc
 
+Func GlobalOrDefault($global, $default)
+   If IsDeclared($global) Then
+      Dbg("Declared")
+      Return Eval($global)
+   Else
+      Return $default
+   EndIf
+EndFunc
+
 Func HexStr($h)
    Return String("0x" & hex($h,6))
 EndFunc
