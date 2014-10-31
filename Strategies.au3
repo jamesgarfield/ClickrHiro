@@ -259,12 +259,17 @@ Func DynamicIdle($tick)
    
    Local $boss = TimeToBeatBoss()
    Local $fails = BossFail()
+   Local $zone = GetZone()
 
    Local $failedBoss = ($fails > 0)
    Local $tooLongToBeatBoss = ($boss > $boss_Seconds * $SECONDS)
    
    If $failedBoss Or $tooLongToBeatBoss Then
-      Dbg("Idle Switch. Fails: " & $fails & ", Time To Beat: " & TimeStr($boss))
+      Dbg("============================================")
+      Dbg("            Idle Switch: " & $zone)
+      Dbg("            Boss Fails : " & $fails)
+      Dbg("            Boss Time  : " & TimeStr($boss))
+      Dbg("============================================")
       Pipeline(NextPipeline())
    EndIf
 EndFunc
