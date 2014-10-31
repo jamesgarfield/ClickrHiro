@@ -222,3 +222,35 @@ EndFunc
 Func CoordStr($coord)
    Return "[" & $coord[0] & ", " & $coord[1] & "]"
 EndFunc
+
+Func TimeStr($ms)
+   Local Const $SECOND = 1000
+   LOCAL CONST $MINUTE = $SECOND * 60
+
+   Local $min = 0
+   Local $sec = 0
+
+   If $ms >= $MINUTE Then
+      $min = Floor($ms/$MINUTE)
+      $ms -= $min * $MINUTE
+   EndIf
+
+   If $ms >= $SECOND Then
+      $sec = Floor($ms/$SECOND)
+      $ms -= $sec * $SECOND
+   EndIf
+
+   Return StrPad($min, 2, "0", true) & ":" & StrPad($sec, 2, "0", true) & "." & StrPad(Int($ms), 3, "0")
+EndFunc
+
+Func StrPad($str, $pad, $char, $left=False)
+   $str = String($str)
+   While StringLen($str) < $pad
+      If $left Then
+         $str = $char & $str
+      Else
+         $str = $str & $char
+      EndIf
+   WEnd
+   Return $str
+EndFunc
