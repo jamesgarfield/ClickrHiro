@@ -33,6 +33,7 @@ Global Const $IDLE_CUTOFF_LEVEL = 725
 Func Main()
    PipelineChain($PIPELINE_CHAIN)
    ActivateBoard()
+   StartBotEngine()
 EndFunc
 
 
