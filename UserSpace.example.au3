@@ -11,8 +11,8 @@ Global Const $DEBUG = False
 HotKeySet("^{PAUSE}", "Toggle_Pause")     ;Ctrl+Pause
 HotKeySet("+!{END}", "Shut_Down")         ;Alt+Shift+End
 
-Global Const $CLICK_DELAY = 3
-Global Const $MOUSE_SPEED = 3
+Global Const $CLICK_DELAY = 2
+Global Const $MOUSE_SPEED = 1
 
 Global Const $DEFAULT_LEVELING_HEROS[] = [$BRITTANY, $IVAN, $TREEBEAST]
 
