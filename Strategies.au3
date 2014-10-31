@@ -152,13 +152,14 @@ EndFunc
 ; Keep an eye on hero target levels duing late game
 ; @param {Int} $tick
 Func LateGameLeveling($tick)
-   
-   If BossFight() Then
+   Static Local $tick_rate = GlobalOrDefault("LATE_GAME_LEVELING_TICK_RATE", $DEFAULT_LATE_GAME_LEVELING_TICK_RATE)
+
+   If BossFight() Or _
+      Mod(GetZone(), $tick_rate) <> 0 Then
       Return
    EndIf
 
    Static Local $index = 0
-
    Static Local $do_primary = True
 
    Local $heroes = PrimaryHeroes()
