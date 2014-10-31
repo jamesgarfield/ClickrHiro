@@ -178,12 +178,6 @@ Func LevelHeroTowardTarget($hero)
             Return LevelForTargetBy100Max($hero)
          EndIf
 
-      Case 50 To 200
-         Return LevelForTargetBy25Or100($hero)
-
-      Case 200 To 1000
-         Return LevelForTargetBy100($hero)
-
       Case Else
          Return LevelForTargetBy25Or100($hero)
    EndSwitch
