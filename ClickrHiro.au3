@@ -1,4 +1,4 @@
-Global Const $VERSION = "0.7.1"
+Global Const $VERSION = "0.8.0"
 
 #include <UserSpace.au3>
 
