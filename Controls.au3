@@ -26,8 +26,8 @@ EndFunc
 
 
 Func ClickInKillZone($count=1)
-   Local Const $x = Int(Floor($BOARD_WIDTH/4)*3)
-   Local Const $y = Int(Floor($BOARD_HEIGHT/3)*2)
+   Local $x = Random($GOLD_ZONE[0], $GOLD_ZONE[2], 1)
+   Local $y = Random($GOLD_ZONE[1], $GOLD_ZONE[3], 1)
 
    Click($x, $y, $count)
 EndFunc
