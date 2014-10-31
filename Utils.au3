@@ -187,6 +187,9 @@ Func GlobalOrDefault($global, $default)
    EndIf
 EndFunc
 
+Func Noop()
+EndFunc
+
 Func HexStr($h)
    Return String("0x" & hex($h,6))
 EndFunc
