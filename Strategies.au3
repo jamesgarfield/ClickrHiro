@@ -70,15 +70,15 @@ Func FabulousFourLeveling($tick)
                         HeroLevel($BRITTANY) <= 125)
 
    Local $leveled = False
-   While DoLeveling($hero)
+   If DoLeveling($hero) Then
       $leveled = True
-   WEnd
-
-   $index += 1
-   If $index >= UBound(PrimaryHeroes()) Then
-      $index = 0
+   Else
+      $index += 1
+      If $index >= UBound(PrimaryHeroes()) Then
+         $index = 0
+      EndIf
    EndIf
-
+   
    If $leveled And $doUpgrades And RunBot() Then
       BuyAllUpgrades()
       ScrollToPage(0)
@@ -159,19 +159,14 @@ Func LateGameLeveling($tick)
 
    Static Local $do_primary = True
 
-   If UBound(PrimaryHeroes()) == 1 Then
-      PrimaryHeroes($DEFAULT_LEVELING_HEROS)
-      $index = 0
-   EndIf
-
    Local $heroes = PrimaryHeroes()
 
-   ; If any target levels are too low, bump them up
-   If Any(LessThan1k, Map(TargetHeroLevel, $heroes)) Then
+   If UBound($heroes) == 1 Then
+      PrimaryHeroes($DEFAULT_LEVELING_HEROS)
+      $heroes = PrimaryHeroes()
       BindRMap(TargetHeroLevel, 4100, $heroes)
       $index = 0
    EndIf
-
 
    ; Alternate between leveling top primary and rest of list
    Local $hero
@@ -179,17 +174,18 @@ Func LateGameLeveling($tick)
       $hero = $heroes[0]
    Else
       $hero = $heroes[$index]
+   EndIf
+   $do_primary = Not $do_primary
+
+   Local $leveled = False
+   If DoLeveling($hero) Then
+      $leveled = True
+   Else
       $index += 1
       If $index >= UBound($heroes) Then
          $index = 0
       EndIf
    EndIf
-   $do_primary = Not $do_primary
-
-   Local $leveled = False
-   While DoLeveling($hero) And Not BossFight()
-      $leveled = True
-   WEnd
    
    If $leveled Then
       EnableProgression()
