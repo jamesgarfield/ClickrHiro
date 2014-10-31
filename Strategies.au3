@@ -63,11 +63,10 @@ Func FabulousFourLeveling($tick)
 
    Local $hero = $heroes[$index]
 
+   Static Local $max_upgrade[] = [150, 125, 150, 100]
+
    ;Only upgrade if it's possible we don't have all upgrades yet
-   Local $doUpgrades = (HeroLevel($CID) < 125 Or _
-                        HeroLevel($TREEBEAST) <= 125 Or _
-                        HeroLevel($IVAN) <= 125 Or _
-                        HeroLevel($BRITTANY) <= 125)
+   Local $needUpgrades = ( HeroLevel($hero) < $max_upgrade[$hero] )
 
    Local $leveled = False
    If DoLeveling($hero) Then
@@ -79,7 +78,10 @@ Func FabulousFourLeveling($tick)
       EndIf
    EndIf
    
-   If $leveled And $doUpgrades And RunBot() Then
+   Local $level = HeroLevel($hero)
+   Local $upgradeLevel = ($level == 10 Or Mod($level, 25) == 0)
+
+   If $leveled And $needUpgrades And $upgradeLevel And RunBot() Then
       BuyAllUpgrades()
       ScrollToPage(0)
    EndIf
