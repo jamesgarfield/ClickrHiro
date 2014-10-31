@@ -261,7 +261,7 @@ Func DynamicIdle($tick)
    Local $fails = BossFail()
 
    Local $failedBoss = ($fails > 0)
-   Local $tooLongToBeatBoss = ($boss > $boss_Seconds * 1000)
+   Local $tooLongToBeatBoss = ($boss > $boss_Seconds * $SECONDS)
    
    If $failedBoss Or $tooLongToBeatBoss Then
       Dbg("Idle Switch. Fails: " & $fails & ", Time To Beat: " & TimeStr($boss))
@@ -284,7 +284,7 @@ Func DynamicAscend($tick)
    Local $level = TimeInLevel()
 
    ;This can happen if you start the bot in the middle of a deep run and you've lost click stacks
-   Local $levelTooLong = ($level > $seconds_per_level)
+   Local $levelTooLong = ($level > $seconds_per_level * $SECONDS)
    ;Check for too many boss failures, but still try and get further than last play
    Local $tooManyFails = ($fails > $boss_fails_after_advance & $zone > $last_ascend)
    ;If we're still not getting anywhere, even if we haven't beaten last play

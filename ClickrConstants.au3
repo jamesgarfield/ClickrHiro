@@ -99,6 +99,9 @@ Global Enum $CLICKSTORM, _
             $ENERGIZE, _
             $RELOAD
 
+Global Const $SECONDS = 1000
+Global Const $MINUTES = $SECONDS * 60
+
 ;Overide with $PAGE_SCROLL_DELAY
 Global Const $DEFAULT_PAGE_SCROLL_DELAY = 300
 
@@ -110,3 +113,4 @@ Global Const $DEFAULT_ASCEND_DELAY = 500
 
 ;Overide with $LATE_GAME_LEVELING_TICK_RATE
 Global Const $DEFAULT_LATE_GAME_LEVELING_TICK_RATE = 4
+
