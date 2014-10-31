@@ -49,6 +49,9 @@ EndFunc
 
 ; Ensures that Amenhotep has enough levels and ascends the world
 Func Ascend()
+   Static Local $delay = GlobalOrDefault("ASCEND_DELAY", $DEFAULT_ASCEND_DELAY)
+
+   ;Ensure Amenhotep has enough levels
    If HeroLevel($AMENHOTEP) < 150 Then
       TargetHeroLevel($AMENHOTEP, 150)
       While LevelHeroTowardTarget($AMENHOTEP)
@@ -56,13 +59,20 @@ Func Ascend()
       BuyAllUpgrades()
    EndIf
 
+   ;Scroll to Amenhotep and click Ascend
    ScrollToHero($AMENHOTEP)
    Click($ASCEND_RANGE[0], $ASCEND_RANGE[1])
-   Sleep(200)
+   Sleep($delay)
+   
+   ;Click thru the confirmation dialog
    Click($CONFIRM_ASCEND_RANGE[0], $CONFIRM_ASCEND_RANGE[1])
+
+   ;Reset All HeroLevels, TargetLevels and PrimaryHeroes
    BindRMap(HeroLevel, 0, Range($FROSTLEAF+1))
    ClearAllTargets()
    ClearPrimaryHeroes()
+
+   ;Reset the pipeline chain
    Pipeline(NextPipeline(True))
 EndFunc
 

@@ -104,3 +104,6 @@ Global Const $DEFAULT_PAGE_SCROLL_DELAY = 300
 
 ;Overide with $CLICK_DELAY
 Global Const $DEFAULT_CLICK_DELAY = 2
+
+;Overide with $ASCEND_DELAY
+Global Const $DEFAULT_ASCEND_DELAY = 500
