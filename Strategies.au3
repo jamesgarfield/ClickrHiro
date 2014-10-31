@@ -206,6 +206,7 @@ Func EnhancedDarkRitual($tick)
 
    Static Local $phase = $PHASE_UNDETERMINED
 
+   MoveToGoldZone()
    Local $skill = Map(SkillEnabled, Range(9))
 
    Switch $phase
@@ -249,6 +250,10 @@ Func EnhancedDarkRitual($tick)
                $phase = $PHASE_NONE
          EndIf
    EndSwitch
+EndFunc
+
+Func CollectGold($tick)
+   MoveToGoldZone()
 EndFunc
 
 ; Monitor Boss statistics to determine when to switch away from Idling
