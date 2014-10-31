@@ -14,7 +14,8 @@ Global Const $KEY_ACTION[3][2] = _
                ["{SHIFTDOWN}", "{SHIFTUP}"], _
                ["{z down}", "{z up}"]]
 
-
+;Overide with $WITH_KEY_DELAY
+Global Const $DEFAULT_WITH_KEY_DELAY = 300
 
 ; Map a function over an array
 ; @param {function} $f
@@ -162,9 +163,10 @@ EndFunc
 ; @returm {*} The result of the called function
 Func WithKeyPress($key, $f, $arg = Null)
    Local $result
+   Static Local $delay = GlobalOrDefault("WITH_KEY_DELAY", $DEFAULT_WITH_KEY_DELAY)
 
    Send($KEY_ACTION[$key][0])
-   Sleep(600)  ;Sometimes you need the delay to be sure the color has changed
+   Sleep($delay)  ;Sometimes you need the delay to be sure the color has changed
    If $arg == Null Then
     $result = $f()
    Else

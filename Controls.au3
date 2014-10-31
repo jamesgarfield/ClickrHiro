@@ -4,6 +4,8 @@
 #include <BoardState.au3>
 #include <ClickrConstants.au3>
 
+Opt("MouseClickDelay", GlobalOrDefault("CLICK_DELAY", $DEFAULT_CLICK_DELAY))
+
 Func EnableProgression()
    ;Didn't find progression mode, turn it on!
    If Not ProgressionEnabled() Then
@@ -19,7 +21,6 @@ EndFunc
 
 Func BuyAllUpgrades()
    ScrollToBuyUpgrades()
-   Sleep(200)
    Click($BUY_UPGRADES_RANGE[0], $BUY_UPGRADES_RANGE[1], 3)
 EndFunc
 
@@ -63,14 +64,17 @@ EndFunc
 ; @param {Int} $page
 Func ScrollToPage($p)
    Static Local $current_page = -1
+   Static Local $delay = GlobalOrDefault("PAGE_SCROLL_DELAY", $DEFAULT_PAGE_SCROLL_DELAY)
+
    If $current_page <> $p Then
       ;Pages at the end get really close together, rescroll to top to ensure a good click
       If $current_page >= 5 And $p >= 5 Then
          Click($SCROLL_TOP[0], $PAGE_SCROLL[0])
+         Sleep($delay)
       EndIf
       Click($SCROLL_TOP[0], $PAGE_SCROLL[$p])
-      Sleep(600)
       $current_page = $p
+      Sleep($delay)
    EndIf
 EndFunc
 
@@ -88,10 +92,7 @@ EndFunc
 ; @param {Int} $row
 Func Click($x, $y, $count=1)
    Local $board = FindBoard()
-   For $i = 0 To $count-1
-     MouseClick("left", $x + $board[0], $y + $board[1], 1, $MOUSE_SPEED)
-     Sleep($CLICK_DELAY)
-   Next
+   MouseClick("left", $x + $board[0], $y + $board[1], $count, $MOUSE_SPEED)
 EndFunc
 
 Func ActivateBoard()
