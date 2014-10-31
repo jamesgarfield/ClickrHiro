@@ -251,6 +251,144 @@ Func EnhancedDarkRitual($tick)
    EndSwitch
 EndFunc
 
+; Monitor Boss statistics to determine when to switch away from Idling
+Func DynamicIdle($tick)
+   
+   ;How long to allow boss fights to take during idle before switching modes
+   Static Local $boss_seconds = GlobalOrDefault("IDLE_BOSS_SECONDS_CUTOFF", 5)
+   
+   Local $boss = TimeToBeatBoss()
+   Local $fails = BossFail()
+
+   Local $failedBoss = ($fails > 0)
+   Local $tooLongToBeatBoss = ($boss > $boss_Seconds * 1000)
+   
+   If $failedBoss Or $tooLongToBeatBoss Then
+      Dbg("Idle Switch. Fails: " & $fails & ", Time To Beat: " & TimeStr($boss))
+      Pipeline(NextPipeline())
+   EndIf
+EndFunc
+
+;Monitor Boss & Level statistics to determine when to ascend
+Func DynamicAscend($tick)
+   
+   Static Local $boss_fails_after_advance = GlobalOrDefault("ASCEND_AFTER_BOSS_FAIL", 2)
+   Static Local $boss_fails_before_advance = GlobalOrDefault("ASCEND_FAILSAFE", $boss_fails_after_advance * 3)
+   Static Local $seconds_per_level = GlobalOrDefault("ASCEND_AFTER_SECONDS_PER_LEVEL", 30)
+
+   Static Local $last_ascend = 0
+   Static Local $ascend_count = 0
+
+   Local $fails = BossFail()
+   Local $zone = GetZone()
+   Local $level = TimeInLevel()
+
+   ;This can happen if you start the bot in the middle of a deep run and you've lost click stacks
+   Local $levelTooLong = ($level > $seconds_per_level)
+   ;Check for too many boss failures, but still try and get further than last play
+   Local $tooManyFails = ($fails > $boss_fails_after_advance & $zone > $last_ascend)
+   ;If we're still not getting anywhere, even if we haven't beaten last play
+   Local $wayTooManyFails = ($fails > $boss_fails_before_advance)
+
+   If $levelTooLong OR $tooManyFails Or $wayTooManyFails Then
+      $last_ascend = $zone
+      $ascend_count += 1
+
+      ;Reset statistics
+      BossFail(0)
+      TimeToBeatBoss(0)
+      TimeInLevel(0)
+
+      Ascend()
+
+      Dbg("============================================")
+      Dbg("      Ascension " & $ascend_count & " @ " & $zone)
+      Dbg("============================================")
+   EndIf
+EndFunc
+
+; Times how long Boss Fights take, and counts failed attempts
+Func BossMonitor($tick)
+   Static Local $timer = Null
+   Static Local $boss_zone = 0
+
+   Local $zone = GetZone()
+
+   ;Still on same boss
+   If $zone == $boss_zone Then
+      Return
+   EndIf
+
+   ;In a boss fight, start a timer
+   If BossFight() Then
+      $boss_zone = $zone
+      $timer = TimerInit()
+      Return
+   EndIf
+
+   ;Beat previous boss fight, set statistics and clear local statics
+   If $zone > $boss_zone Then
+      Local $diff = TimerDiff($timer)
+      TimeToBeatBoss($diff, $boss_zone)
+      $timer = Null
+      $boss_zone = Null
+      BossFail(0)
+      Return
+   EndIf
+
+   ;Failed Previous boss fight, increase BossFail count
+   If $zone < $boss_zone Then
+      BossFail(BossFail() + 1)
+      Return
+   EndIf
+EndFunc
+
+; Time how long levels take
+Func LevelMonitor($tick)
+   Static Local $timer = Null
+   Static Local $last_zone = 0
+
+   Local $zone = GetZone()
+
+   If $zone > $last_zone Then
+      $last_zone = $zone
+      $timer = TimerInit()
+      Return
+   EndIf
+
+   Local $diff = TimerDiff($timer)
+
+   TimeInLevel($diff)
+EndFunc
+
+; Get/Set how long the last boss fight took
+Func TimeToBeatBoss($ms = Null, $boss = Null)
+   Static Local $beat_time = 0
+   If $ms <> Null Then
+      $beat_time = Floor($ms)
+      Dbg("To Beat " & StrPad($boss, 4, " ") & " Time: " & TimeStr($beat_time))
+   EndIf
+   Return $beat_time
+EndFunc
+
+;Get/Set Boss Fail Count
+Func BossFail($count = Null)
+   Static Local $fails = 0
+   If $count <> Null Then
+      $fails = $count
+   EndIf
+   Return $fails
+EndFunc
+
+;Get/Set how long the current level has been taking
+Func TimeInLevel($ms = Null)
+   Static Local $level_time = 0
+   If $ms <> Null Then
+      $level_time = $ms
+   EndIf
+   Return $level_time
+EndFunc
+
 
 Func SpamEarlySkills($tick)
    Send("12")
