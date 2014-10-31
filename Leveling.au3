@@ -65,8 +65,6 @@ EndFunc
 
 Func CanLevel($hero)
    ScrollToHero($hero)
-   Sleep(400)
-
    Local $row = $HERO_BUTTON[$hero][1]
 
    Local Const $SEARCH_RADIUS = 20
