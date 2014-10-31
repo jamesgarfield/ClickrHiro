@@ -47,6 +47,25 @@ Func ClearAllTargets()
    BindRMap(TargetHeroLevel, 0, Range($FROSTLEAF+1))
 EndFunc
 
+; Ensures that Amenhotep has enough levels and ascends the world
+Func Ascend()
+   If HeroLevel($AMENHOTEP) < 150 Then
+      TargetHeroLevel($AMENHOTEP, 150)
+      While LevelHeroTowardTarget($AMENHOTEP)
+      WEnd
+      BuyAllUpgrades()
+   EndIf
+
+   ScrollToHero($AMENHOTEP)
+   Click($ASCEND_RANGE[0], $ASCEND_RANGE[1])
+   Sleep(200)
+   Click($CONFIRM_ASCEND_RANGE[0], $CONFIRM_ASCEND_RANGE[1])
+   BindRMap(HeroLevel, 0, Range($FROSTLEAF+1))
+   ClearAllTargets()
+   ClearPrimaryHeroes()
+   Pipeline(NextPipeline(True))
+EndFunc
+
 
 ; Levels a hero towards their target level and enables progression if successful
 ; @param {HeroEnum} $hero
