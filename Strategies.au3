@@ -177,16 +177,18 @@ Func LateGameLeveling($tick)
    Else
       $hero = $heroes[$index]
    EndIf
-   $do_primary = Not $do_primary
 
    Local $leveled = False
    If DoLeveling($hero) Then
       $leveled = True
    Else
-      $index += 1
-      If $index >= UBound($heroes) Then
-         $index = 0
+      If Not $do_primary Then
+         $index += 1
+         If $index >= UBound($heroes) Then
+            $index = 0
+         EndIf
       EndIf
+      $do_primary = Not $do_primary
    EndIf
    
    If $leveled Then
