@@ -310,7 +310,7 @@ EndFunc
 ; Times how long Boss Fights take, and counts failed attempts
 Func BossMonitor($tick)
    Static Local $timer = Null
-   Static Local $boss_zone = 0
+   Static Local $boss_zone = Null
 
    Local $zone = GetZone()
 
@@ -323,6 +323,11 @@ Func BossMonitor($tick)
    If BossFight() Then
       $boss_zone = $zone
       $timer = TimerInit()
+      Return
+   EndIf
+
+   ;No Boss set, nothing to do
+   If $boss_zone == Null Then
       Return
    EndIf
 
