@@ -39,6 +39,9 @@ Global Const $WINDOW = "Clicker Heroes"
    ;Ascend
    Global Const $ASCEND_RANGE = NewPixelRange(300, 560)
    Global Const $CONFIRM_ASCEND_RANGE = NewPixelRange(490, 415)
+
+   ;Gold Zone
+   Global Const $GOLD_ZONE = NewPixelRange(745, 400, 945, 450)
 ;End of Pixels
 
 ;Used to find the game board within the browser window
