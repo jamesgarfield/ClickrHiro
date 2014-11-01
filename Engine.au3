@@ -17,10 +17,8 @@ Func StartBotEngine()
          TickTimer($tick)
       EndIf
       
-      Local $pipeline = Pipeline()
-      For $step in $pipeline
-         RunStep($step, $tick)  
-      Next
+      RunPipeline(OnTick(), $tick)
+      RunPipeline(Pipeline(), $tick)
    WEnd
 EndFunc
 
@@ -35,12 +33,30 @@ Func Tick($reset=False)
    Return $tick
 EndFunc
 
+Func RunPipeline($pipeline, $tick)
+   For $step in $pipeline
+      RunStep($step, $tick)
+   Next
+EndFunc
+
 Func RunStep($step, $tick)
    If $PROFILE_BOT_ENGINE Then
       StepTimer($step, $tick)
    Else
       $step($tick)
    EndIf
+EndFunc
+
+Func OnTick($f = Null)
+   Static Local $steps[] = [Noop]
+   If $f <> Null Then
+      If $steps[0] == Noop Then
+         $steps[0] = $f
+      Else
+         _ArrayAdd($steps, $f)
+      EndIf
+   EndIf
+   Return $steps
 EndFunc
 
 Func PipelineChain($c = Null)
