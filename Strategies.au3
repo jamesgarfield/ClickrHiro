@@ -401,6 +401,12 @@ Func LevelMonitor($tick)
    TimeInLevel($diff)
 EndFunc
 
+Func ClearStatistics()
+   TimeToBeatBoss(0)
+   BossFail(0)
+   TimeInLevel(0)
+EndFunc
+
 ; Get/Set how long the last boss fight took
 Func TimeToBeatBoss($ms = Null, $boss = Null)
    Static Local $beat_time = 0
