@@ -301,11 +301,11 @@ Func DynamicAscend($tick)
    ;This can happen if you start the bot in the middle of a deep run and you've lost click stacks
    Local $levelTooLong = ($level > $seconds_per_level * $SECONDS)
    ;Check for too many boss failures, but still try and get further than last play
-   Local $tooManyFails = ($fails > $boss_fails_after_advance & $zone > $last_ascend)
+   Local $tooManyFails = ($fails > $boss_fails_after_advance) And ($zone > $last_ascend)
    ;If we're still not getting anywhere, even if we haven't beaten last play
    Local $wayTooManyFails = ($fails > $boss_fails_before_advance)
 
-   If $levelTooLong OR $tooManyFails Or $wayTooManyFails Then
+   If $levelTooLong Or $tooManyFails Or $wayTooManyFails Then
       $last_ascend = $zone
       $ascend_count += 1
 
