@@ -282,7 +282,6 @@ Func DynamicIdle($tick)
    
    
    If $failedBoss Or $tooLongToBeatBoss Or $tooLongInLevel Then
-      Dbg("============================================")
       Dbg("            Idle Switch: " & $zone)
       Dbg("            Previous   : " & $last_idle)
       Dbg("            Boss Fails : " & $fails)
@@ -319,7 +318,6 @@ Func DynamicAscend($tick)
 
    If $levelTooLong Or $tooManyFails Or $wayTooManyFails Then
 
-      Dbg("============================================")
       Dbg("            Ascend     : " & $ascend_count)
       Dbg("            Zone       : " & $zone)
       Dbg("            Previous   : " & $last_ascend)
