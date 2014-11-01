@@ -4,6 +4,13 @@
 #include <BoardState.au3>
 #include <Controls.au3>
 
+InitStrategies()
+Func InitStrategies()
+   OnTick(LevelMonitor)
+   OnTick(BossMonitor)
+   OnAscend(ClearPrimaryHeroes)
+   OnAscend(ClearStatistics)
+EndFunc
 
 ; Get/Set the primary heroes to level during late game leveling
 ; @param {Array<HeroEnum>} [$heroes]
@@ -323,14 +330,7 @@ Func DynamicAscend($tick)
       $last_ascend = $zone
       $ascend_count += 1
 
-      ;Reset statistics
-      BossFail(0)
-      TimeToBeatBoss(0)
-      TimeInLevel(0)
-
       Ascend()
-
-
    EndIf
 EndFunc
 
