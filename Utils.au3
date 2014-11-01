@@ -107,6 +107,10 @@ Func Any($f, ByRef $a)
    Return False
 EndFunc
 
+Func Invoke($f)
+   Return $f()
+EndFunc
+
 ; Returns true if the argument passed is true, otherwise, false
 Func IsTrue($b)
    Return $b == True
@@ -180,14 +184,13 @@ EndFunc
 
 Func GlobalOrDefault($global, $default)
    If IsDeclared($global) Then
-      Dbg("Declared")
       Return Eval($global)
    Else
       Return $default
    EndIf
 EndFunc
 
-Func Noop()
+Func Noop($a=Null, $b=Null, $c=Null, $d=Null)
 EndFunc
 
 Func HexStr($h)
