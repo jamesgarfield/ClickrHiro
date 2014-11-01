@@ -121,7 +121,7 @@ Func LadderLeveling($tick)
    Local $hero = $heroes[$index]
 
    Local $leveled = False
-   If DoLeveling($hero)
+   If DoLeveling($hero) Then
       $leveled = True
    Else
       $index += 1
