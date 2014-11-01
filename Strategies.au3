@@ -121,13 +121,13 @@ Func LadderLeveling($tick)
    Local $hero = $heroes[$index]
 
    Local $leveled = False
-   While DoLeveling($hero)
+   If DoLeveling($hero) Then
       $leveled = True
-   WEnd
-   
-   $index += 1
-   If $index >= UBound(PrimaryHeroes()) Then
-      $index = 0
+   Else
+      $index += 1
+      If $index >= UBound(PrimaryHeroes()) Then
+         $index = 0
+      EndIf
    EndIf
 
    If $leveled Then
@@ -135,7 +135,7 @@ Func LadderLeveling($tick)
    EndIf
 
    ; Try to only buy upgrades once per page
-   If $upgrade_tick == 4 Then
+   If $upgrade_tick == 3 Then
       BuyAllUpgrades()
       $upgrade_tick = 0
    EndIf
@@ -261,22 +261,32 @@ Func DynamicIdle($tick)
    
    ;How long to allow boss fights to take during idle before switching modes
    Static Local $boss_seconds = GlobalOrDefault("IDLE_BOSS_SECONDS_CUTOFF", 5)
+
+   Static Local $last_idle = Null
    
    Local $boss = TimeToBeatBoss()
+   Local $level = TimeInLevel()
    Local $fails = BossFail()
    Local $zone = GetZone()
 
    Local $failedBoss = ($fails > 0)
    Local $tooLongToBeatBoss = ($boss > $boss_Seconds * $SECONDS)
+   Local $tooLongInLevel = ($level > $boss_seconds * $SECONDS * 2)
    
-   If $failedBoss Or $tooLongToBeatBoss Then
+   
+   If $failedBoss Or $tooLongToBeatBoss Or $tooLongInLevel Then
       Dbg("============================================")
       Dbg("            Idle Switch: " & $zone)
+      Dbg("            Previous   : " & $last_idle)
       Dbg("            Boss Fails : " & $fails)
       Dbg("            Boss Time  : " & TimeStr($boss))
+      Dbg("            Level Time : " & TimeStr($level))
       Dbg("============================================")
+
+      $last_idle = $zone
       Pipeline(NextPipeline())
    EndIf
+
 EndFunc
 
 ;Monitor Boss & Level statistics to determine when to ascend
@@ -296,11 +306,20 @@ Func DynamicAscend($tick)
    ;This can happen if you start the bot in the middle of a deep run and you've lost click stacks
    Local $levelTooLong = ($level > $seconds_per_level * $SECONDS)
    ;Check for too many boss failures, but still try and get further than last play
-   Local $tooManyFails = ($fails > $boss_fails_after_advance & $zone > $last_ascend)
+   Local $tooManyFails = ($fails > $boss_fails_after_advance) And ($zone > $last_ascend)
    ;If we're still not getting anywhere, even if we haven't beaten last play
    Local $wayTooManyFails = ($fails > $boss_fails_before_advance)
 
-   If $levelTooLong OR $tooManyFails Or $wayTooManyFails Then
+   If $levelTooLong Or $tooManyFails Or $wayTooManyFails Then
+
+      Dbg("============================================")
+      Dbg("            Ascend     : " & $ascend_count)
+      Dbg("            Zone       : " & $zone)
+      Dbg("            Previous   : " & $last_ascend)
+      Dbg("            Boss Fails : " & $fails)
+      Dbg("            Level Time : " & TimeStr($level))
+      Dbg("============================================")
+
       $last_ascend = $zone
       $ascend_count += 1
 
@@ -311,9 +330,7 @@ Func DynamicAscend($tick)
 
       Ascend()
 
-      Dbg("============================================")
-      Dbg("      Ascension " & $ascend_count & " @ " & $zone)
-      Dbg("============================================")
+
    EndIf
 EndFunc
 
@@ -333,6 +350,14 @@ Func BossMonitor($tick)
    If BossFight() Then
       $boss_zone = $zone
       $timer = TimerInit()
+      Return
+   EndIf
+
+   ;Not a fail, possible ascension, possible manual level reset
+   If $zone < ($boss_zone - 1) Then
+      ;Can't trust anything
+      $timer = Null
+      $boss_zone = Null
       Return
    EndIf
 
@@ -365,7 +390,7 @@ Func LevelMonitor($tick)
 
    Local $zone = GetZone()
 
-   If $zone > $last_zone Then
+   If $zone > $last_zone Or $zone < $last_zone - 1 Then
       $last_zone = $zone
       $timer = TimerInit()
       Return
@@ -381,7 +406,7 @@ Func TimeToBeatBoss($ms = Null, $boss = Null)
    Static Local $beat_time = 0
    If $ms <> Null Then
       $beat_time = Floor($ms)
-      Dbg("To Beat " & StrPad($boss, 4, " ") & " Time: " & TimeStr($beat_time))
+      ;Dbg("To Beat " & StrPad($boss, 4, " ") & " Time: " & TimeStr($beat_time))
    EndIf
    Return $beat_time
 EndFunc

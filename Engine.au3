@@ -48,7 +48,6 @@ Func PipelineChain($c = Null)
    If $c <> Null Then
       $chain = $c
    EndIf
-
    Return $chain
 EndFunc
 
@@ -58,8 +57,8 @@ EndFunc
 Func Pipeline($p=Null)
    Static Local $pipeline
    If $p <> Null Then
-      $pipeline = $p
       Tick(true)
+      $pipeline = $p
    EndIf
 
    Return $pipeline
