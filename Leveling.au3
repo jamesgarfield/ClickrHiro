@@ -71,11 +71,24 @@ Func Ascend()
    BindRMap(HeroLevel, 0, Range($FROSTLEAF+1))
    ClearAllTargets()
    ClearPrimaryHeroes()
+   
+   Map(Invoke, OnAscend)
 
    ;Reset the pipeline chain
    Pipeline(NextPipeline(True))
 EndFunc
 
+Func OnAscend($f = Null)
+   Static Local $listeners[] = [Noop]
+   If $f <> Null Then
+      If $listeners[0] == Noop Then
+         $listeners[0] = $f
+      Else
+         _ArrayAdd($listeners, $f)
+      EndIf
+   EndIf
+   Return $listeners
+EndFunc
 
 ; Levels a hero towards their target level and enables progression if successful
 ; @param {HeroEnum} $hero
