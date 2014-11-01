@@ -120,3 +120,19 @@ Func ScreenCoordsToBoardCoords($x, $y=Null)
    Local $coords[] = [$x - $board[0], $y - $board[1]]
    Return $coords
 EndFunc 
+
+
+Func CursorInfo()
+   Static $info_on = False
+   $info_on = Not $info_on
+
+   
+   While $info_on
+      Local $mouse = MouseGetPos()
+      Local $coord = ScreenCoordsToBoardCoords($mouse)
+
+      Local $pixelHex = HexStr(PixelGetColor($mouse[0], $mouse[1]))
+
+      Tooltip("Screen: " & CoordStr($mouse) & " Board: " & CoordStr($coord) & " " & "Hex: " & $pixelHex)
+   Wend
+EndFunc
