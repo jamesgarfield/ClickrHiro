@@ -365,7 +365,7 @@ Func LevelMonitor($tick)
 
    Local $zone = GetZone()
 
-   If $zone > $last_zone Then
+   If $zone > $last_zone Or $zone < $last_zone - 1 Then
       $last_zone = $zone
       $timer = TimerInit()
       Return
