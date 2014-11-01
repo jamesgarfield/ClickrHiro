@@ -6,6 +6,12 @@
 
 Opt("MouseClickDelay", GlobalOrDefault("CLICK_DELAY", $DEFAULT_CLICK_DELAY))
 
+InitControls()
+Func InitControls()
+   OnUnPause(ActivateBoard)
+EndFunc
+
+
 Func EnableProgression()
    ;Didn't find progression mode, turn it on!
    If Not ProgressionEnabled() Then
