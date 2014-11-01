@@ -306,6 +306,15 @@ Func DynamicAscend($tick)
    Local $wayTooManyFails = ($fails > $boss_fails_before_advance)
 
    If $levelTooLong Or $tooManyFails Or $wayTooManyFails Then
+
+      Dbg("============================================")
+      Dbg("            Ascend     : " & $ascend_count)
+      Dbg("            Zone       : " & $zone)
+      Dbg("            Previous   : " & $last_ascend)
+      Dbg("            Boss Fails : " & $fails)
+      Dbg("            Level Time : " & TimeStr($level))
+      Dbg("============================================")
+
       $last_ascend = $zone
       $ascend_count += 1
 
@@ -316,9 +325,7 @@ Func DynamicAscend($tick)
 
       Ascend()
 
-      Dbg("============================================")
-      Dbg("      Ascension " & $ascend_count & " @ " & $zone)
-      Dbg("============================================")
+
    EndIf
 EndFunc
 
