@@ -381,7 +381,7 @@ Func TimeToBeatBoss($ms = Null, $boss = Null)
    Static Local $beat_time = 0
    If $ms <> Null Then
       $beat_time = Floor($ms)
-      Dbg("To Beat " & StrPad($boss, 4, " ") & " Time: " & TimeStr($beat_time))
+      ;Dbg("To Beat " & StrPad($boss, 4, " ") & " Time: " & TimeStr($beat_time))
    EndIf
    Return $beat_time
 EndFunc
