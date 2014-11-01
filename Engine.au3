@@ -102,7 +102,41 @@ Func Paused($pause=Null)
    EndIf
 
    $is_paused = $pause
+
+   Local $run
+   If $is_paused Then
+      $run = OnPause()
+   Else
+      $run = OnUnPause()
+   EndIf
+
+   Map(Invoke, $run)
+
    Return $is_paused
+EndFunc
+
+Func OnPause($f=Null)
+   Static Local $listeners[] = [Noop]
+   If $f <> Null Then
+      If $listeners[0] == Noop Then
+         $listeners[0] = $f
+      Else
+         _ArrayAdd($listeners, $f)
+      EndIf
+   EndIf
+   Return $listeners
+EndFunc
+
+Func OnUnPause($f=Null)
+   Static Local $listeners[] = [Noop]
+   If $f <> Null Then
+      If $listeners[0] == Noop Then
+         $listeners[0] = $f
+      Else
+         _ArrayAdd($listeners, $f)
+      EndIf
+   EndIf
+   Return $listeners
 EndFunc
 
 ; Set the Bot Engine to on or off
