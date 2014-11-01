@@ -261,6 +261,8 @@ Func DynamicIdle($tick)
    
    ;How long to allow boss fights to take during idle before switching modes
    Static Local $boss_seconds = GlobalOrDefault("IDLE_BOSS_SECONDS_CUTOFF", 5)
+
+   Static Local $last_idle = Null
    
    Local $boss = TimeToBeatBoss()
    Local $level = TimeInLevel()
@@ -275,10 +277,13 @@ Func DynamicIdle($tick)
    If $failedBoss Or $tooLongToBeatBoss Or $tooLongInLevel Then
       Dbg("============================================")
       Dbg("            Idle Switch: " & $zone)
+      Dbg("            Previous   : " & $last_idle)
       Dbg("            Boss Fails : " & $fails)
       Dbg("            Boss Time  : " & TimeStr($boss))
       Dbg("            Level Time : " & TimeStr($level))
       Dbg("============================================")
+
+      $last_idle = $zone
       Pipeline(NextPipeline())
    EndIf
 
