@@ -47,6 +47,10 @@ Func ClearAllTargets()
    BindRMap(TargetHeroLevel, 0, Range($FROSTLEAF+1))
 EndFunc
 
+Func ClearHeroLevels()
+   BindRMap(HeroLevel, 0, Range($FROSTLEAF+1))
+EndFunc
+
 ; Ensures that Amenhotep has enough levels and ascends the world
 Func Ascend()
    Static Local $delay = GlobalOrDefault("ASCEND_DELAY", $DEFAULT_ASCEND_DELAY)
@@ -67,10 +71,8 @@ Func Ascend()
    ;Click thru the confirmation dialog
    Click($CONFIRM_ASCEND_RANGE[0], $CONFIRM_ASCEND_RANGE[1])
 
-   ;Reset All HeroLevels, TargetLevels and PrimaryHeroes
-   BindRMap(HeroLevel, 0, Range($FROSTLEAF+1))
    ClearAllTargets()
-   ClearPrimaryHeroes()
+   ClearHeroLevels()
    
    Map(Invoke, OnAscend)
 
