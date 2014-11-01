@@ -121,13 +121,13 @@ Func LadderLeveling($tick)
    Local $hero = $heroes[$index]
 
    Local $leveled = False
-   While DoLeveling($hero)
+   If DoLeveling($hero)
       $leveled = True
-   WEnd
-   
-   $index += 1
-   If $index >= UBound(PrimaryHeroes()) Then
-      $index = 0
+   Else
+      $index += 1
+      If $index >= UBound(PrimaryHeroes()) Then
+         $index = 0
+      EndIf
    EndIf
 
    If $leveled Then
@@ -135,7 +135,7 @@ Func LadderLeveling($tick)
    EndIf
 
    ; Try to only buy upgrades once per page
-   If $upgrade_tick == 4 Then
+   If $upgrade_tick == 3 Then
       BuyAllUpgrades()
       $upgrade_tick = 0
    EndIf
