@@ -263,20 +263,25 @@ Func DynamicIdle($tick)
    Static Local $boss_seconds = GlobalOrDefault("IDLE_BOSS_SECONDS_CUTOFF", 5)
    
    Local $boss = TimeToBeatBoss()
+   Local $level = TimeInLevel()
    Local $fails = BossFail()
    Local $zone = GetZone()
 
    Local $failedBoss = ($fails > 0)
    Local $tooLongToBeatBoss = ($boss > $boss_Seconds * $SECONDS)
+   Local $tooLongInLevel = ($level > $boss_seconds * $SECONDS * 2)
    
-   If $failedBoss Or $tooLongToBeatBoss Then
+   
+   If $failedBoss Or $tooLongToBeatBoss Or $tooLongInLevel Then
       Dbg("============================================")
       Dbg("            Idle Switch: " & $zone)
       Dbg("            Boss Fails : " & $fails)
       Dbg("            Boss Time  : " & TimeStr($boss))
+      Dbg("            Level Time : " & TimeStr($level))
       Dbg("============================================")
       Pipeline(NextPipeline())
    EndIf
+
 EndFunc
 
 ;Monitor Boss & Level statistics to determine when to ascend
