@@ -353,6 +353,14 @@ Func BossMonitor($tick)
       Return
    EndIf
 
+   ;Not a fail, possible ascension, possible manual level reset
+   If $zone < ($boss_zone - 1) Then
+      ;Can't trust anything
+      $timer = Null
+      $boss_zone = Null
+      Return
+   EndIf
+
    ;No Boss set, nothing to do
    If $boss_zone == Null Then
       Return
