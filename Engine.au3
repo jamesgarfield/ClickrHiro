@@ -164,7 +164,7 @@ Func TickTimer($tick)
    Local $diff = TimerDiff($timer)
    $total += $diff
    Local $tps = Round($tick / Floor($total/1000))
-   Dbg("Tick: " & StrPad($tick, 25, " ") & " Time: " & TimeStr($diff) & ", t/sec: " & $tps)
+   Dbg("Tick: " & StrPad($tick-1, 25, " ") & " Time: " & TimeStr($diff) & ", t/sec: " & $tps)
    Dbg("----------------------------------------------------------------")
    $timer = TimerInit()
 EndFunc
