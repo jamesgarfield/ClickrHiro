@@ -33,7 +33,23 @@ EndFunc
 
 ; Always clicks mobs for every tick count
 Func AlwaysWithTheClicking($tick)
-   ClickInKillZone(40)
+   If BossFight() Then
+      ClickInKillZone(160)
+   Else
+      ClickInKillZone(40)
+   EndIf
+EndFunc
+
+Func FabulousFour($tick)
+   Static Local $fab4[] = [$BRITTANY, $IVAN, $TREEBEAST, $CID]
+   If $tick == $START_TICK Then
+      PrimaryHeroes($fab4)
+      ClearAllTargets()
+      TargetHeroLevel($CID, 150)
+      TargetHeroLevel($TREEBEAST, 1000)
+      TargetHeroLevel($IVAN, 1000)
+      TargetHeroLevel($BRITTANY, 1000)   
+   EndIf
 EndFunc
 
 ; Leveling stragegy for early game that focuses on levelling the four Page 0 heroes until all heroes are available
@@ -46,34 +62,36 @@ Func FabulousFourLeveling($tick)
       Return
    EndIf
 
-   If Mod($tick, 2) <> 0 Then
+   If $tick == $START_TICK Then
+      FabulousFour()
+      LevelingRateLimit(GlobalOrDefault("FAB_FOUR_RATE_LIMIT", 2))
+   EndIf
+
+   RotationalLeveling($tick)
+EndFunc
+
+Func LevelingRateLimit($ticks=Null)
+   Static Local $limit
+   If $ticks <> Null Then
+      $limit = $ticks
+   EndIf
+EndFunc
+
+Func RotationalLeveling($tick)
+   If Mod($tick, LevelingRateLimit()) <> 0 Then
       Return
    EndIf
 
-   Static Local $fab4[] = [$BRITTANY, $IVAN, $TREEBEAST, $CID]
-
-   Static Local $index = 0
-   
-   Local $heroes = PrimaryHeroes()
-   If UBound($heroes) == 1 Then
-      PrimaryHeroes($fab4)
-   
-      ClearAllTargets()
-      TargetHeroLevel($CID, 150)
-      TargetHeroLevel($TREEBEAST, 1000)
-      TargetHeroLevel($IVAN, 1000)
-      TargetHeroLevel($BRITTANY, 1000)   
-
-      $heroes = PrimaryHeroes()
+   If $tick == $START_TICK Then
       $index = 0
    EndIf
 
+   Local $heroes = PrimaryHeroes()
    Local $hero = $heroes[$index]
 
-   Static Local $max_upgrade[] = [150, 125, 150, 100]
-
    ;Only upgrade if it's possible we don't have all upgrades yet
-   Local $needUpgrades = ( HeroLevel($hero) < $max_upgrade[$hero] )
+   Local $currentLevel = HeroLevel($hero)
+   Local $needUpgrades = $currentLevel < $MAX_UPGRADE[$hero]
 
    Local $leveled = False
    If DoLeveling($hero) Then
@@ -96,6 +114,18 @@ Func FabulousFourLeveling($tick)
    EnableProgression()
 EndFunc
 
+Func LevelsForEveryone($tick)
+   If $tick == $START_TICK Then
+      PrimaryHeroes(Range($ALL_HEROES))
+      $heroes = PrimaryHeroes()
+      Local $arg[] = [100]
+      Local $levels = BindMap(_Max, $arg, Map(MaxUpgradeLevel, Range($ALL_HEROES)))
+
+      Local $hero_levels = Zip($heroes, $levels)
+      MapInvoke(TargetHeroLevel, $hero_levels)
+   EndIf
+EndFunc
+
 ; Leveling strategy to iteratively go down the hero ladder leveling each to their 100's max
 Func LadderLeveling($tick)
    
@@ -106,46 +136,12 @@ Func LadderLeveling($tick)
       Return
    EndIf
 
-   Static Local $upgrade_tick = 0
-
-   Local $heroes = PrimaryHeroes()
-
-   Static Local $index = 0
-
-   ; Newly in pipeline, setup heroes
-   If UBound($heroes) == 1 Then
-      PrimaryHeroes(Range($TREEBEAST, $FROSTLEAF+1))
-      $heroes = PrimaryHeroes()
-
-      BindRMap(TargetHeroLevel, 125, $heroes)
-      TargetHeroLevel($AMENHOTEP, 150)
-      TargetHeroLevel($FROSTLEAF, 100)
-
-      $upgrade_tick = 0
-      $index = 0
+   If $tick == $START_TICK Then
+      LevelsForEveryone()
+      LevelingRateLimit(1)
    EndIf
-
-   Local $hero = $heroes[$index]
-
-   Local $leveled = False
-   If DoLeveling($hero) Then
-      $leveled = True
-   Else
-      $index += 1
-      If $index >= UBound(PrimaryHeroes()) Then
-         $index = 0
-      EndIf
-   EndIf
-
-   If $leveled Then
-      $upgrade_tick += 1
-   EndIf
-
-   ; Try to only buy upgrades once per page
-   If $upgrade_tick == 3 Then
-      BuyAllUpgrades()
-      $upgrade_tick = 0
-   EndIf
+   
+   PageLeveling($tick)
 
    If TargetHeroLevelReached() Then
       ;ladder leveling done, move onto to next play pipeline
@@ -156,52 +152,65 @@ Func LadderLeveling($tick)
    EndIf
 EndFunc
 
-; Keep an eye on hero target levels duing late game
-; @param {Int} $tick
-Func LateGameLeveling($tick)
-   Static Local $tick_rate = GlobalOrDefault("LATE_GAME_LEVELING_TICK_RATE", $DEFAULT_LATE_GAME_LEVELING_TICK_RATE)
-
-   If BossFight() Or _
-      Mod(GetZone(), $tick_rate) <> 0 Then
+Func PageLeveling($tick)
+   If Mod($tick, LevelingRateLimit()) <> 0 Then
       Return
    EndIf
 
+   Static Local $upgrade_tick = 0
    Static Local $index = 0
-   Static Local $do_primary = True
 
    Local $heroes = PrimaryHeroes()
 
-   If UBound($heroes) == 1 Then
-      PrimaryHeroes($DEFAULT_LEVELING_HEROS)
-      $heroes = PrimaryHeroes()
-      BindRMap(TargetHeroLevel, 4100, $heroes)
+   ; Newly in pipeline, setup heroes
+   If $tick == $START_TICK Then
+      $upgrade_tick = 0
       $index = 0
    EndIf
 
-   ; Alternate between leveling top primary and rest of list
-   Local $hero
-   If $do_primary Then
-      $hero = $heroes[0]
-   Else
-      $hero = $heroes[$index]
-   EndIf
+   Local $hero = $heroes[$index]
 
    Local $leveled = False
    If DoLeveling($hero) Then
       $leveled = True
    Else
-      If Not $do_primary Then
-         $index += 1
-         If $index >= UBound($heroes) Then
-            $index = 0
-         EndIf
+      $upgrade_tick += 1
+      $index += 1
+      If $index >= UBound(PrimaryHeroes()) Then
+         $index = 0
       EndIf
-      $do_primary = Not $do_primary
    EndIf
+
+   ; Try to only buy upgrades once per page
+   If $upgrade_tick == 4 Then
+      BuyAllUpgrades()
+      $upgrade_tick = 0
+   EndIf
+EndFunc
+
+
+Func BringOutTheBigGuns($tick)
+   If $tick == $START_TICK Then
+      PrimaryHeroes($DEFAULT_LEVELING_HEROS)
+      Local $arg[] = [$MAX_HERO_LEVEL]
+      BindRMap(TargetHeroLevel, $arg, PrimaryHeroes())
+   EndIf
+EndFunc
+
+; Keep an eye on hero target levels duing late game
+; @param {Int} $tick
+Func LateGameLeveling($tick)
    
-   If $leveled Then
-      EnableProgression()
+   If BossFight() Then
+      Return
    EndIf
+
+   If $tick == $START_TICK Then
+      BringOutTheBigGuns()
+      LevelingRateLimit(GlobalOrDefault("LATE_GAME_RATE_LIMIT", 3))
+   EndIf
+
+   RotationalLeveling($tick)
 EndFunc
 
 Func EnhancedDarkRitual($tick)
