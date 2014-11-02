@@ -83,6 +83,17 @@ Func BindRMap($f, ByRef $arg, ByRef $a)
    Return $result
 EndFunc
 
+Func MapInvoke($f, $args)
+   Local $len = UBound($args)
+   Local $result[$len]
+
+   For $i = 0 To $len-1 Step 1
+     $result[$i] = Invoke($f, $args[$i])
+   Next
+
+   Return $result
+EndFunc
+
 ; Returns true if the provided function returns true for Every element of the array
 Func Every($f, ByRef $a)
    Local $len = UBound($a)
