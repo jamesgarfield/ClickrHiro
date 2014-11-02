@@ -107,8 +107,14 @@ Func Any($f, ByRef $a)
    Return False
 EndFunc
 
-Func Invoke($f)
-   Return $f()
+Func Invoke($f, $arg=Null)
+   If $arg == Null Then
+      Return $f()
+   Else
+      Local $bindArg = ArrayToCallArg($arg)
+      Return Call(FuncName($f), $bindArg)
+   EndIf
+EndFunc
 EndFunc
 
 ; Returns true if the argument passed is true, otherwise, false
