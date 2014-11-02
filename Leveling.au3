@@ -41,6 +41,10 @@ Func TargetHeroLevel($hero = Null, $level = Null)
    Return $target_level[$hero]
 EndFunc
 
+Func MaxUpgradeLevel($hero)
+   Return $MAX_UPGRADE[$hero]
+EndFunc
+
 ; Set all target hero levels to 0
 Func ClearAllTargets()
    ;Clear Targets
