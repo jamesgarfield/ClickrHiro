@@ -115,6 +115,16 @@ Func Invoke($f, $arg=Null)
       Return Call(FuncName($f), $bindArg)
    EndIf
 EndFunc
+
+Func ArrayToCallArg(ByRef $a)
+   Local $len = UBound($a)
+   Local $callarg[$len+1]
+
+   $callarg[0] = "CallArgArray"
+   For $i in Range($len)
+      $callarg[$i+1] = $a[$i]
+   Next
+   Return $callarg
 EndFunc
 
 Func Zip($a, $b)
