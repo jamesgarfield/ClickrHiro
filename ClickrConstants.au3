@@ -79,7 +79,37 @@ Global Enum $CID, _
             $APHRODITE, _
             $SHINATOBE, _
             $GRANT, _
-            $FROSTLEAF
+            $FROSTLEAF, _
+            $ALL_HEROES ;Useful for Range
+
+Global Const $MAX_UPGRADE = [ 150, _   ;CID
+                              100, _   ;Treebeast
+                              125, _   ;Ivan
+                               75, _   ;Brittany
+                              100, _   ;Fisherman
+                              100, _   ;Betty
+                               75, _   ;Samurai
+                               75, _   ;Leon
+                               75, _   ;Seer
+                              100, _   ;Alexa
+                               75, _   ;Natalia
+                              100, _   ;Mercedes
+                              100, _   ;Bobby
+                              100, _   ;Broyle
+                              100, _   ;George
+                              125, _   ;Midas
+                              125, _   ;Refri
+                               75, _   ;Abadon   
+                               75, _   ;MaZhu
+                              150, _   ;Amenhotep
+                              100, _   ;Beastloard
+                              100, _   ;Athena
+                              125, _   ;Aphrodite
+                              100, _   ;Shinatobe
+                               75, _   ;Grant
+                               75]     ;Frostleaf
+
+Global Const $MAX_HERO_LEVEL = 4100
 
 ;Hero Page/Row combos
 Global Const $HERO_BUTTON[26][2] = _
