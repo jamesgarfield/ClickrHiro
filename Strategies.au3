@@ -63,7 +63,7 @@ Func FabulousFourLeveling($tick)
    EndIf
 
    If $tick == $START_TICK Then
-      FabulousFour()
+      FabulousFour($tick)
       LevelingRateLimit(GlobalOrDefault("FAB_FOUR_RATE_LIMIT", 2))
    EndIf
 
@@ -75,15 +75,17 @@ Func LevelingRateLimit($ticks=Null)
    If $ticks <> Null Then
       $limit = $ticks
    EndIf
+   Return $limit
 EndFunc
 
 Func RotationalLeveling($tick)
-   If Mod($tick, LevelingRateLimit()) <> 0 Then
-      Return
-   EndIf
-
+   Static Local $index = 0
    If $tick == $START_TICK Then
       $index = 0
+   EndIf
+
+   If Mod($tick, LevelingRateLimit()) <> 0 Then
+      Return
    EndIf
 
    Local $heroes = PrimaryHeroes()
@@ -91,7 +93,7 @@ Func RotationalLeveling($tick)
 
    ;Only upgrade if it's possible we don't have all upgrades yet
    Local $currentLevel = HeroLevel($hero)
-   Local $needUpgrades = $currentLevel < $MAX_UPGRADE[$hero]
+   Local $needUpgrades = $currentLevel < maxUpgradeLevel($hero)
 
    Local $leveled = False
    If DoLeveling($hero) Then
@@ -131,13 +133,15 @@ Func LadderLeveling($tick)
    
    ;All Heroes should be levelled by zone 180
    If GetZone() >= 180 Then
+      Dbg("           Skipping Ladder Leveling")
+      Dbg("============================================")
       ClearPrimaryHeroes()
       Pipeline(NextPipeline())
       Return
    EndIf
 
    If $tick == $START_TICK Then
-      LevelsForEveryone()
+      LevelsForEveryone($tick)
       LevelingRateLimit(1)
    EndIf
    
@@ -206,7 +210,7 @@ Func LateGameLeveling($tick)
    EndIf
 
    If $tick == $START_TICK Then
-      BringOutTheBigGuns()
+      BringOutTheBigGuns($tick)
       LevelingRateLimit(GlobalOrDefault("LATE_GAME_RATE_LIMIT", 3))
    EndIf
 
@@ -278,24 +282,27 @@ Func DynamicIdle($tick)
    ;How long to allow boss fights to take during idle before switching modes
    Static Local $boss_seconds = GlobalOrDefault("IDLE_BOSS_SECONDS_CUTOFF", 5)
 
-   Static Local $last_idle = Null
+   Static Local $last_idle = 0
    
    Local $boss = TimeToBeatBoss()
    Local $level = TimeInLevel()
    Local $fails = BossFail()
    Local $zone = GetZone()
 
+   
    Local $failedBoss = ($fails > 0)
-   Local $tooLongToBeatBoss = ($boss > $boss_Seconds * $SECONDS)
-   Local $tooLongInLevel = ($level > $boss_seconds * $SECONDS * 2)
+
+   Local $beatLastIdle = $zone > $last_idle
+   Local $tooLongToBeatBoss = ( $boss > ($boss_seconds * $SECONDS) )   And $beatLastIdle
+   Local $tooLongInLevel = ( $level > ($boss_seconds * $SECONDS * 2) ) And $beatLastIdle
    
    
    If $failedBoss Or $tooLongToBeatBoss Or $tooLongInLevel Then
       Dbg("            Idle Switch: " & $zone)
       Dbg("            Previous   : " & $last_idle)
-      Dbg("            Boss Fails : " & $fails)
-      Dbg("            Boss Time  : " & TimeStr($boss))
-      Dbg("            Level Time : " & TimeStr($level))
+      Dbg("            Boss Fails : " & $fails & " (" & $failedBoss & ")")
+      Dbg("            Boss Time  : " & TimeStr($boss) & " (" & $tooLongToBeatBoss & ")")
+      Dbg("            Level Time : " & TimeStr($level) & " (" & $tooLongInLevel & ")")
       Dbg("============================================")
 
       $last_idle = $zone
