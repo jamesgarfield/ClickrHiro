@@ -3,6 +3,8 @@
 #include <Utils.au3>
 #include <ClickrConstants.au3>
 
+Global Const $START_TICK = 1
+
 Global Const $PROFILE_BOT_ENGINE = False
 
 Func StartBotEngine()
