@@ -117,6 +117,16 @@ Func Invoke($f, $arg=Null)
 EndFunc
 EndFunc
 
+Func Zip($a, $b)
+   Local $len = _Min(UBound($a), UBound($b))
+   Local $zipped[$len]
+   For $i = 0 To $len-1 Step 1
+      Local $x[] = [$a[$i], $b[$i]]
+      $zipped[$i] = $x
+   Next
+   Return $zipped
+EndFunc
+
 ; Returns true if the argument passed is true, otherwise, false
 Func IsTrue($b)
    Return $b == True
