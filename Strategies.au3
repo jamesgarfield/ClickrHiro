@@ -292,9 +292,8 @@ Func DynamicIdle($tick)
    
    Local $failedBoss = ($fails > 0)
 
-   Local $beatLastIdle = $zone > $last_idle
-   Local $tooLongToBeatBoss = ( $boss > ($boss_seconds * $SECONDS) )   And $beatLastIdle
-   Local $tooLongInLevel = ( $level > ($boss_seconds * $SECONDS * 2) ) And $beatLastIdle
+   Local $tooLongToBeatBoss = ( $boss > ($boss_seconds * $SECONDS) )
+   Local $tooLongInLevel = ( $level > ($boss_seconds * $SECONDS * 2) )
    
    
    If $failedBoss Or $tooLongToBeatBoss Or $tooLongInLevel Then
@@ -355,6 +354,13 @@ Func BossMonitor($tick)
 
    Local $zone = GetZone()
 
+   If $tick == $START_TICK Then
+      BossFail(0)
+      TimeToBeatBoss(0)
+      $boss_zone = 0
+      $timer = TimerInit()
+   EndIf
+
    ;Still on same boss
    If $zone == $boss_zone Then
       Return
@@ -387,6 +393,7 @@ Func BossMonitor($tick)
       $timer = Null
       $boss_zone = Null
       BossFail(0)
+      TimeToBeatBoss(0)
       Return
    EndIf
 
@@ -404,7 +411,15 @@ Func LevelMonitor($tick)
 
    Local $zone = GetZone()
 
-   If $zone > $last_zone Or $zone < $last_zone - 1 Then
+   If $tick == $START_TICK Then
+      TimeInLevel(0)
+      $last_zone = 0
+      $timer = TimerInit()
+      Return
+   EndIf
+
+   If $zone <> $last_zone Then
+      TimeInLevel(0)
       $last_zone = $zone
       $timer = TimerInit()
       Return
