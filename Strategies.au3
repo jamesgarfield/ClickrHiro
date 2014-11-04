@@ -6,8 +6,8 @@
 
 InitStrategies()
 Func InitStrategies()
-   OnTick(LevelMonitor)
-   OnTick(BossMonitor)
+   OnStep(LevelMonitor)
+   OnStep(BossMonitor)
    OnAscend(ClearPrimaryHeroes)
    OnAscend(ClearStatistics)
 EndFunc
