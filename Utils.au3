@@ -31,6 +31,21 @@ Func Map($f, ByRef $a)
    Return $result
 EndFunc
 
+Func Filter($f, ByRef $a)
+   Local $len = UBound($a)
+   Local $result[$len]
+
+   Local $r = 0
+   For $i = 0 To $len-1 Step 1
+      If $f($a[$i]) Then
+         $result[$r] = $a[$i]
+         $r += 1
+      EndIf
+   Next
+   ReDim $result[$r]
+   Return $result
+EndFunc
+
 ; Bind arguments to a given function and map it over an array
 ; @param {function} $f
 ; @param {Array} $arg
