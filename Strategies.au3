@@ -418,16 +418,14 @@ Func LevelMonitor($tick)
       Return
    EndIf
 
+   Local $diff = TimerDiff($timer)
+   TimeInLevel($diff)
+
    If $zone <> $last_zone Then
-      TimeInLevel(0)
       $last_zone = $zone
       $timer = TimerInit()
       Return
    EndIf
-
-   Local $diff = TimerDiff($timer)
-
-   TimeInLevel($diff)
 EndFunc
 
 Func ClearStatistics()
