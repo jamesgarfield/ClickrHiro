@@ -42,6 +42,16 @@ Func RunPipeline($pipeline, $tick)
 EndFunc
 
 Func RunStep($step, $tick)
+   
+   Local $listeners = OnStep()
+   For $listener in $listeners
+      If $PROFILE_BOT_ENGINE Then
+         StepTimer($listener, $tick)
+      Else
+         $listener($tick)
+      EndIf
+   Next
+
    If $PROFILE_BOT_ENGINE Then
       StepTimer($step, $tick)
    Else
@@ -50,6 +60,18 @@ Func RunStep($step, $tick)
 EndFunc
 
 Func OnTick($f = Null)
+   Static Local $steps[] = [Noop]
+   If $f <> Null Then
+      If $steps[0] == Noop Then
+         $steps[0] = $f
+      Else
+         _ArrayAdd($steps, $f)
+      EndIf
+   EndIf
+   Return $steps
+EndFunc
+
+Func OnStep($f = Null)
    Static Local $steps[] = [Noop]
    If $f <> Null Then
       If $steps[0] == Noop Then
