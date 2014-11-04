@@ -132,7 +132,7 @@ EndFunc
 Func LadderLeveling($tick)
    
    ;All Heroes should be levelled by zone 180
-   If GetZone() >= 180 Then
+   If GetZone() >= GlobalOrDefault("LADDER_SKIP_ZONE", 250) Then
       Dbg("           Skipping Ladder Leveling")
       Dbg("============================================")
       ClearPrimaryHeroes()
