@@ -74,6 +74,7 @@ Func Ascend()
    
    ;Click thru the confirmation dialog
    Click($CONFIRM_ASCEND_RANGE[0], $CONFIRM_ASCEND_RANGE[1])
+   Sleep($delay)
 
    ClearAllTargets()
    ClearHeroLevels()
