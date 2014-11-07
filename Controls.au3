@@ -73,6 +73,12 @@ Func ClickHeroRow($row, $count=1)
    EndIf
 EndFunc
 
+Func ClickHeroTab()
+   Local $x = $HERO_TAB[0]
+   Local $y = $HERO_TAB[1]
+   Click($x, $y)
+EndFunc
+
 ; Scroll to a given hero page
 ; @param {Int} $page
 Func ScrollToPage($p)
@@ -111,6 +117,7 @@ EndFunc
 Func ActivateBoard()
    WinActivate($WINDOW)
    FindBoard(true)
+   ClickHeroTab()
    ScrollToPage(7)
    ScrollToPage(0)
 EndFunc
