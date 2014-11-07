@@ -82,6 +82,14 @@ Global Enum $CID, _
             $FROSTLEAF, _
             $ALL_HEROES ;Useful for Range
 
+Global Const $HERO_NAME = [ "Cid", "Treebeast", "Ivan", "Brittany", _
+                            "Fisherman", "Betty", "Samurai", "Leon", _
+                            "Forest Seer", "Alexa", "Natalia", "Mercedes", _
+                            "Bobby", "Broyle", "George", "Midas", _
+                            "Refri", "Abadon", "Ma Zhu", "Amenhotep", _
+                            "Beastlord", "Athena", "Aphrodite", "Shinatobe", _
+                            "Grant", "Frostleaf", "" ]
+
 Global Const $MAX_UPGRADE = [ 150, _   ;CID
                               100, _   ;Treebeast
                               125, _   ;Ivan

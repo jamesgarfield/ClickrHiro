@@ -114,3 +114,10 @@ Func ActivateBoard()
    ScrollToPage(7)
    ScrollToPage(0)
 EndFunc
+
+; Get the display name of a hero
+; @param {HeroEnum} $hero
+; @return {String}
+Func HeroName($hero)
+   Return $HERO_NAME[$hero]
+EndFunc
