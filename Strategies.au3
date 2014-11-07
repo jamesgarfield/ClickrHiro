@@ -225,6 +225,71 @@ Func LateGameLeveling($tick)
    EndIf
 
    RotationalLeveling($tick)
+   EndGame($tick)
+EndFunc
+
+Func EndGame($tick)
+   Static Local $endgame_count = 0
+   Static Local $previous_zone = 0
+   Static Local $is_endgame = False
+   Static Local $alternates
+   Static Local $alt_index = 0
+
+   Local $zone = GetZone()
+
+   ;As soon as any hero is above 4k, enter endgame
+   If Any(Over4000, HeroLevel()) And Not $is_endgame Then
+      $is_endgame = True
+
+      Local $superSayan = Filter(HeroOver4000, Range($ALL_HEROES))
+      Local $names = _ArrayToString(Map(HeroName, $superSayan), ", ")
+      $endgame_count += 1
+      Dbg("             End Game : " & $endgame_count)
+      Dbg("             Zone     : " & $zone)
+      Dbg("             Previous : " & $previous_zone)
+      Dbg("             Heroes   : " & $names)
+      Dbg("============================================")
+      
+      ;Alternates are all non primary heroes
+      $alternates = Filter(NotPrimary, Range($TREEBEAST, $ALL_HEROES))
+      $alt_index = 0
+
+      SetHeroesTarget($alternates, $MAX_HERO_LEVEL)
+
+      $previous_zone = $zone
+   ElseIf $is_endgame And $zone >= $previous_zone Then
+      ;Only do endgame leveling after normal leveling
+      If Mod($tick, LevelingRateLimit()) <> 1 And LevelingRateLimit() <> 1 Then
+         Return
+      EndIf
+      Local $hero = $alternates[$alt_index]
+      If Not DoLeveling($hero) Then
+         $alt_index += 1
+         If $alt_index >= UBound($alternates) Then
+            $alt_index = 0
+         EndIf
+      EndIf
+   ElseIf $is_endgame And $zone < $previous_zone Then
+      ; Potentially ascended, reset
+      $is_endgame = False
+      $alternates = Null
+   EndIf
+EndFunc
+
+Func Over4000($n)
+   Return $n >= 4000
+EndFunc
+
+Func HeroOver4000($hero)
+   Return Over4000(HeroLevel($hero))
+EndFunc
+
+Func IsPrimary($hero)
+   Return (_ArraySearch(PrimaryHeroes(), $hero) <> -1)
+EndFunc
+
+Func NotPrimary($hero)
+   Return Not IsPrimary($hero)
 EndFunc
 
 Func EnhancedDarkRitual($tick)
