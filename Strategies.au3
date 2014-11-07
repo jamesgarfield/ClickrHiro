@@ -390,7 +390,7 @@ Func DynamicAscend($tick)
    
    Static Local $boss_fails_after_advance = GlobalOrDefault("ASCEND_AFTER_BOSS_FAIL", 2)
    Static Local $boss_fails_before_advance = GlobalOrDefault("ASCEND_FAILSAFE", $boss_fails_after_advance * 3)
-   Static Local $seconds_per_level = GlobalOrDefault("ASCEND_AFTER_SECONDS_PER_LEVEL", 30)
+   Static Local $seconds_per_level = GlobalOrDefault("ASCEND_AFTER_SECONDS_PER_LEVEL", 75)
 
    Static Local $last_ascend = 0
    Static Local $ascend_count = 0
