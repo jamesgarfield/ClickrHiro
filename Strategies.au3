@@ -196,9 +196,19 @@ EndFunc
 Func BringOutTheBigGuns($tick)
    If $tick == $START_TICK Then
       PrimaryHeroes($DEFAULT_LEVELING_HEROS)
-      Local $arg[] = [$MAX_HERO_LEVEL]
-      BindRMap(TargetHeroLevel, $arg, PrimaryHeroes())
+      TargetPrimaryHeroes($MAX_HERO_LEVEL)      
    EndIf
+EndFunc
+
+; Set all Primary Heroes target level
+; @param {Int} $level
+Func TargetPrimaryHeroes($level)
+   Return SetHeroesTarget(PrimaryHeroes(), $level)
+EndFunc
+
+Func SetHeroesTarget($heroes, $level)
+   Local $arg[] = [$level]
+   Return BindRMap(TargetHeroLevel, $arg, $heroes)
 EndFunc
 
 ; Keep an eye on hero target levels duing late game
