@@ -68,8 +68,9 @@ EndFunc
 ; Leveling stragegy for early game that focuses on levelling the four Page 0 heroes until all heroes are available
 ; @param {Int} @tick
 Func FabulousFourLeveling($tick)
-   ;If any heroes after brittany are leveled, we're past fab4
-   If Any(AboveZero, Map(HeroLevel, Range($FISHERMAN, $ALL_HEROES)))  Then
+   ;If any heroes after brittany are leveled, or level is over 120, we're past fab4
+   If Any(AboveZero, Map(HeroLevel, Range($FISHERMAN, $ALL_HEROES))) Or _
+      GetZone() > 120 Then
       ClearPrimaryHeroes()
       Pipeline(NextPipeline())
       Return
