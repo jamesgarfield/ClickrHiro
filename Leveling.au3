@@ -267,7 +267,10 @@ EndFunc
 Func LevelForTargetBy25Or100($hero)
    Local $level = HeroLevel($hero)
    Local $target = TargetHeroLevel($hero)
-   Local $diff = $target - $level
+   
+   Local $nextTarget = _Min( (Floor($level/25) * 25) + 25, $target)
+
+   Local $diff = $nextTarget - $level
 
    If $diff >= 100 And Mod($level, 100) == 0 And CanLevelBy100($hero) Then
       LevelUp($hero, 100)
@@ -279,7 +282,7 @@ Func LevelForTargetBy25Or100($hero)
       ;Handles scnearios where the current level is not a proper multiple
       LevelUp($hero, 10)
       Return True
-   ElseIf (Mod($diff, 5) <> 0 Or $diff < 10)  And CanLevel($hero) Then
+   ElseIf (Mod($diff, 25) <> 0 Or $diff < 10)  And CanLevel($hero) Then
       ;Handles scnearios where the current level is not a proper multiple
       LevelUp($hero, 1)
       Return True
