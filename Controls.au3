@@ -106,6 +106,53 @@ Func ScrollToBuyUpgrades()
    ScrollToPage(7)
 EndFunc
 
+; Navigate options to put game data into the clipboard
+Func CopyGameFile()
+   OpenOptions()
+   ClickSaveGame()
+   CloseSaveWindow()
+   CloseOptions()
+EndFunc
+
+; Click on the options wrench
+Func OpenOptions()
+   Static Local $delay = GlobalOrDefault("OPTIONS_DELAY", $DEFAULT_OPTIONS_DELAY)
+   ClickInRange($OPTIONS_BUTTON)
+   Sleep($delay)
+EndFunc
+
+; Click on the red X in the options window, to close it
+Func CloseOptions()
+   Static Local $delay = GlobalOrDefault("OPTIONS_DELAY", $DEFAULT_OPTIONS_DELAY)
+   ClickInRange($CLOSE_OPTIONS)
+   Sleep($delay)
+EndFunc  
+
+; Click the save buttton in the options menu
+Func ClickSaveGame()
+   Static Local $delay = GlobalOrDefault("OPTIONS_DELAY", $DEFAULT_OPTIONS_DELAY)
+   ClickInRange($SAVE_BUTTON)
+   Sleep($delay)
+EndFunc
+
+; Activate the "Save As" dialog from saving game data and close it
+Func CloseSaveWindow()
+   Static Local $delay = GlobalOrDefault("OPTIONS_DELAY", $DEFAULT_OPTIONS_DELAY)
+   WinActivate("Save As")
+   Send("{ESC}")
+   Sleep($delay)
+EndFunc
+
+;Click in the center of a range a given number of times
+; @param {PixelRange} $range
+; @param {Int} [$count=1]
+Func ClickInRange($range, $count=1)
+   Dbg($range)
+   Local $x = Int($range[2] + ($range[2]-$range[0])/2)
+   Local $y = Int($range[1] + ($range[1]-$range[3])/2)
+   Click($x, $y, $count)
+EndFunc
+
 ; Click on the game board a given number of times.
 ; Performs x,y coordinate translations from board x,y to screen x,y
 ; @param {Int} $row
