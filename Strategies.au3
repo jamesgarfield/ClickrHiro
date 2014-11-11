@@ -10,6 +10,7 @@ Func InitStrategies()
    OnStep(BossMonitor)
    OnAscend(ClearPrimaryHeroes)
    OnAscend(ClearStatistics)
+   OnAscend(ResetGameData)
 EndFunc
 
 ; Get/Set the primary heroes to level during late game leveling
