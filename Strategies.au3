@@ -436,10 +436,15 @@ Func GameDataSync($tick)
    Static Local $timer = TimerInit()
    Static Local $sync_minutes = GlobalOrDefault("DATA_SYNC_MINUTES", $DEFAULT_DATA_SYNC_MINUTES) * $MINUTES
 
+   If BossFight() Then
+      Return
+   EndIf
+
    Local $diff = TimerDiff($timer)
 
    If $diff > $sync_minutes Then
       ResetGameData()
+      $timer = TimerInit()
    EndIf
 EndFunc
 
