@@ -434,7 +434,7 @@ EndFunc
 
 Func GameDataSync($tick)
    Static Local $timer = TimerInit()
-   Static Local $sync_minutes = GlobalOrDefault("DATA_SYNC_MINUTES", "DEFAULT_DATA_SYNC_MINUTES") * $MINUTES
+   Static Local $sync_minutes = GlobalOrDefault("DATA_SYNC_MINUTES", $DEFAULT_DATA_SYNC_MINUTES) * $MINUTES
 
    Local $diff = TimerDiff($timer)
 
