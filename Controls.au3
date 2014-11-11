@@ -147,7 +147,6 @@ EndFunc
 ; @param {PixelRange} $range
 ; @param {Int} [$count=1]
 Func ClickInRange($range, $count=1)
-   Dbg($range)
    Local $x = Int($range[2] + ($range[2]-$range[0])/2)
    Local $y = Int($range[1] + ($range[1]-$range[3])/2)
    Click($x, $y, $count)
