@@ -431,6 +431,17 @@ Func DynamicAscend($tick)
    EndIf
 EndFunc
 
+Func GameDataSync($tick)
+   Static Local $timer = TimerInit()
+   Static Local $sync_minutes = GlobalOrDefault("DATA_SYNC_MINUTES", "DEFAULT_DATA_SYNC_MINUTES") * $MINUTES
+
+   Local $diff = TimerDiff($timer)
+
+   If $diff > $sync_minutes Then
+      ResetGameData()
+   EndIf
+EndFunc
+
 ; Times how long Boss Fights take, and counts failed attempts
 Func BossMonitor($tick)
    Static Local $timer = Null
