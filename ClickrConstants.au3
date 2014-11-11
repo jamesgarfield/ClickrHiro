@@ -58,6 +58,12 @@ Global Const $WINDOW = "Clicker Heroes"
    ;Hero Tab
    Global Const $HERO_TAB = NewPixelRange(40, 100)
 
+   ;Options Window
+   Global Const $OPTIONS_BUTTON = NewPixelRange(1115, 20)
+   Global Const $CLOSE_OPTIONS = NewPixelRange(895, 30)
+
+   Global Const $SAVE_BUTTON = NewPixelRange(322, 81)
+
 ;End of Pixels
 
 ;Used to find the game board within the browser window
@@ -171,3 +177,8 @@ Global Const $DEFAULT_ASCEND_DELAY = 500
 ;Overide with $LATE_GAME_LEVELING_TICK_RATE
 Global Const $DEFAULT_LATE_GAME_LEVELING_TICK_RATE = 4
 
+;Overide with $OPTIONS_DELAY
+Global Const $DEFAULT_OPTIONS_DELAY = 200
+
+; Overide with DATA_SYNC_MINUTES
+Global Const $DEFAULT_DATA_SYNC_MINUTES = 10

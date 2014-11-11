@@ -10,7 +10,6 @@
 ;
 ;You should have received a copy of the GNU General Public License
 ;along with this program.  If not, see <http://www.gnu.org/licenses/>.
-Global Const $VERSION = "0.12.1"
 
 #include <UserSpace.au3>
 Dbg("ClickrHiro Version: " & $VERSION)

@@ -16,6 +16,7 @@
 #include <ClickrConstants.au3>
 #include <BoardState.au3>
 #include <Controls.au3>
+#include <GameDataParser.au3>
 
 ; Get/Set a hero's level
 ; @param {HeroEnum} [@hero] If omitted, return is all hero levels as array
@@ -66,6 +67,16 @@ EndFunc
 Func ClearHeroLevels()
    BindRMap(HeroLevel, 0, Range($FROSTLEAF+1))
 EndFunc
+
+; Synchronize local hero levels with game data hero levels
+Func SyncAllHeroLevels()
+   Map(SyncHeroLevel, Range($ALL_HEROES))
+EndFunc
+
+Func SyncHeroLevel($hero)
+   HeroLevel($hero, GameDataHeroLevel($hero))
+EndFunc
+
 
 ; Ensures that Amenhotep has enough levels and ascends the world
 Func Ascend()
@@ -268,7 +279,10 @@ EndFunc
 Func LevelForTargetBy25Or100($hero)
    Local $level = HeroLevel($hero)
    Local $target = TargetHeroLevel($hero)
-   Local $diff = $target - $level
+   
+   Local $nextTarget = _Min( (Floor($level/25) * 25) + 25, $target)
+
+   Local $diff = $nextTarget - $level
 
    If $diff >= 100 And Mod($level, 100) == 0 And CanLevelBy100($hero) Then
       LevelUp($hero, 100)
@@ -280,7 +294,7 @@ Func LevelForTargetBy25Or100($hero)
       ;Handles scnearios where the current level is not a proper multiple
       LevelUp($hero, 10)
       Return True
-   ElseIf (Mod($diff, 5) <> 0 Or $diff < 10)  And CanLevel($hero) Then
+   ElseIf (Mod($diff, 25) <> 0 Or $diff < 10)  And CanLevel($hero) Then
       ;Handles scnearios where the current level is not a proper multiple
       LevelUp($hero, 1)
       Return True

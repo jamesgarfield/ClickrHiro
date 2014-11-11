@@ -19,8 +19,10 @@ InitStrategies()
 Func InitStrategies()
    OnStep(LevelMonitor)
    OnStep(BossMonitor)
+   OnTick(GameDataSync)
    OnAscend(ClearPrimaryHeroes)
    OnAscend(ClearStatistics)
+   OnAscend(ResetGameData)
 EndFunc
 
 ; Get/Set the primary heroes to level during late game leveling
@@ -66,8 +68,8 @@ EndFunc
 ; Leveling stragegy for early game that focuses on levelling the four Page 0 heroes until all heroes are available
 ; @param {Int} @tick
 Func FabulousFourLeveling($tick)
-   ;Frostleaf should be available by zone 120
-   If GetZone() >= 120 Then
+   ;If any heroes after brittany are leveled, we're past fab4
+   If Any(AboveZero, Map(HeroLevel, Range($FISHERMAN, $ALL_HEROES)))  Then
       ClearPrimaryHeroes()
       Pipeline(NextPipeline())
       Return
@@ -79,6 +81,10 @@ Func FabulousFourLeveling($tick)
    EndIf
 
    RotationalLeveling($tick)
+EndFunc
+
+Func AboveZero($n)
+   return $n > 0
 EndFunc
 
 Func LevelingRateLimit($ticks=Null)
@@ -165,6 +171,12 @@ Func LadderLeveling($tick)
       $upgrade_tick = 0
       Pipeline(NextPipeline())
    EndIf
+EndFunc
+
+Func RequiresUpgrades($hero)
+   Local $level = HeroLevel($hero)
+   Local $maxUpgrade = MaxUpgradeLevel($hero)
+   Return $level < $maxUpgrade
 EndFunc
 
 Func PageLeveling($tick)
@@ -433,6 +445,22 @@ Func DynamicAscend($tick)
    EndIf
 EndFunc
 
+Func GameDataSync($tick)
+   Static Local $timer = TimerInit()
+   Static Local $sync_minutes = GlobalOrDefault("DATA_SYNC_MINUTES", $DEFAULT_DATA_SYNC_MINUTES) * $MINUTES
+
+   If BossFight() Then
+      Return
+   EndIf
+
+   Local $diff = TimerDiff($timer)
+
+   If $diff > $sync_minutes Then
+      ResetGameData()
+      $timer = TimerInit()
+   EndIf
+EndFunc
+
 ; Times how long Boss Fights take, and counts failed attempts
 Func BossMonitor($tick)
    Static Local $timer = Null
@@ -472,6 +500,15 @@ Func BossMonitor($tick)
       Return
    EndIf
 
+   ;Skipped over next zone, maybe paused
+   If $zone > ($boss_zone + 1) Then
+      $timer = Null
+      $boss_zone = Null
+      BossFail(0)
+      TimeToBeatBoss(0)
+      Return
+   EndIf
+
    ;Beat previous boss fight, set statistics and clear local statics
    If $zone > $boss_zone Then
       Local $diff = TimerDiff($timer)
@@ -500,6 +537,13 @@ Func LevelMonitor($tick)
    If $tick == $START_TICK Then
       TimeInLevel(0)
       $last_zone = 0
+      $timer = TimerInit()
+      Return
+   EndIf
+
+   ;Happens when pausing
+   If $zone > ($last_zone + 1) Then
+      $last_zone = $zone
       $timer = TimerInit()
       Return
    EndIf
