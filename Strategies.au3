@@ -1,4 +1,15 @@
-
+;This program is free software: you can redistribute it and/or modify
+;it under the terms of the GNU General Public License as published by
+;the Free Software Foundation, either version 3 of the License, or
+;(at your option) any later version.
+;
+;This program is distributed in the hope that it will be useful,
+;but WITHOUT ANY WARRANTY; without even the implied warranty of
+;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;GNU General Public License for more details.
+;
+;You should have received a copy of the GNU General Public License
+;along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <Utils.au3>
 #include <ClickrConstants.au3>
 #include <BoardState.au3>
@@ -48,7 +59,7 @@ Func FabulousFour($tick)
       TargetHeroLevel($CID, 150)
       TargetHeroLevel($TREEBEAST, 1000)
       TargetHeroLevel($IVAN, 1000)
-      TargetHeroLevel($BRITTANY, 1000)   
+      TargetHeroLevel($BRITTANY, 1000)
    EndIf
 EndFunc
 
@@ -104,7 +115,7 @@ Func RotationalLeveling($tick)
          $index = 0
       EndIf
    EndIf
-   
+
    Local $level = HeroLevel($hero)
    Local $upgradeLevel = ($level == 10 Or Mod($level, 25) == 0)
 
@@ -130,7 +141,7 @@ EndFunc
 
 ; Leveling strategy to iteratively go down the hero ladder leveling each to their 100's max
 Func LadderLeveling($tick)
-   
+
    ;All Heroes should be levelled by zone 180
    If GetZone() >= GlobalOrDefault("LADDER_SKIP_ZONE", 250) Then
       Dbg("           Skipping Ladder Leveling")
@@ -144,7 +155,7 @@ Func LadderLeveling($tick)
       LevelsForEveryone($tick)
       LevelingRateLimit(1)
    EndIf
-   
+
    PageLeveling($tick)
 
    If TargetHeroLevelReached() Then
@@ -196,7 +207,7 @@ EndFunc
 Func BringOutTheBigGuns($tick)
    If $tick == $START_TICK Then
       PrimaryHeroes($DEFAULT_LEVELING_HEROS)
-      TargetPrimaryHeroes($MAX_HERO_LEVEL)      
+      TargetPrimaryHeroes($MAX_HERO_LEVEL)
    EndIf
 EndFunc
 
@@ -214,7 +225,7 @@ EndFunc
 ; Keep an eye on hero target levels duing late game
 ; @param {Int} $tick
 Func LateGameLeveling($tick)
-   
+
    If BossFight() Then
       Return
    EndIf
@@ -249,7 +260,7 @@ Func EndGame($tick)
       Dbg("             Previous : " & $previous_zone)
       Dbg("             Heroes   : " & $names)
       Dbg("============================================")
-      
+
       ;Alternates are all non primary heroes
       $alternates = Filter(NotPrimary, Range($TREEBEAST, $ALL_HEROES))
       $alt_index = 0
@@ -353,24 +364,24 @@ EndFunc
 
 ; Monitor Boss statistics to determine when to switch away from Idling
 Func DynamicIdle($tick)
-   
+
    ;How long to allow boss fights to take during idle before switching modes
    Static Local $boss_seconds = GlobalOrDefault("IDLE_BOSS_SECONDS_CUTOFF", 5)
 
    Static Local $last_idle = 0
-   
+
    Local $boss = TimeToBeatBoss()
    Local $level = TimeInLevel()
    Local $fails = BossFail()
    Local $zone = GetZone()
 
-   
+
    Local $failedBoss = ($fails > 0)
 
    Local $tooLongToBeatBoss = ( $boss > ($boss_seconds * $SECONDS) )
    Local $tooLongInLevel = ( $level > ($boss_seconds * $SECONDS * 2) )
-   
-   
+
+
    If $failedBoss Or $tooLongToBeatBoss Or $tooLongInLevel Then
       Dbg("            Idle Switch: " & $zone)
       Dbg("            Previous   : " & $last_idle)
@@ -387,7 +398,7 @@ EndFunc
 
 ;Monitor Boss & Level statistics to determine when to ascend
 Func DynamicAscend($tick)
-   
+
    Static Local $boss_fails_after_advance = GlobalOrDefault("ASCEND_AFTER_BOSS_FAIL", 2)
    Static Local $boss_fails_before_advance = GlobalOrDefault("ASCEND_FAILSAFE", $boss_fails_after_advance * 3)
    Static Local $seconds_per_level = GlobalOrDefault("ASCEND_AFTER_SECONDS_PER_LEVEL", 75)
