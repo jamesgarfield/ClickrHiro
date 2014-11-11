@@ -4,6 +4,7 @@
 #include <ClickrConstants.au3>
 #include <BoardState.au3>
 #include <Controls.au3>
+#include <GameDataParser.au3>
 
 ; Get/Set a hero's level
 ; @param {HeroEnum} [@hero] If omitted, return is all hero levels as array
@@ -54,6 +55,16 @@ EndFunc
 Func ClearHeroLevels()
    BindRMap(HeroLevel, 0, Range($FROSTLEAF+1))
 EndFunc
+
+; Synchronize local hero levels with game data hero levels
+Func SyncAllHeroLevels()
+   Map(SyncHeroLevel, Range($ALL_HEROES))
+EndFunc
+
+Func SyncHeroLevel($hero)
+   HeroLevel($hero, GameDataHeroLevel($hero))
+EndFunc
+
 
 ; Ensures that Amenhotep has enough levels and ascends the world
 Func Ascend()
