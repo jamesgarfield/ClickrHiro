@@ -10,9 +10,11 @@
 ;
 ;You should have received a copy of the GNU General Public License
 ;along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #include <UserSpace.au3>
 
-Global Const $VERSION = "0.13.0"
+Global Const $VERSION = "0.13.1"
+
 Dbg("ClickrHiro Version: " & $VERSION)
 Dbg("============================================")
 Main()
