@@ -43,7 +43,7 @@ Func MoveToGoldZone()
    Local $y = Random($GOLD_ZONE[1], $GOLD_ZONE[3], 1)
    Local $coord = TranslateCoords($x, $y)
    MouseMove($coord[0], $coord[1], $MOUSE_SPEED)
-EndFunc
+EndFunc 
 
 ; Send a given number of clicks to a hero row
 ; @param {Int} $row
