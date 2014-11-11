@@ -482,6 +482,15 @@ Func BossMonitor($tick)
       Return
    EndIf
 
+   ;Skipped over next zone, maybe paused
+   If $zone > ($boss_zone + 1) Then
+      $timer = Null
+      $boss_zone = Null
+      BossFail(0)
+      TimeToBeatBoss(0)
+      Return
+   EndIf
+
    ;Beat previous boss fight, set statistics and clear local statics
    If $zone > $boss_zone Then
       Local $diff = TimerDiff($timer)
@@ -510,6 +519,13 @@ Func LevelMonitor($tick)
    If $tick == $START_TICK Then
       TimeInLevel(0)
       $last_zone = 0
+      $timer = TimerInit()
+      Return
+   EndIf
+
+   ;Happens when pausing
+   If $zone > ($last_zone + 1) Then
+      $last_zone = $zone
       $timer = TimerInit()
       Return
    EndIf
