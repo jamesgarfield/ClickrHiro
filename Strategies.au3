@@ -55,8 +55,8 @@ EndFunc
 ; Leveling stragegy for early game that focuses on levelling the four Page 0 heroes until all heroes are available
 ; @param {Int} @tick
 Func FabulousFourLeveling($tick)
-   ;Frostleaf should be available by zone 120
-   If GetZone() >= 120 Then
+   ;If any heroes after brittany are leveled, we're past fab4
+   If Any(AboveZero, Map(HeroLevel, Range($FISHERMAN, $ALL_HEROES)))  Then
       ClearPrimaryHeroes()
       Pipeline(NextPipeline())
       Return
@@ -68,6 +68,10 @@ Func FabulousFourLeveling($tick)
    EndIf
 
    RotationalLeveling($tick)
+EndFunc
+
+Func AboveZero($n)
+   return $n > 0
 EndFunc
 
 Func LevelingRateLimit($ticks=Null)
@@ -131,8 +135,7 @@ EndFunc
 ; Leveling strategy to iteratively go down the hero ladder leveling each to their 100's max
 Func LadderLeveling($tick)
    
-   ;All Heroes should be levelled by zone 180
-   If GetZone() >= GlobalOrDefault("LADDER_SKIP_ZONE", 250) Then
+   If Not Any(RequiresUpgrades, Range($ALL_HEROES)) Then
       Dbg("           Skipping Ladder Leveling")
       Dbg("============================================")
       ClearPrimaryHeroes()
@@ -154,6 +157,12 @@ Func LadderLeveling($tick)
       $upgrade_tick = 0
       Pipeline(NextPipeline())
    EndIf
+EndFunc
+
+Func RequiresUpgrades($hero)
+   Local $level = HeroLevel($hero)
+   Local $maxUpgrade = MaxUpgradeLevel($hero)
+   Return $level < $maxUpgrade
 EndFunc
 
 Func PageLeveling($tick)
