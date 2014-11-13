@@ -34,11 +34,17 @@ Global Const $WINDOW = "Clicker Heroes"
    ;Page scrolling postions (4 heroes per page), final page is for Buy All Upgrades
    Global Const $PAGE_SCROLL[] = [201, 304, 359, 418, 474, 529, 559, 605]
 
+   Global Const $SCROLL_DOWN = NewPixelRange(545, 620)
+
    ; Cooldowns Position
    Global Const $TOP_COOLDOWN[] = [607, 169]
    Global Const $COOLDOWN_Y_OFFSET = 51.75
 
    ;Level Button Positioning
+   Global Const $HERO_WINDOW = NewPixelRange(460, 172, 460, 639)
+
+   Global Const $HERO_ROW_HEIGHT = 107
+
    Global Const $HERO_ROW_X = 91
    Global Const $HERO_ROW_Y[] = [224, 330, 436, 542]
 
@@ -93,7 +99,7 @@ Global Enum $CID, _
             $GEORGE, _
             $MIDAS, _
             $REFRI, _
-            $ABADON, _
+            $ABADDON, _
             $MAZHU, _
             $AMENHOTEP, _
             $BEASTLORD, _
