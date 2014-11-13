@@ -122,6 +122,15 @@ Func TranslateCoords($x, $y)
    Return $coords
 EndFunc
 
+Func TranslateRange($range)
+   Local $board = FindBoard()
+   Local $coords[] = [  $range[0] + $board[0], _
+                        $range[1] + $board[1], _ 
+                        $range[2] + $board[0], _ 
+                        $range[3] + $board[1]]
+   Return $coords
+EndFunc
+
 Func ScreenCoordsToBoardCoords($x, $y=Null)
    If $y == Null And IsArray($x) Then
       $y = $x[1]
