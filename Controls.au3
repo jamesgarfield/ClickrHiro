@@ -110,6 +110,16 @@ Func ScrollToPage($p)
    EndIf
 EndFunc
 
+Func NormalizeBoardRGB($c)
+   Local $rgb = [_ColorGetRed($c), _ColorGetGreen($c), _ColorGetBlue($c)]
+   Local $normalized = _ColorSetRGB(Map(RoundColorTo10, $rgb))
+   Return $normalized
+EndFunc
+
+Func RoundColorTo10($n)
+   Return _Min(Int(Round($n/10)*10), 255)
+EndFunc
+
 Func ScrollToHero($hero)
    Local $page = $HERO_BUTTON[$hero][0]
    ScrollToPage($page)
