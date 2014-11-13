@@ -122,7 +122,7 @@ Func ScrollToPage($p)
    EndIf
 EndFunc
 
-Func HeroWindowOffset($offset=Null)
+Func HeroRibbonOffset($offset=Null)
    Static Local $window_offset = 0
    If $offset <> Null Then
       $window_offset = $offset
