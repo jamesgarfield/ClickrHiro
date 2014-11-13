@@ -326,6 +326,14 @@ Func NewPixelRange($left, $top, $right=Null, $bottom=Null)
    Return $range
 EndFunc
 
+Func PixelRangeHeight($range)
+   Return $range[3] - $range[1]
+EndFunc
+
+Func PixelRangeWidth($range)
+   Return $range[2] - $range[0]
+EndFunc
+
 ;Serialize a coordinates array into a string
 Func CoordStr($coord)
    Return "[" & $coord[0] & ", " & $coord[1] & "]"
