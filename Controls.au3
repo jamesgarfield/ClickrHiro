@@ -132,33 +132,20 @@ EndFunc
 
 Func ClickScrollToHero($hero)
    
-   Local $offset
-   If ScrollMode() == $SCROLL_MODE_INCREMENT Then
-      $offset = HeroWindowOffset()
-   Else
+   If ScrollMode() <> $SCROLL_MODE_INCREMENT Then
+      ScrollToPage(0)
       ScrollMode($SCROLL_MODE_INCREMENT)
-      $offset = 0
+      HeroRibbonOffset(0)
    EndIf
 
-
-   Local $heroDepth = ($hero * $HERO_ROW_HEIGHT) + $HERO_ROW_HEIGHT
-
-   Local $windowHeight = PixelRangeHeight($HERO_WINDOW)
-
-   
-   
-   Local $end = $offset + $windowHeight
+   Local $heroOnRibbon = NewPixelRange($HERO_ROW_X, HeroYRibbon())
 
    Local $moved
-   While $end < $heroDepth And RunBot() And Not Paused()
-      $moved = ScrollDown()
-      $offset += $moved
-      $end = $offset + $windowHeight
+   While Not PixelRangeContains(VisibleHeroRibbon(), $heroOnRibbon) And RunBot() And Not Paused()
+      ScrollDown()
    WEnd
 
-   HeroWindowOffset($offset)
-
-   Local $heroY = $HERO_WINDOW[3] - ($end - ($heroDepth - Floor($HERO_ROW_HEIGHT/2)))
+   Local $heroY = HeroYPanel($hero)
 
    Local $heroTarget = TranslateCoords($HERO_ROW_X, $heroY)
 
