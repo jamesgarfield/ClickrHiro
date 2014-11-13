@@ -175,6 +175,10 @@ Func Zip($a, $b)
    Return $zipped
 EndFunc
 
+Func Take($arr, $index)
+   Return $arr[$index]
+EndFunc
+
 ; Returns true if the argument passed is true, otherwise, false
 Func IsTrue($b)
    Return $b == True
