@@ -165,6 +165,25 @@ Func ClickScrollToHero($hero)
    MouseMove($heroTarget[0], $heroTarget[1], $MOUSE_SPEED)
 EndFunc
 
+Func HeroYRibbon($hero)
+   Return ($hero * $HERO_ROW_HEIGHT) + $HERO_ROW_HEIGHT
+EndFunc
+
+Func HeroYPanel($hero)
+   Static Local $window_height = PixelRangeHeight($HERO_WINDOW)
+
+   Local $offset = HeroWindowOffset()
+   Local $heroDepth = HeroYRibbon()
+   
+   Local $ribbon = VisibleHeroRibbon()
+   Local $ribbonBottom = $ribbon[3]
+   Local $windowBottom = $HERO_WINDOW[3]
+
+   Local $heroY = $windowBottom - ($ribbonBottom - ($heroDepth - Floor($HERO_ROW_HEIGHT/2)))
+
+   Return $heroY         
+EndFunc
+
 
 Func ScrollDown()
    Local $window = TranslateRange($HERO_WINDOW)
