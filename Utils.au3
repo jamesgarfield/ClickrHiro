@@ -213,6 +213,15 @@ Func Range($start, $end=Null, $step = 1)
 EndFunc
 
 
+Func ArraySlice($a, $start=0, $stop=Null)
+   If $stop == Null Then
+      $stop = UBound($a)
+   EndIf
+
+   Local $bind = [$a]
+   Local $slice = BindMap(Take, $bind, Range($start, $stop))
+   Return $slice
+EndFunc
 ; Search for a color in a given pixel range
 ; @param {Int} $left
 ; @param {Int} $top
