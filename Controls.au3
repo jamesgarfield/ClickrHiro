@@ -122,23 +122,41 @@ Func ScrollToPage($p)
    EndIf
 EndFunc
 
+Func HeroWindowOffset($offset=Null)
+   Static Local $window_offset = 0
+   If $offset <> Null Then
+      $window_offset = $offset
+   EndIf
+   Return $window_offset
+EndFunc
+
 Func ClickScrollToHero($hero)
    
+   Local $offset
+   If ScrollMode() == $SCROLL_MODE_INCREMENT Then
+      $offset = HeroWindowOffset()
+   Else
+      ScrollMode($SCROLL_MODE_INCREMENT)
+      $offset = 0
+   EndIf
+
+
    Local $heroDepth = ($hero * $HERO_ROW_HEIGHT) + $HERO_ROW_HEIGHT
 
    Local $windowHeight = PixelRangeHeight($HERO_WINDOW)
 
-   ScrollToPage(0)
-   Local $offset = 0
+   
+   
    Local $end = $offset + $windowHeight
 
    Local $moved
    While $end < $heroDepth And RunBot() And Not Paused()
       $moved = ScrollDown()
       $offset += $moved
-      Dbg("Moved: " & $moved & " Offset: " & $offset)
       $end = $offset + $windowHeight
    WEnd
+
+   HeroWindowOffset($offset)
 
    Local $heroY = $HERO_WINDOW[3] - ($end - ($heroDepth - Floor($HERO_ROW_HEIGHT/2)))
 
