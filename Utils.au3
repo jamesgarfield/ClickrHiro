@@ -15,6 +15,9 @@
 #include <MsgBoxConstants.au3>
 #include <Array.au3>
 #include <Math.au3>
+#include <ScreenCapture.au3>
+#include <GDIPlus.au3>
+
 
 ;Key Press
 Global Enum $KEY_CTRL, _
