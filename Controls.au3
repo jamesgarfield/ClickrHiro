@@ -94,11 +94,21 @@ Func ClickHeroTab()
    Click($x, $y)
 EndFunc
 
+Func ScrollMode($mode=Null)
+   Static Local $scroll_mode = $SCROLL_MODE_PAGE
+   If $mode <> NULL Then
+      $scroll_mode = $mode
+   EndIf
+   Return $scroll_mode
+EndFunc
+
 ; Scroll to a given hero page
 ; @param {Int} $page
 Func ScrollToPage($p)
    Static Local $current_page = -1
    Static Local $delay = GlobalOrDefault("PAGE_SCROLL_DELAY", $DEFAULT_PAGE_SCROLL_DELAY)
+
+   ScrollMode($SCROLL_MODE_PAGE)
 
    If $current_page <> $p Then
       ;Pages at the end get really close together, rescroll to top to ensure a good click
