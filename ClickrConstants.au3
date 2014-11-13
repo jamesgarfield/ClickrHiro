@@ -25,6 +25,12 @@ Global Const $WINDOW = "Clicker Heroes"
    Global Const $BOARD_WIDTH = 1133
    Global Const $BOARD_HEIGHT = 639
 
+   ;Scroll Up Arrow
+   Global Const $SCROLL_UP = NewPixelRange(545, 185)
+   ;Scroll Down Arrow
+   Global Const $SCROLL_DOWN = NewPixelRange(545, 620)
+   
+
    ;Top of scroll bar, under up arrow
    Global Const $SCROLL_TOP[] = [547, 201]
 
@@ -33,8 +39,6 @@ Global Const $WINDOW = "Clicker Heroes"
 
    ;Page scrolling postions (4 heroes per page), final page is for Buy All Upgrades
    Global Const $PAGE_SCROLL[] = [201, 304, 359, 418, 474, 529, 559, 605]
-
-   Global Const $SCROLL_DOWN = NewPixelRange(545, 620)
 
    ; Cooldowns Position
    Global Const $TOP_COOLDOWN[] = [607, 169]
