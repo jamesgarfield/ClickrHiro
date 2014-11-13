@@ -148,7 +148,7 @@ Func CursorInfo()
    $info_on = Not $info_on
 
 
-   While $info_on
+   While $info_on And RunBot()
       Local $mouse = MouseGetPos()
       Local $coord = ScreenCoordsToBoardCoords($mouse)
 
