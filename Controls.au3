@@ -15,6 +15,7 @@
 #include <Utils.au3>
 #include <BoardState.au3>
 #include <ClickrConstants.au3>
+#include <Color.au3>
 
 Opt("MouseClickDelay", GlobalOrDefault("CLICK_DELAY", $DEFAULT_CLICK_DELAY))
 
