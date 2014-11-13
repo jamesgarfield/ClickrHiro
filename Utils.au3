@@ -222,6 +222,26 @@ Func ArraySlice($a, $start=0, $stop=Null)
    Local $slice = BindMap(Take, $bind, Range($start, $stop))
    Return $slice
 EndFunc
+
+Func PixelColumn($range)
+   
+   Local $x = $range[0]
+   Local $yMin = $range[1]
+   Local $yMax = $range[3]
+   Local $size = $yMax - $yMin
+
+   _GDIPlus_Startup()
+      Local $hbmp = _ScreenCapture_Capture("", $x, $yMin, $x, $yMax)
+      Local $bitmap = _GDIPlus_BitmapCreateFromHBITMAP($hbmp)
+      Local $bind[] = [$bitmap, 0]
+      Local $slice = BindMap(_GDIPLus_BitmapGetPixel, $bind, Range($size))
+      _WinAPI_DeleteObject($bitmap)
+   _GDIPlus_Shutdown()
+
+   Return $slice
+EndFunc
+
+
 ; Search for a color in a given pixel range
 ; @param {Int} $left
 ; @param {Int} $top
