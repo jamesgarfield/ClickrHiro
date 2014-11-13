@@ -17,6 +17,8 @@
 #include <ClickrConstants.au3>
 #include <Color.au3>
 
+Global Enum $SCROLL_MODE_UNKNOWN, $SCROLL_MODE_PAGE, $SCROLL_MODE_INCREMENT
+
 Opt("MouseClickDelay", GlobalOrDefault("CLICK_DELAY", $DEFAULT_CLICK_DELAY))
 
 InitControls()
