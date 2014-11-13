@@ -110,6 +110,43 @@ Func ScrollToPage($p)
    EndIf
 EndFunc
 
+Func Overlap($pre, $post)
+   Local $MIN_MATCH = 10
+   Local $MAX_MATCH = 54
+
+   $pre = Map(NormalizeBoardRGB, $pre)
+   $post = Map(NormalizeBoardRGB, $post)
+
+   Local $len = UBound($post)
+   Local $matched
+   
+   Local $subSeq[] = [0, 0]
+   For $searchFrom in Range($len)
+      $matched = 0
+      For $i in Range($len-$searchFrom)
+         If $pre[$searchFrom + $i] == $post[$i] Then
+            $matched += 1
+
+            If $matched >= $MAX_MATCH Then
+               ExitLoop
+            EndIf
+         Else
+            ExitLoop
+         EndIf
+      Next
+
+      If $matched >= $MIN_MATCH And $matched > $subSeq[1] Then
+         $subSeq[0] = $searchFrom
+         $subSeq[1] = $matched
+      EndIf
+
+      If $matched >= $MAX_MATCH Then
+         Return $subSeq
+      EndIf
+   Next
+   Return $subSeq
+EndFunc
+
 Func NormalizeBoardRGB($c)
    Local $rgb = [_ColorGetRed($c), _ColorGetGreen($c), _ColorGetBlue($c)]
    Local $normalized = _ColorSetRGB(Map(RoundColorTo10, $rgb))
