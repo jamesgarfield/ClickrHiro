@@ -110,6 +110,18 @@ Func ScrollToPage($p)
    EndIf
 EndFunc
 
+Func ScrollDown()
+   Local $window = TranslateRange($HERO_WINDOW)
+   Local $pre = PixelColumn($window)
+   ClickInRange($SCROLL_DOWN)
+   ClickInRange($SCROLL_DOWN)
+   Sleep(300)
+   Local $post = PixelColumn($window)
+   Local $o = Overlap($pre, $post)
+   Dbg($o)
+   Return $o[0]
+EndFunc
+
 Func Overlap($pre, $post)
    Local $MIN_MATCH = 10
    Local $MAX_MATCH = 54
