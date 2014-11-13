@@ -165,6 +165,21 @@ Func ClickScrollToHero($hero)
    MouseMove($heroTarget[0], $heroTarget[1], $MOUSE_SPEED)
 EndFunc
 
+Func VisibleHeroRibbon()
+   Static Local $window_height = PixelRangeHeight($HERO_WINDOW)
+   Static Local $left = $HERO_WINDOW[0]
+   Static Local $right = $HERO_WINDOW[2]
+
+   Local $offset = HeroRibbonOffset()
+   Return NewPixelRange($left, $offset, $right, $offset + $window_height)
+EndFunc
+
+Func PixelRangeContains($container, $search)
+   Local $horz = $search[0] >= $container[0] And $search[2] <= $container[2]
+   Local $vert = $search[1] >= $container[1] And $search[3] <= $container[3]
+   Return $horz And $vert
+EndFunc
+
 Func HeroYRibbon($hero)
    Return ($hero * $HERO_ROW_HEIGHT) + $HERO_ROW_HEIGHT
 EndFunc
