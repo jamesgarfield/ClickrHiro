@@ -293,8 +293,8 @@ EndFunc
 Func Noop($a=Null, $b=Null, $c=Null, $d=Null)
 EndFunc
 
-Func HexStr($h)
-   Return String("0x" & hex($h,6))
+Func HexStr($h, $length=6)
+   Return String("0x" & hex($h,$length))
 EndFunc
 
 Func Pop($msg)
