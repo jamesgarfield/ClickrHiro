@@ -246,8 +246,13 @@ Func RoundColorTo10($n)
 EndFunc
 
 Func ScrollToHero($hero)
+   If HeroLevel($FROSTLEAF) < 1 Then
+      Return ClickScrollToHero($hero)
+   EndIf
+
    Local $page = $HERO_BUTTON[$hero][0]
    ScrollToPage($page)
+   Return True
 EndFunc
 
 Func ScrollToBuyUpgrades()
