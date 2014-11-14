@@ -56,6 +56,8 @@ EndFunc
 Func FabulousFour($tick)
    Static Local $fab4[] = [$BRITTANY, $IVAN, $TREEBEAST, $CID]
    If $tick == $START_TICK Then
+      Dbg("             Fab Four")
+      Dbg("============================================")
       PrimaryHeroes($fab4)
       ClearAllTargets()
       TargetHeroLevel($CID, 150)
@@ -136,6 +138,8 @@ EndFunc
 
 Func LevelsForEveryone($tick)
    If $tick == $START_TICK Then
+      Dbg("             Levels For Everyone")
+      Dbg("============================================")
       PrimaryHeroes(Range($ALL_HEROES))
       $heroes = PrimaryHeroes()
       Local $arg[] = [100]
