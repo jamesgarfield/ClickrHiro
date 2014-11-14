@@ -193,7 +193,9 @@ Func ScrollDown()
    Sleep(300)
    Local $post = PixelColumn($window)
    Local $o = Overlap($pre, $post)
-   HeroRibbonOffset(HeroRibbonOffset() + $o[0])
+   Local $offset = $o[0]
+   HeroRibbonOffset(HeroRibbonOffset() + $offset)
+   Return $offset > 0
 EndFunc
 
 Func Overlap($pre, $post)
