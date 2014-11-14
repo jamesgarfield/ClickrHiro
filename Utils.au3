@@ -270,9 +270,11 @@ Func WithKeyPress($key, $f, $arg = Null)
    Static Local $delay = GlobalOrDefault("WITH_KEY_DELAY", $DEFAULT_WITH_KEY_DELAY)
 
    Send($KEY_ACTION[$key][0])
-   Sleep($delay)  ;Sometimes you need the delay to be sure the color has changed
+   Sleep($delay)  ;Delay to ensure application registers keypress
    If $arg == Null Then
     $result = $f()
+   ElseIf IsArray($arg) Then
+      $result = Call(FuncName($f), ArrayToCallArg($arg))
    Else
       $result = Call(FuncName($f), $arg)
    EndIf
