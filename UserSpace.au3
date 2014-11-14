@@ -53,53 +53,6 @@ Func ShowStats($tick=Null)
    Dbg("============================================")
 EndFunc
 
-Func Gaze()
-   Local $y = $HERO_ROW_Y[2]
-   Local $range = NewPixelRange(460, $y, 480, $y+2)
-   Dbg("Original Range")
-   Dbg($range)
-   Local $grid = NewPixelGrid($range)
-   MouseWheel("down", 1)
-   Local $coord = FindPixelGrid($range, $grid)
-EndFunc
-
-Func FindPixelGrid($range, $grid)
-   Local Const $left    = $range[0]
-   Local Const $top     = $range[1]
-   Local Const $right   = $range[2]
-   Local Const $bottom  = $range[3]
-
-   Local Const $MIN_TOP = 175
-
-   Local $found = False
-
-   Local $search = $MIN_TOP
-
-   While Not $found And $search < $top
-      Local $test = BoardSearch($left, $MIN_TOP, $left, $top, $grid[0][0])
-
-   WEnd
-
-EndFunc
-
-Func NewPixelGrid($range)
-   Local Const $left    = $range[0]
-   Local Const $top     = $range[1]
-   Local Const $right   = $range[2]
-   Local Const $bottom  = $range[3]
-
-   Local $grid[$right-$left][$bottom-$top]
-
-   For $x = $right To $left
-      For $y = $top To $bottom
-         Local $coord = TranslateCoords($x, $y)
-         $grid[$x][$y] = PixelGetColor($coord[0], $coord[1])
-      Next
-   Next
-
-   Return $grid
-EndFunc
-
 Func GottaKeepOnMovin($tick)
    Local $heroes = Range($TREEBEAST, $ALL_HEROES)
    If Any(HeroIsMaxed, $heroes) Then
