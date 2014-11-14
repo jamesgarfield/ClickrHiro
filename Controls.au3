@@ -171,18 +171,17 @@ Func HeroYRibbon($hero)
 EndFunc
 
 Func HeroYPanel($hero)
-   Static Local $window_height = PixelRangeHeight($HERO_WINDOW)
+   Switch ScrollMode()
+      Case $SCROLL_MODE_PAGE
+         Local $row = $HERO_BUTTON[$hero][1]
+         Return $HERO_ROW_Y[$row]
 
-   Local $offset = HeroWindowOffset()
-   Local $heroDepth = HeroYRibbon()
-   
-   Local $ribbon = VisibleHeroRibbon()
-   Local $ribbonBottom = $ribbon[3]
-   Local $windowBottom = $HERO_WINDOW[3]
-
-   Local $heroY = $windowBottom - ($ribbonBottom - ($heroDepth - Floor($HERO_ROW_HEIGHT/2)))
-
-   Return $heroY         
+      Case $SCROLL_MODE_INCREMENT
+         Local $ribbon = VisibleHeroRibbon()
+         Local $ribbonBottom = $ribbon[3]
+         Local $windowBottom = $HERO_WINDOW[3]
+         Return $windowBottom - ($ribbonBottom - (HeroYRibbon($hero) - Floor($HERO_ROW_HEIGHT/2)))   
+   EndSwitch
 EndFunc
 
 
