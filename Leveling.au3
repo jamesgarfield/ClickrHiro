@@ -178,10 +178,11 @@ Func LevelUp($hero, $levels=1)
       Return
    EndIf
 
-   ScrollToHero($hero)
+   If Not ScrollToHero($hero) Then
+      Return False
+   EndIf
 
-   Local $row = $HERO_BUTTON[$hero][1]
-   ClickHeroRow($row, $levels)
+   ClickHero($hero, $levels)
    HeroLevel($hero, HeroLevel($hero) + $levels)
 EndFunc
 
