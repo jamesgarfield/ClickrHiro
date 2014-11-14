@@ -136,15 +136,17 @@ Func DoLeveling($hero)
 EndFunc
 
 Func CanLevel($hero)
-   ScrollToHero($hero)
-   Local $row = $HERO_BUTTON[$hero][1]
-
    Local Const $SEARCH_RADIUS = 20
+   Local Const $X = $HERO_ROW_X
 
-   Local $range = NewPixelRange( $HERO_ROW_X - $SEARCH_RADIUS, _
-                              $HERO_ROW_Y[$row] - $SEARCH_RADIUS, _
-                              $HERO_ROW_X + $SEARCH_RADIUS, _
-                              $HERO_ROW_Y[$row] + $SEARCH_RADIUS)
+   ScrollToHero($hero)
+   Local $y = HeroYPanel($hero)
+
+
+   Local $range = NewPixelRange( $X - $SEARCH_RADIUS, _
+                                 $y - $SEARCH_RADIUS, _
+                                 $X + $SEARCH_RADIUS, _
+                                 $y + $SEARCH_RADIUS)
 
    For $cannotBuyColor in $CANNOT_BUY_COLORS
       ;Found the CANNOT_BUY_COLOR, cannot buy this amount
