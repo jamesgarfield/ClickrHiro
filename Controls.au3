@@ -131,30 +131,29 @@ Func HeroRibbonOffset($offset=Null)
 EndFunc
 
 Func ClickScrollToHero($hero)
-   
    If ScrollMode() <> $SCROLL_MODE_INCREMENT Then
       ScrollToPage(0)
       ScrollMode($SCROLL_MODE_INCREMENT)
       HeroRibbonOffset(0)
    EndIf
 
-   Local $heroOnRibbon = NewPixelRange($HERO_ROW_X, HeroYRibbon())
-
-   Local $moved
-   While Not PixelRangeContains(VisibleHeroRibbon(), $heroOnRibbon) And RunBot() And Not Paused()
-      ScrollDown()
+   While Not HeroIsVisible($hero) And RunBot() And Not Paused()
+      If Not ScrollDown() Then
+         Return HeroIsVisisble()
+      EndIf
    WEnd
 
-   Local $heroY = HeroYPanel($hero)
+   Return HeroIsVisible($hero)
+EndFunc
 
-   Local $heroTarget = TranslateCoords($HERO_ROW_X, $heroY)
-
-   MouseMove($heroTarget[0], $heroTarget[1], $MOUSE_SPEED)
+Func HeroIsVisible($hero)
+   Local $heroOnRibbon = NewPixelRange($HERO_ROW_X, HeroYRibbon($hero))
+   Return PixelRangeContains(VisibleHeroRibbon(), $heroOnRibbon)
 EndFunc
 
 Func VisibleHeroRibbon()
    Static Local $window_height = PixelRangeHeight($HERO_WINDOW)
-   Static Local $left = $HERO_WINDOW[0]
+   Static Local $left = $HERO_ROW_X
    Static Local $right = $HERO_WINDOW[2]
 
    Local $offset = HeroRibbonOffset()
