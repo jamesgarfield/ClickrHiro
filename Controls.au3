@@ -122,6 +122,28 @@ Func ScrollToPage($p)
    EndIf
 EndFunc
 
+Func ClickHero($hero, $count=1)
+   If $count <= 0 Then
+      Return
+   EndIf
+
+   Local $heroRange = NewPixelRange($HERO_ROW_X, HeroYPanel($hero))
+   Local $bind = [$heroRange, 1]
+   If $count >= 100 Then
+      WithKeyPress($KEY_CTRL, ClickInRange, $bind)
+      Return ClickHero($hero, $count-100)
+   ElseIf $count >= 25 Then
+      WithKeyPress($KEY_Z, ClickInRange, $bind)
+      Return ClickHero($hero, $count-25)
+   ElseIf $count >= 10 Then
+      WithKeyPress($KEY_SHIFT, ClickInRange, $bind)
+      Return ClickHero($hero, $count-10)
+   Else
+      ClickInRange($heroRange, $count)
+   EndIf
+EndFunc
+
+
 Func HeroRibbonOffset($offset=Null)
    Static Local $window_offset = 0
    If $offset <> Null Then
