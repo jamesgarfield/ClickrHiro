@@ -140,7 +140,9 @@ Func LevelsForEveryone($tick)
    If $tick == $START_TICK Then
       Dbg("             Levels For Everyone")
       Dbg("============================================")
+      
       PrimaryHeroes(Range($ALL_HEROES))
+      
       $heroes = PrimaryHeroes()
       Local $arg[] = [100]
       Local $levels = BindMap(_Max, $arg, Map(MaxUpgradeLevel, Range($ALL_HEROES)))
