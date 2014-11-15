@@ -161,7 +161,7 @@ Func ClickScrollToHero($hero)
 
    While Not HeroIsVisible($hero) And RunBot() And Not Paused()
       If Not ScrollDown() Then
-         Return HeroIsVisisble()
+         Return HeroIsVisible($hero)
       EndIf
    WEnd
 
