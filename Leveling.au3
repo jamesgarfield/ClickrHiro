@@ -31,6 +31,7 @@ Func HeroLevel($hero = Null, $level = Null)
 
    If $level <> Null Then
       $hero_level[$hero] = $level
+      Dbg($HERO_NAME[$hero] & ": " & $level)
    EndIf
 
    Return $hero_level[$hero]
