@@ -179,7 +179,9 @@ Func VisibleHeroRibbon()
    Static Local $right = $HERO_WINDOW[2]
 
    Local $offset = HeroRibbonOffset()
-   Return NewPixelRange($left, $offset, $right, $offset + $window_height)
+   Local $ribbon = NewPixelRange($left, $offset, $right, $offset + $window_height)
+   Dbg($ribbon)
+   Return $ribbon
 EndFunc
 
 Func PixelRangeContains($container, $search)
