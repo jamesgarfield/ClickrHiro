@@ -139,7 +139,9 @@ Func CanLevel($hero)
    Local Const $SEARCH_RADIUS = 20
    Local Const $X = $HERO_ROW_X
 
-   ScrollToHero($hero)
+   If Not ScrollToHero($hero) Then
+      Return False
+   EndIf
    Local $y = HeroYPanel($hero)
 
 
