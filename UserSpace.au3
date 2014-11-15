@@ -30,6 +30,7 @@ Global Const $DEFAULT_LEVELING_HEROS[] = [$TREEBEAST, $BRITTANY, $NATALIA,  $IVA
 Global Const $CLICKSTARTER_PIPELINE[] = [AlwaysProgress, AlwaysWithTheClicking, StartBuying]
 Global Const $FAB_FOUR_PIPELINE[] = [FabulousFourLeveling, CollectGold]
 Global Const $LADDER_PIPELINE[] = [LadderLeveling, CollectGold]
+Global Const $LEVELER_PIPELINE[] = [AllLevelsAllTheTime, CollectGold]
 Global Const $IDLE_PIPELINE[] = [LateGameLeveling, EnhancedDarkRitual, DynamicIdle]
 Global Const $ACTIVE_PIPELINE[] = [AlwaysWithTheClicking, LateGameLeveling, EnhancedDarkRitual, DynamicAscend]
 Global Const $DEEP_PIPELINE[] = [AlwaysWithTheClicking, LateGameLeveling, EnhancedDarkRitual]
@@ -39,11 +40,13 @@ Global Const $PIPELINE_CHAIN[] = [$CLICKSTARTER_PIPELINE, $FAB_FOUR_PIPELINE, $L
 Global Const $DEEP_RUN_CHAIN[] = [$CLICKSTARTER_PIPELINE, $FAB_FOUR_PIPELINE, $LADDER_PIPELINE, $IDLE_PIPELINE, $DEEP_PIPELINE]
 Global Const $IDLE_ASCEND_CHAIN[] = [$CLICKSTARTER_PIPELINE, $FAB_FOUR_PIPELINE, $LADDER_PIPELINE, $IDLE_PIPELINE, $APOCOLYPSE_NOW_PIPELINE]
 
-Global Const $FIREMAN_CHAIN[] = [$CLICKSTARTER_PIPELINE, $LADDER_PIPELINE, $IDLE_PIPELINE, $ACTIVE_PIPELINE]
+Global Const $FIREMAN_CHAIN[] = [$CLICKSTARTER_PIPELINE, $LEVELER_PIPELINE, $IDLE_PIPELINE, $ACTIVE_PIPELINE]
 
 Func Main()
    PipelineChain($FIREMAN_CHAIN)
    ActivateBoard()
+
+   
    StartBotEngine()
 EndFunc
 
