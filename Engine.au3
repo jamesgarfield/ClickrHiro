@@ -125,7 +125,8 @@ Func NextPipeline($restart = False)
    If $restart Then
       $index = 0
    EndIf
-   $p = $PIPELINE_CHAIN[$index]
+   Local $chain = PipelineChain()
+   $p = $chain[$index]
    $index += 1
    Return $p
 EndFunc
