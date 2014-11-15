@@ -150,6 +150,15 @@ Func LevelsForEveryone($tick)
    EndIf
 EndFunc
 
+Func AllLevelsAllTheTime($tick)
+   If $tick == $START_TICK Then
+      LevelsForEveryone($tick)
+      LevelingRateLimit(1)
+   EndIf
+
+   RotationalLeveling($tick)
+EndFunc
+
 ; Leveling strategy to iteratively go down the hero ladder leveling each to their 100's max
 Func LadderLeveling($tick)
 
