@@ -264,11 +264,6 @@ Func LadderLeveling($tick)
       Return
    EndIf
 
-   If $tick == $START_TICK Then
-      LevelsForEveryone($tick)
-      LevelingRateLimit(1)
-   EndIf
-
    PageLeveling($tick)
 
    If TargetHeroLevelReached() Then
