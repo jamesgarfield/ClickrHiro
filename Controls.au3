@@ -220,14 +220,37 @@ EndFunc
 
 
 Func ScrollDown()
-   Local $window = TranslateRange($HERO_WINDOW)
-   Local $pre = PixelColumn($window)
-   ClickInRange($SCROLL_DOWN)
-   ClickInRange($SCROLL_DOWN)
-   Sleep(300)
-   Local $post = PixelColumn($window)
+   Static Local $hero_panel = TranslateRange($HERO_WINDOW)
+   
+   Static Local $max_scroll = $SCROLL_BOTTOM[1]
+
+   Local $currentY = ScrollSliderY()
+
+   If $currentY >= $max_scroll Then
+      Return False
+   EndIf
+
+   Local $targetY = _Min($currentY + 40, $max_scroll)
+
+   Local $pre = PixelColumn($hero_panel)
+
+   ;WaitForRibbon()
+
+   MoveSliderTo($targetY)
+   
+   WaitForRibbon()
+
+   Local $post = PixelColumn($hero_panel)
    Local $o = Overlap($pre, $post)
    Local $offset = $o[0]
+
+   If $offset == 0 Then
+      MoveSliderTo($currentY)
+      WaitForRibbon()
+      Return False
+   EndIf
+
+   
    HeroRibbonOffset(HeroRibbonOffset() + $offset)
    Return $offset > 0
 EndFunc
