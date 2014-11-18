@@ -45,14 +45,25 @@ EndFunc
 ; @param {HeroEnum} $hero
 ; @return {Int}
 Func GameDataHeroLevel($hero)
+   Local $heroData = GameDataHero($hero)
+   Local $level = Jsmn_ObjGet($heroData, "level")
+   Return $level
+EndFunc
+
+Func GameDataHeroLocked($hero)
+   Local $heroData = GameDataHero($hero)
+   Local $locked = Jsmn_ObjGet($heroData, "locked")
+   Return $locked
+EndFunc
+
+Func GameDataHero($hero)
    Local $data = GameData()
    Local $collection = Jsmn_ObjGet($data, "heroCollection")
    
    Local $heroes = Jsmn_ObjGet($collection, "heroes")
    
    Local $heroData = Jsmn_ObjGet($heroes, String($hero+1))
-   Local $level = Jsmn_ObjGet($heroData, "level")
-   Return $level
+   Return $heroData
 EndFunc
 
 ; Decrypt & parse the raw text of a game save file into a jsmn 'js' object
