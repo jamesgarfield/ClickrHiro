@@ -256,6 +256,37 @@ Func RibbonMoving()
    Local $pixelsMatched = $overlap[1]
    Return Not (($startIndex == 0) And ($pixelsMatched == 54))
 EndFunc
+
+;Current Y Position of the scrollbar slider
+Func ScrollSliderY($y=Null)
+   Static Local $y_pos = $SCROLL_TOP[1]
+   If $y <> Null Then
+      $y_pos = $y
+   EndIf
+   Return $y_pos
+EndFunc
+
+Func MoveSliderTo($y)
+   Static Local $x = $SCROLL_TOP[0]
+
+   ;Ensure $y is within the scroll slider range
+   $y = _Max(_Min($y, $SCROLL_BOTTOM[1]), $SCROLL_TOP[1])
+   
+   Local $start = NewPixelRange($x, ScrollSliderY())
+   Local $stop = NewPixelRange($x, $y)
+   ClickDrag($start, $stop)
+
+   ScrollSliderY($y)
+EndFunc
+
+Func ClickDrag($start, $stop)
+   Static Local $scroll_speed = GlobalOrDefault("HERO_SCROLL_SPEED", $DEFAULT_HERO_SCROLL_SPEED)
+   Local $from = TranslateRange($start)
+   Local $to  = TranslateRange($stop)
+   MouseClickDrag("left", $from[0], $from[1], $to[0], $to[1], $scroll_speed)
+   WaitForRibbon()
+EndFunc
+
 Func Overlap($pre, $post)
    Local $MIN_MATCH = 10
    Local $MAX_MATCH = 54
