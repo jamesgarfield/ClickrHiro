@@ -189,10 +189,21 @@ Func PixelRangeContains($container, $search)
    Return $horz And $vert
 EndFunc
 
+; Provides the 'absolute' position of a hero on the 'hero ribbon'
+; 'Hero ribbon ' is the stack of heroes that can bee seen moving 'behind' the hero panel
+; Absolute position is how far from the top of this ribbon the bottom of a given hero row is
+; @param {HeroEnum} $hero
+; @return {Int}
 Func HeroYRibbon($hero)
    Return ($hero * $HERO_ROW_HEIGHT) + $HERO_ROW_HEIGHT
 EndFunc
 
+; Provides the current Y position of a given hero in the hero panel
+; Hero panel is the window on the left that contains the hero ribbon
+; The current Y position of a hero in the panel is relative to where 
+; the ribbon has been scrolled to.
+; @param {HeroEnum} $hero
+; @return {Int}
 Func HeroYPanel($hero)
    Switch ScrollMode()
       Case $SCROLL_MODE_PAGE
