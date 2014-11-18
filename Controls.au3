@@ -180,7 +180,6 @@ Func VisibleHeroRibbon()
 
    Local $offset = HeroRibbonOffset()
    Local $ribbon = NewPixelRange($left, $offset, $right, $offset + $window_height)
-   Dbg($ribbon)
    Return $ribbon
 EndFunc
 
