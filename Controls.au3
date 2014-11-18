@@ -232,6 +232,30 @@ Func ScrollDown()
    Return $offset > 0
 EndFunc
 
+Func WaitForRibbon()
+   Local $moving = RibbonMoving()
+   While $moving And RunBot() And Not Paused()
+      Sleep(1)
+      $moving = RibbonMoving()
+   WEnd
+   Return $moving
+EndFunc
+
+Func RibbonMoving()
+   Static Local $sample_rate = GlobalOrDefault("HERO_PANEL_SAMPLE_RATE", $DEFAULT_HERO_PANEL_SAMPLE_RATE)
+   Static Local $hero_panel = TranslateRange($HERO_WINDOW)
+
+   Local $pre = PixelColumn($hero_panel)
+   Sleep($sample_rate)
+   Local $post = PixelColumn($hero_panel)
+   Local $overlap = Overlap($pre, $post)
+
+   Local $pixelLength = UBound($post)
+
+   Local $startIndex = $overlap[0]
+   Local $pixelsMatched = $overlap[1]
+   Return Not (($startIndex == 0) And ($pixelsMatched == 54))
+EndFunc
 Func Overlap($pre, $post)
    Local $MIN_MATCH = 10
    Local $MAX_MATCH = 54
