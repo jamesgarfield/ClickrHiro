@@ -136,33 +136,124 @@ Func RotationalLeveling($tick)
    EnableProgression()
 EndFunc
 
+Func StackLeveling($tick)
+   Static Local $index = 0
+   Static Local $misses = 0
+   Static Local $heroes = Range($ALL_HEROES)
+   If $tick == $START_TICK Then
+      $index = 0
+   EndIf
+
+   If Mod($tick, LevelingRateLimit()) <> 0 Then
+      Return
+   EndIf
+
+   Local $hero = $heroes[$index]
+
+   ;Only upgrade if it's possible we don't have all upgrades yet
+   Local $currentLevel = HeroLevel($hero)
+   Local $needUpgrades = $currentLevel < maxUpgradeLevel($hero)
+
+   Local $leveled = False
+   If DoLeveling($hero) Then
+      $leveled = True
+   ElseIf TargetHeroLevelReached($hero) Then
+      $index += 1
+      If $index >= UBound(PrimaryHeroes()) Then
+         $index = 0
+      EndIf
+   ElseIf $misses > 5 Then
+      $misses = 0
+      ScrollToPage(0)
+      $index += 1
+      If $index >= UBound(PrimaryHeroes()) Then
+         $index = 0
+      EndIf
+      Return
+   Else
+      $misses += 1
+   EndIf
+
+   Local $level = HeroLevel($hero)
+   Local $upgradeLevel = ($level == 10 Or Mod($level, 25) == 0)
+
+   If $leveled And $needUpgrades And $upgradeLevel And RunBot() Then
+      BuyAllUpgrades()
+      ScrollToPage(0)
+   EndIf
+
+   EnableProgression()
+
+EndFunc
+
 Func LevelsForEveryone($tick)
    If $tick == $START_TICK Then
       Dbg("             Levels For Everyone")
       Dbg("============================================")
       
       PrimaryHeroes(Range($ALL_HEROES))
-      
-      $heroes = PrimaryHeroes()
-      Local $arg[] = [100]
-      Local $levels = BindMap(_Max, $arg, Map(MaxUpgradeLevel, Range($ALL_HEROES)))
-
-      Local $hero_levels = Zip($heroes, $levels)
-      MapInvoke(TargetHeroLevel, $hero_levels)
+      TargetHundreds()
    EndIf
 EndFunc
 
-Func AllLevelsAllTheTime($tick)
+Func TargetAll25($tick)
    If $tick == $START_TICK Then
-      LevelsForEveryone($tick)
+      Dbg("             Levels To 25")
+      Dbg("============================================")
+      
+      PrimaryHeroes(Range($ALL_HEROES))
+      Local $arg[] = [25]
+      BindRMap(TargetHeroLevel, $arg, Range($ALL_HEROES))
+   EndIf
+   
+EndFunc
+
+Func TargetHundreds()
+   Local $heroes = Range($ALL_HEROES)
+   Local $arg[] = [100]
+   Local $levels = BindMap(_Max, $arg, Map(MaxUpgradeLevel, Range($ALL_HEROES)))
+
+   Local $hero_levels = Zip($heroes, $levels)
+   MapInvoke(TargetHeroLevel, $hero_levels)
+EndFunc
+
+Func AllLevelsAllTheTime($tick)
+   Static Local $test_zone = 10
+   Static Local $timer = TimerInit()
+
+   If $tick == $START_TICK Then
+      $test_zone = 10
+      $timer = TimerInit()
+
+      TargetAll25($tick)
       LevelingRateLimit(1)
    EndIf
 
-   RotationalLeveling($tick)
+   Local $zone = GetZone()
+   Local $diff = TimerDiff($timer)
+
+   If GameDataHeroLocked($FROSTLEAF) And _
+      ($zone >= $test_zone Or $diff > 60*$SECONDS) Then
+      ResetGameData()
+      SyncAllHeroLevels()
+      $test_zone = $zone+10
+      $timer = TimerInit()
+   EndIf
+
+   StackLeveling($tick)
+
+   If TargetHeroLevelReached() Then
+      Pipeline(NextPipeline())
+   EndIf
 EndFunc
 
 ; Leveling strategy to iteratively go down the hero ladder leveling each to their 100's max
 Func LadderLeveling($tick)
+   
+   If $tick == $START_TICK Then
+      LevelsForEveryone($tick)
+      LevelingRateLimit(1)
+   EndIf
 
    ;All Heroes should be levelled by zone 180
    If GetZone() >= GlobalOrDefault("LADDER_SKIP_ZONE", 250) Then
