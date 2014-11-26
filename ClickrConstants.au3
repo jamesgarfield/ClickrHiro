@@ -32,7 +32,7 @@ Global Const $WINDOW = "Clicker Heroes"
    
 
    ;Top of scroll bar, under up arrow
-   Global Const $SCROLL_TOP[] = [547, 201]
+   Global Const $SCROLL_TOP = NewPixelRange(547, 201)
 
    ;Bottom of scroll bar, above down arrow
    Global Const $SCROLL_BOTTOM = NewPixelRange(550, 605)
@@ -192,3 +192,8 @@ Global Const $DEFAULT_OPTIONS_DELAY = 300
 
 ; Overide with DATA_SYNC_MINUTES
 Global Const $DEFAULT_DATA_SYNC_MINUTES = 10
+
+Global Const $DEFAULT_HERO_SCROLL_SPEED = 5
+
+
+Global Const $DEFAULT_HERO_PANEL_SAMPLE_RATE = 20
