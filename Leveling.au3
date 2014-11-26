@@ -23,7 +23,7 @@
 ; @param {Int} [@level] Sets the hero level. If omitted return is current hero level
 ; @return {Int|Array<Int>}
 Func HeroLevel($hero = Null, $level = Null)
-   Local Static $hero_level[$FROSTLEAF+1]
+   Local Static $hero_level[$ALL_HEROES]
 
    If $hero == Null Then
       Return $hero_level
@@ -41,7 +41,7 @@ EndFunc
 ; @param {Int} [@level] Sets the target level. If omitted return is current target level
 ; @return {Int|Array<Int>}
 Func TargetHeroLevel($hero = Null, $level = Null)
-   Local Static $target_level[$FROSTLEAF+1]
+   Local Static $target_level[$ALL_HEROES]
 
    If $hero == Null Then
       Return $target_level
@@ -61,11 +61,11 @@ EndFunc
 ; Set all target hero levels to 0
 Func ClearAllTargets()
    ;Clear Targets
-   BindRMap(TargetHeroLevel, 0, Range($FROSTLEAF+1))
+   BindRMap(TargetHeroLevel, 0, Range($ALL_HEROES))
 EndFunc
 
 Func ClearHeroLevels()
-   BindRMap(HeroLevel, 0, Range($FROSTLEAF+1))
+   BindRMap(HeroLevel, 0, Range($ALL_HEROES))
 EndFunc
 
 ; Synchronize local hero levels with game data hero levels
@@ -188,7 +188,7 @@ EndFunc
 ; @return {Boolean}
 Func TargetHeroLevelReached($hero = Null)
    If $hero == Null Then
-      For $i In Range($FROSTLEAF+1)
+      For $i In Range($ALL_HEROES)
          If Not TargetHeroLevelReached($i) Then
             Return False
          EndIf
