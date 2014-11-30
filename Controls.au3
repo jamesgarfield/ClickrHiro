@@ -156,6 +156,7 @@ EndFunc
 Func ClickScrollToHero($hero)
    If ScrollMode() <> $SCROLL_MODE_INCREMENT Then
       ScrollToPage(0)
+      WaitForRibbon()
       ScrollMode($SCROLL_MODE_INCREMENT)
       HeroRibbonOffset(0)
    EndIf
