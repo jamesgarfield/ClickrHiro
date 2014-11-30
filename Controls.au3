@@ -117,6 +117,7 @@ Func ScrollToPage($p)
          Sleep($delay)
       EndIf
       Click($SCROLL_TOP[0], $PAGE_SCROLL[$p])
+      ScrollSliderY($PAGE_SCROLL[$p])
       $current_page = $p
       Sleep($delay)
    EndIf
