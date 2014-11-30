@@ -24,10 +24,10 @@ Global Const $WITH_KEY_DELAY = 400
 Global Const $LATE_GAME_LEVELING_TICK_RATE = 3
 
 
-Global Const $DEFAULT_LEVELING_HEROS[] = [$TREEBEAST, $BRITTANY, $NATALIA,  $IVAN, $SAMURAI, $APHRODITE, $FROSTLEAF]
+Global Const $DEFAULT_LEVELING_HEROS[] = [$TREEBEAST, $BRITTANY, $NATALIA,  $SAMURAI, $APHRODITE, $FROSTLEAF]
 
 
-Global Const $CLICKSTARTER_PIPELINE[] = [AlwaysProgress, AlwaysWithTheClicking, StartBuying]
+Global Const $CLICKSTARTER_PIPELINE[] = [AlwaysProgress, StartBuying, AlwaysWithTheClicking]
 Global Const $FAB_FOUR_PIPELINE[] = [FabulousFourLeveling, CollectGold]
 Global Const $LADDER_PIPELINE[] = [LadderLeveling, CollectGold]
 Global Const $LEVELER_PIPELINE[] = [AllLevelsAllTheTime, CollectGold]
@@ -40,13 +40,15 @@ Global Const $PIPELINE_CHAIN[] = [$CLICKSTARTER_PIPELINE, $FAB_FOUR_PIPELINE, $L
 Global Const $DEEP_RUN_CHAIN[] = [$CLICKSTARTER_PIPELINE, $FAB_FOUR_PIPELINE, $LADDER_PIPELINE, $IDLE_PIPELINE, $DEEP_PIPELINE]
 Global Const $IDLE_ASCEND_CHAIN[] = [$CLICKSTARTER_PIPELINE, $FAB_FOUR_PIPELINE, $LADDER_PIPELINE, $IDLE_PIPELINE, $APOCOLYPSE_NOW_PIPELINE]
 
-Global Const $FIREMAN_CHAIN[] = [$CLICKSTARTER_PIPELINE, $LEVELER_PIPELINE, $IDLE_PIPELINE, $ACTIVE_PIPELINE]
+Global Const $FIREMAN_CHAIN[] = [$CLICKSTARTER_PIPELINE, $LEVELER_PIPELINE, $LADDER_PIPELINE, $IDLE_PIPELINE, $ACTIVE_PIPELINE]
 
 Func Main()
+   ActivateBoard()
+   SyncAllHeroLevels()
    PipelineChain($FIREMAN_CHAIN)
    ActivateBoard()
 
-   
+
    StartBotEngine()
 EndFunc
 
@@ -56,6 +58,16 @@ Func ShowStats($tick=Null)
    Dbg("       Boss Time  :   " & TimeStr(TimeToBeatBoss()))
    Dbg("       Fails      :   " & BossFail())
    Dbg("============================================")
+EndFunc
+
+Func Club4100()
+   Dbg("4100 Club")
+   Dbg(Map(HeroName, Filter(Is4100, Range($ALL_HEROES))))
+   Dbg("============================================")
+EndFunc
+
+Func Is4100($hero)
+   Return HeroLevel($hero) >= 4100
 EndFunc
 
 Func GottaKeepOnMovin($tick)
@@ -86,10 +98,12 @@ EndFunc
 
 Func StartBuying($tick)
    Local $zone = GetZone()
-   If CanLevelBy10($TREEBEAST) And $tick > 4 Then
+   If (CanLevelBy10($TREEBEAST) And $tick > 4) Or HeroLevel($TREEBEAST) >= 10 Then
       Dbg("             Start buying @ zone " & $zone)
       Dbg("============================================")
-      LevelUp($TREEBEAST, 10)
+      If HeroLevel($TREEBEAST) < 10 Then
+         LevelUp($TREEBEAST, 10)
+      EndIf
       Pipeline(NextPipeline())
    ElseIf $zone > 120 Then
       Dbg("             Skipping ClickStarter")
