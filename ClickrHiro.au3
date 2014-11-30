@@ -13,7 +13,7 @@
 
 #include <UserSpace.au3>
 
-Global Const $VERSION = "0.14.1"
+Global Const $VERSION = "0.14.2"
 
 Dbg("ClickrHiro Version: " & $VERSION)
 Dbg("============================================")
