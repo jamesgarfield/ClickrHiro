@@ -405,8 +405,8 @@ EndFunc
 Func CloseSaveWindow()
    Static Local $delay = GlobalOrDefault("OPTIONS_DELAY", $DEFAULT_OPTIONS_DELAY)
    WinActivate("Save As")
-   Send("{ESC}")
-   Sleep($delay)
+   WinClose("Save As")
+   WinWaitClose("Save As")
 EndFunc
 
 ;Click in the center of a range a given number of times
