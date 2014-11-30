@@ -115,7 +115,8 @@ Func ScrollToHero($hero)
 EndFunc
 
 Func ScrollToBuyUpgrades()
-   ScrollToPage(7)
+   Static Local $page = UBound($PAGE_SCROLL) - 1
+   ScrollToPage($page)
 EndFunc
 
 ; Navigate options to put game data into the clipboard
